@@ -278,6 +278,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Web\App_Plugins\RedirectsViewer\controllers\" />
+    <Folder Include="Web\App_Plugins\RedirectsViewer\resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web\App_Plugins\RedirectsViewer\views\editor.html" />
+    <Content Include="Web\App_Plugins\RedirectsViewer\views\rights-prevalue-editor.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
