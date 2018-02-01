@@ -270,18 +270,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\UserGroupsApiController.cs" />
+    <Compile Include="Models\UserGroupDisplay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Web\App_Plugins\RedirectsViewer\package.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Web\App_Plugins\RedirectsViewer\controllers\" />
     <Folder Include="Web\App_Plugins\RedirectsViewer\resources\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Web\App_Plugins\RedirectsViewer\controllers\rights-prevalue-editor.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\views\editor.html" />
     <Content Include="Web\App_Plugins\RedirectsViewer\views\rights-prevalue-editor.html" />
   </ItemGroup>
