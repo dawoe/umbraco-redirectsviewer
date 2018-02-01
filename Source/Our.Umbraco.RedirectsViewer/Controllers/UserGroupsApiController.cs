@@ -1,11 +1,16 @@
 ﻿namespace Our.Umbraco.RedirectsViewer.Controllers
 {
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
 
+    using AutoMapper;
+
     using global::Umbraco.Core.Services;
     using global::Umbraco.Web.Editors;
+
+    using Our.Umbraco.RedirectsViewer.Models;
 
     /// <summary>
     /// User groups api controller
@@ -19,13 +24,10 @@
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupsApiController"/> class.
-        /// </summary>
-        /// <param name="userService">
-        /// The user service.
-        /// </param>
-        public UserGroupsApiController(IUserService userService)
+        /// </summary>      
+        public UserGroupsApiController()
         {
-            this.userService = userService;
+            this.userService = this.Services.UserService;
         }
 
         /// <summary>
@@ -37,7 +39,7 @@
         [HttpGet]
         public HttpResponseMessage GetUserGroups()
         {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            return this.Request.CreateResponse(HttpStatusCode.OK, Mapper.Map<IEnumerable<UserGroupDisplay>>(this.userService.GetAllUserTypes()));
         }
     }
 }
