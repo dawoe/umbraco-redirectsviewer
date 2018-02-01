@@ -272,8 +272,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Umbraco.Tests, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\Our.Umbraco.RedirectsViewer\packages\Our.Umbraco.Community.Tests.7.6.2\lib\Umbraco.Tests.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\Umbraco.Tests\Umbraco.Tests.dll</HintPath>
     </Reference>
     <Reference Include="Umbraco.Web.UI, Version=1.0.6331.7980, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\Our.Umbraco.RedirectsViewer\packages\UmbracoCms.Core.7.6.0\lib\net45\Umbraco.Web.UI.dll</HintPath>
