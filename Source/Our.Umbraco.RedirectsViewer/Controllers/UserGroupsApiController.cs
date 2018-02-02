@@ -15,7 +15,7 @@
     /// <summary>
     /// User groups api controller
     /// </summary>
-    internal class UserGroupsApiController : BackOfficeNotificationsController
+    public class UserGroupsApiController : BackOfficeNotificationsController
     {
         /// <summary>
         /// The user service.
