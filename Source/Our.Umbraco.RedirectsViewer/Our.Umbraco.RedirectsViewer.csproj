@@ -284,6 +284,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Web\App_Plugins\RedirectsViewer\controllers\editor.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\rights-prevalue-editor.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\resources\usergroup-resource.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\views\editor.html" />

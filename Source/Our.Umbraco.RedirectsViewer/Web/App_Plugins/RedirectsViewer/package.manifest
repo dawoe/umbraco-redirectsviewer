@@ -30,6 +30,7 @@
   ],
   "javascript": [
     "~/App_Plugins/RedirectsViewer/controllers/rights-prevalue-editor.js",
+    "~/App_Plugins/RedirectsViewer/controllers/editor.js",
     "~/App_Plugins/RedirectsViewer/resources/usergroup-resource.js"
   ] 
 }
