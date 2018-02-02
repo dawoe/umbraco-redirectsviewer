@@ -1,5 +1,17 @@
-﻿<div ng-controller="Our.Umbraco.RedirectsViewer.EditController as vm">
-    <div ng-if="!vm.isCreate">
-        Editor goes here
+﻿<div ng-controller="Our.Umbraco.RedirectsViewer.EditController as vm" style="position:relative">
+    <umb-load-indicator ng-if="vm.isLoading">
+    </umb-load-indicator> 
+    <div ng-if="!vm.isLoading">
+        <div ng-if="vm.isEnabled">
+            <div ng-if="!vm.isCreate">
+                Editor goes here
+            </div>
+            <div ng-if="vm.isCreate">
+                Redirects are not visible because you are creating a new item. After saving this will be visible
+            </div>
+        </div>
+        <div ng-if="!vm.isEnabled">
+            Redirects are not enabled. Contact your system administrator to enable them
+        </div>
     </div>
 </div>
