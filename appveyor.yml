@@ -60,7 +60,7 @@ deploy:
 notifications:
 - provider: Email
   to:
-    secure: R7dZ4m7gCp+NdEN+sUnfI9NsdMh/lvBNhdqsAGO/CWg=
+    secure: j1LZqasFLjUYgAUBNjXUWXMhIfEqI7e7bL9uBB6Nltk=
   subject: Umbraco redirects build
   on_build_success: true
   on_build_failure: true
