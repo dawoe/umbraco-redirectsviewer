@@ -271,6 +271,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\RedirectsApiController.cs" />
     <Compile Include="Controllers\UserGroupsApiController.cs" />
     <Compile Include="Mapping\UsergroupMapping.cs" />
     <Compile Include="Models\UserGroupDisplay.cs" />
@@ -286,6 +287,7 @@
   <ItemGroup>
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\editor.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\rights-prevalue-editor.js" />
+    <Content Include="Web\App_Plugins\RedirectsViewer\resources\redirects-resource.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\resources\usergroup-resource.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\views\editor.html" />
     <Content Include="Web\App_Plugins\RedirectsViewer\views\rights-prevalue-editor.html" />

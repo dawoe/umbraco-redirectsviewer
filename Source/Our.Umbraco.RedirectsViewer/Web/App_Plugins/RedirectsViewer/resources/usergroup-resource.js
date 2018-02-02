@@ -9,7 +9,7 @@
             getAll: getAllUserGroups
         };
 
-        return resource
+        return resource;
 
         function getAllUserGroups() {
             return umbRequestHelper.resourcePromise(

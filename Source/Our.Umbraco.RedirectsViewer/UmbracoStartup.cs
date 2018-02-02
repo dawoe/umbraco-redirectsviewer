@@ -1,5 +1,6 @@
 ﻿namespace Our.Umbraco.RedirectsViewer
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web;
@@ -50,7 +51,8 @@
             var urlDictionairy = new Dictionary<string, object>();
 
             urlDictionairy.Add("UserGroupApi", urlHelper.GetUmbracoApiServiceBaseUrl<UserGroupsApiController>(c => c.GetUserGroups()));
-            
+            urlDictionairy.Add("RedirectsApi", urlHelper.GetUmbracoApiServiceBaseUrl<RedirectsApiController>(c => c.GetRedirectsForContent(Guid.Empty)));
+
             if (!e.Keys.Contains("Our.Umbraco.RedirectsViewer"))
             {
                 e.Add("Our.Umbraco.RedirectsViewer", urlDictionairy);
