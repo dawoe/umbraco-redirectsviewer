@@ -56,4 +56,13 @@ deploy:
     on:
       branch: master
       appveyor_repo_tag: true
+      
+notifications:
+- provider: Email
+  to:
+    secure: R7dZ4m7gCp+NdEN+sUnfI9NsdMh/lvBNhdqsAGO/CWg=
+  subject: Umbraco redirects build
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true
 
