@@ -3,6 +3,8 @@
 
     function UserGroupResource($http, umbRequestHelper) {
 
+        var apiUrl = Umbraco.Sys.ServerVariables["Our.Umbraco.RedirectsViewer"].UserGroupApi;
+
         var resource = {
             getAll: getAllUserGroups
         };
@@ -11,7 +13,7 @@
 
         function getAllUserGroups() {
             return umbRequestHelper.resourcePromise(
-                $http.get(umbRequestHelper.getApiUrl("Umbraco.Sys.ServerVariables.Our.Umbraco.RedirectsViewer", "GetUserGroups")), "Failed to get list");
+                $http.get(apiUrl + "GetUserGroups"), "Failed to get list");
         }
 
     }
