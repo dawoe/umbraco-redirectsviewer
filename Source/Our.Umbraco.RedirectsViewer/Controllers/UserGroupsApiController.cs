@@ -1,9 +1,11 @@
 ﻿namespace Our.Umbraco.RedirectsViewer.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
+    using System.Xml.Linq;
 
     using AutoMapper;
 
@@ -39,7 +41,13 @@
         [HttpGet]
         public HttpResponseMessage GetUserGroups()
         {
-            return this.Request.CreateResponse(HttpStatusCode.OK, Mapper.Map<IEnumerable<UserGroupDisplay>>(this.userService.GetAllUserTypes()));
+            // get all user groups
+            var allUserTypes = this.userService.GetAllUserTypes().OrderBy(x => x.Name).ToList();
+
+            // remove admin group
+            allUserTypes.RemoveAll(x => x.Alias == "admin");
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, Mapper.Map<IEnumerable<UserGroupDisplay>>(allUserTypes));
         }
     }
 }
