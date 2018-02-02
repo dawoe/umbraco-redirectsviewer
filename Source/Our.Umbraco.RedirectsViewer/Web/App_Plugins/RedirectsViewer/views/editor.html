@@ -4,6 +4,31 @@
     <div ng-if="!vm.isLoading">
         <div ng-if="vm.isEnabled">
             <div ng-if="!vm.isCreate">
+                <div class="umb-listview" ng-if="vm.redirects.length > 0">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>                       
+                            <td>
+                                Original Url
+                            </td>
+                            <td>
+                                Created date (UTC)
+                            </td>   
+                            <td>
+                                &nbsp;
+                            </td>                         
+                        </tr>
+                        </thead>                
+                        <tbody>
+                        <tr ng-repeat="item in vm.redirects">                        
+                            <td><a class="umb-table-body__link" href="{{item.originalUrl}}" target="_blank">{{item.originalUrl}}</a></td>
+                            <td>{{item.createDateUtc}}</td>
+                            <td><!--<umb-button type="button" label="Delete redirect" action="vm.deleteRedirect(item.redirectId)"></umb-button>--></td>
+                        </tr>
+                        </tbody>
+                    </table> 
+                </div>
+
                 <umb-empty-state
                     ng-if="vm.redirects.length === 0"
                     position="center">
