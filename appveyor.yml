@@ -58,9 +58,7 @@ deploy:
       appveyor_repo_tag: true
       
 notifications:
-- provider: Email
-  to:
-    secure: j1LZqasFLjUYgAUBNjXUWXMhIfEqI7e7bL9uBB6Nltk=
+- provider: Email  
   subject: Umbraco redirects build
   on_build_success: true
   on_build_failure: true
