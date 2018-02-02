@@ -1,3 +1,7 @@
+environment:
+  my_email:
+    secure: R7dZ4m7gCp+NdEN+sUnfI9NsdMh/lvBNhdqsAGO/CWg=
+
 os: Visual Studio 2015
 
 # Version format
@@ -58,7 +62,9 @@ deploy:
       appveyor_repo_tag: true
       
 notifications:
-- provider: Email  
+- provider: Email 
+  to :
+    - %my_email%
   subject: Umbraco redirects build
   on_build_success: true
   on_build_failure: true
