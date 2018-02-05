@@ -10,7 +10,7 @@
         vm.isAdmin = false;
         vm.redirects = [];
         vm.canDelete = false;
-        vm.canAdd = false;
+        vm.canAdd = false;        
 
         function checkEnabled() {
             return redirectUrlsResource.getEnableState().then(function(data) {
@@ -77,6 +77,24 @@
         };
 
         vm.loadRedirects = loadRedirects;
+
+        function showPrompt(item) {
+            item.deletePrompt = true;
+        };
+
+        vm.showPrompt = showPrompt;
+
+        function confirmAction(index, item) {
+            // confirm logic here
+        };
+
+        vm.confirmAction = confirmAction;
+
+        function hidePrompt(item) {
+            item.deletePrompt = false;
+        };
+
+        vm.hidePrompt = hidePrompt;        
 
         function init() {
             vm.checkEnabled().then(function() {
