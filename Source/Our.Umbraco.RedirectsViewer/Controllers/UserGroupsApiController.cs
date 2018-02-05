@@ -33,6 +33,17 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="UserGroupsApiController"/> class.
+        /// </summary>
+        /// <param name="userService">
+        /// The user service.
+        /// </param>
+        internal UserGroupsApiController(IUserService userService)
+        {
+            this.userService = userService;
+        }
+
+        /// <summary>
         /// The get user groups.
         /// </summary>
         /// <returns>
