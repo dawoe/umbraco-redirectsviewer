@@ -214,6 +214,7 @@
       <HintPath>..\Our.Umbraco.RedirectsViewer\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Our.Umbraco.RedirectsViewer\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -296,6 +297,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Controllers\UserGroupsApiControllerTests.cs" />
     <Compile Include="Mapping\UserGroupMappingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -309,6 +311,7 @@
       <Name>Our.Umbraco.RedirectsViewer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
