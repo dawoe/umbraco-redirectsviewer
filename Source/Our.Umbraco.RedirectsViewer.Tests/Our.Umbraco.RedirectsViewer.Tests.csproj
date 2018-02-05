@@ -296,11 +296,18 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Mapping\UserGroupMappingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Our.Umbraco.RedirectsViewer\Our.Umbraco.RedirectsViewer.csproj">
+      <Project>{37e9a4f8-8d1f-4117-836d-583a5301318d}</Project>
+      <Name>Our.Umbraco.RedirectsViewer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
