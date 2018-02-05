@@ -15,6 +15,10 @@ branches:
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
 init:
   - set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta   
+  
+test: 
+    assemblies:
+    - '**\Our.Umbraco.RedirectsViewer.Tests.dll'
 
 build_script:
   - cd Packaging
@@ -24,10 +28,6 @@ artifacts:
   - path: artifacts\*.nupkg
   - path: artifacts\*.zip
   
-test: 
-    assemblies:
-    - '**\Our.Umbraco.RedirectsViewer.Tests.dll'
-
 deploy:
  # MyGet Deployment for beta releases  
   - provider: NuGet
