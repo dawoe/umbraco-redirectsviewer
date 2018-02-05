@@ -42,8 +42,8 @@
         public HttpResponseMessage GetUserGroups()
         {
             // get all user groups
-            var allUserTypes = this.userService.GetAllUserTypes().OrderBy(x => x.Name).ToList();
-
+            var allUserTypes = this.userService.GetAllUserGroups().OrderBy(x => x.Name).ToList();
+          
             // remove admin group
             allUserTypes.RemoveAll(x => x.Alias == "admin");
 

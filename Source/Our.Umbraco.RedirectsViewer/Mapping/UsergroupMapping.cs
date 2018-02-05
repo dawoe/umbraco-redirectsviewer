@@ -24,7 +24,7 @@
         /// </param>
         public override void ConfigureMappings(IConfiguration config, ApplicationContext applicationContext)
         {
-            config.CreateMap<IUserType, UserGroupDisplay>()
+            config.CreateMap<IUserGroup, UserGroupDisplay>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Alias, opt => opt.MapFrom(src => src.Alias));
         }
