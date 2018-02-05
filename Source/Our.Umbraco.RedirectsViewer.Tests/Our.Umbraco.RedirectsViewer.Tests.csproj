@@ -297,6 +297,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Controllers\RedirectsApiControllerTests.cs" />
     <Compile Include="Controllers\UserGroupsApiControllerTests.cs" />
     <Compile Include="Mapping\UserGroupMappingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

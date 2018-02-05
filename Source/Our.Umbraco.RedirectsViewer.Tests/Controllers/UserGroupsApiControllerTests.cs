@@ -36,7 +36,7 @@
         /// <summary>
         /// The mapping engine.
         /// </summary>
-        private Mock<IMappingEngine> mappingEngine;
+        private Mock<IMappingEngine> mappingEngineMock;
 
         /// <summary>
         /// The controller.
@@ -52,12 +52,12 @@
             base.Initialize();
 
             this.userServiceMock = new Mock<IUserService>();
-            this.mappingEngine = new Mock<IMappingEngine>();
+            this.mappingEngineMock = new Mock<IMappingEngine>();
 
 
             var umbracoContext = this.GetUmbracoContext("http://localhost", -1, new RouteData(), false);
 
-            this.controller = new UserGroupsApiController(umbracoContext, this.userServiceMock.Object, this.mappingEngine.Object)
+            this.controller = new UserGroupsApiController(umbracoContext, this.userServiceMock.Object, this.mappingEngineMock.Object)
                                   {
                                       Request = new HttpRequestMessage
                                                     {
@@ -80,7 +80,7 @@
         {
             this.controller = null;
             this.userServiceMock = null;
-            this.mappingEngine = null;
+            this.mappingEngineMock = null;
 
             base.TearDown();
         }
@@ -94,14 +94,14 @@
             // arrange
             this.userServiceMock.Setup(x => x.GetAllUserGroups()).Returns(new List<IUserGroup>());
 
-            this.mappingEngine.Setup(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()));
+            this.mappingEngineMock.Setup(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()));
 
             // act
             var result = this.controller.GetUserGroups();
 
             // assert
             this.userServiceMock.Verify(x => x.GetAllUserGroups(), Times.Once);
-            this.mappingEngine.Verify(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()), Times.Never);
+            this.mappingEngineMock.Verify(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()), Times.Never);
 
             Assert.IsNotNull(result);        
 
@@ -137,7 +137,7 @@
 
             IEnumerable<IUserGroup> actualMappedItems = null;
             
-            this.mappingEngine.Setup(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()))
+            this.mappingEngineMock.Setup(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()))
                 .Callback(
                     (object src) => { actualMappedItems = (IEnumerable<IUserGroup>)src; })
                 .Returns(new List<UserGroupDisplay>());
@@ -147,7 +147,7 @@
 
             // assert
             this.userServiceMock.Verify(x => x.GetAllUserGroups(), Times.Once);
-            this.mappingEngine.Verify(x => x.Map<IEnumerable<UserGroupDisplay>>(userGroups), Times.Once);
+            this.mappingEngineMock.Verify(x => x.Map<IEnumerable<UserGroupDisplay>>(userGroups), Times.Once);
 
             Assert.IsNotNull(result);
 
@@ -181,7 +181,7 @@
 
             List<IUserGroup> actualMappedItems = null;
 
-            this.mappingEngine.Setup(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()))
+            this.mappingEngineMock.Setup(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()))
                 .Callback(
                     (object src) => { actualMappedItems = ((IEnumerable<IUserGroup>)src).ToList(); })
                 .Returns(new List<UserGroupDisplay>());
@@ -191,7 +191,7 @@
 
             // assert
             this.userServiceMock.Verify(x => x.GetAllUserGroups(), Times.Once);
-            this.mappingEngine.Verify(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()), Times.Once);
+            this.mappingEngineMock.Verify(x => x.Map<IEnumerable<UserGroupDisplay>>(It.IsAny<IEnumerable<IUserGroup>>()), Times.Once);
 
             Assert.IsNotNull(result);
 

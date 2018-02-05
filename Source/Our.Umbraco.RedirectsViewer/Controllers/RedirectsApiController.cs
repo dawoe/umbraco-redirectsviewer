@@ -9,6 +9,7 @@
 
     using AutoMapper;
 
+    using global::Umbraco.Core.Configuration;
     using global::Umbraco.Core.Services;
     using global::Umbraco.Web;
     using global::Umbraco.Web.Editors;
@@ -35,7 +36,7 @@
         public RedirectsApiController()
         {
             this.redirectUrlService = this.Services.RedirectUrlService;
-            this.mapper = Mapper.Engine;
+            this.mapper = Mapper.Engine;            
         }
 
         /// <summary>
@@ -53,10 +54,10 @@
         public RedirectsApiController(
             UmbracoContext context,
             IRedirectUrlService redirectUrlService,
-            IMappingEngine mapper)
+            IMappingEngine mapper) : base(context)
         {
             this.redirectUrlService = redirectUrlService;
-            this.mapper = mapper;
+            this.mapper = mapper;           
         }
 
         /// <summary>
@@ -71,9 +72,25 @@
         [HttpGet]
         public HttpResponseMessage GetRedirectsForContent(Guid contentKey)
         {
+            if (this.IsUrlTrackingDisabled())
+            {
+                return new HttpResponseMessage(HttpStatusCode.Conflict);
+            }
+
             var redirects = this.mapper.Map<IEnumerable<ContentRedirectUrl>>(this.redirectUrlService.GetContentRedirectUrls(contentKey)).ToArray();
 
             return this.Request.CreateResponse(HttpStatusCode.OK, redirects);
+        }
+
+        /// <summary>
+        /// Checks if  url tracking disabled.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="bool"/>.
+        /// </returns>
+        private bool IsUrlTrackingDisabled()
+        {
+            return UmbracoConfig.For.UmbracoSettings().WebRouting.DisableRedirectUrlTracking;
         }
     }
 }
