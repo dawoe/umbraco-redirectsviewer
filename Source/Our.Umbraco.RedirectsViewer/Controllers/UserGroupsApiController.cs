@@ -10,6 +10,7 @@
     using AutoMapper;
 
     using global::Umbraco.Core.Services;
+    using global::Umbraco.Web;
     using global::Umbraco.Web.Editors;
 
     using Our.Umbraco.RedirectsViewer.Models;
@@ -25,11 +26,36 @@
         private readonly IUserService userService;
 
         /// <summary>
+        /// The mapper.
+        /// </summary>
+        private readonly IMappingEngine mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupsApiController"/> class.
         /// </summary>      
         public UserGroupsApiController()
         {
             this.userService = this.Services.UserService;
+            this.mapper = Mapper.Engine;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserGroupsApiController"/> class.
+        /// </summary>
+        /// <param name="umbracoContext">
+        /// The umbraco Context.
+        /// </param>
+        /// <param name="userService">
+        /// The user service.
+        /// </param>
+        /// <param name="mapper">
+        /// The mapper.
+        /// </param>
+        internal UserGroupsApiController(UmbracoContext umbracoContext, IUserService userService, IMappingEngine mapper)
+            : base(umbracoContext)
+        {
+            this.userService = userService;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -42,12 +68,19 @@
         public HttpResponseMessage GetUserGroups()
         {
             // get all user groups
-            var allUserTypes = this.userService.GetAllUserTypes().OrderBy(x => x.Name).ToList();
-
+            var allUserTypes = this.userService.GetAllUserGroups().OrderBy(x => x.Name).ToList();
+          
             // remove admin group
             allUserTypes.RemoveAll(x => x.Alias == "admin");
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, Mapper.Map<IEnumerable<UserGroupDisplay>>(allUserTypes));
+            var model = new List<UserGroupDisplay>();
+
+            if (allUserTypes.Any())
+            {
+                model = this.mapper.Map<IEnumerable<UserGroupDisplay>>(allUserTypes).ToList();
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, model);
         }
     }
 }
