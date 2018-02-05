@@ -62,12 +62,16 @@
 		<BuildUmbDir>$(MSBuildProjectDirectory)\UmbracoBuild</BuildUmbDir>
 		<BuildNuGetDir>$(MSBuildProjectDirectory)\NugetBuild</BuildNuGetDir>
 		<ArtifactsDir>$(RootDir)\artifacts</ArtifactsDir>
-		<CoreProjectDir>$(RootDir)\Source\Our.Umbraco.RedirectsViewer</CoreProjectDir>		
+		<CoreProjectDir>$(RootDir)\Source\Our.Umbraco.RedirectsViewer</CoreProjectDir>	
+		<CoreProjectTestDir>$(RootDir)\Source\Our.Umbraco.RedirectsViewer.Tests</CoreProjectTestDir>			
 	</PropertyGroup>
 	
 	<!-- PROJECTS TO BUILD -->
 	<ItemGroup>
 		<ProjectToBuild Include="$(CoreProjectDir)\Our.Umbraco.RedirectsViewer.csproj" >
+			<Properties>Configuration=Release</Properties>
+		</ProjectToBuild>
+		<ProjectToBuild Include="$(CoreProjectTestDir)\Our.Umbraco.RedirectsViewer.Tests.csproj" >
 			<Properties>Configuration=Release</Properties>
 		</ProjectToBuild>		
 	</ItemGroup>
