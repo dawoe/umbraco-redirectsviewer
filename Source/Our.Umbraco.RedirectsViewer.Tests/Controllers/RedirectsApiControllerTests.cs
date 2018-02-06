@@ -284,7 +284,7 @@
             this.redirectUrlServiceMock.Setup(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()));
 
             // act
-            var result = this.controller.CreateRedicect(new RedirectSave());
+            var result = this.controller.CreateRedirect(new RedirectSave());
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
@@ -311,7 +311,7 @@
             this.redirectUrlServiceMock.Setup(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()));
 
             // act
-            var result = this.controller.CreateRedicect(input);
+            var result = this.controller.CreateRedirect(input);
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
@@ -341,7 +341,7 @@
             this.redirectUrlServiceMock.Setup(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()));
 
             // act
-            var result = this.controller.CreateRedicect(input);
+            var result = this.controller.CreateRedirect(input);
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
@@ -378,7 +378,7 @@
             this.redirectUrlServiceMock.Setup(x => x.Register(input.Url, input.ContentKey)).Throws(new Exception("Error during creating of redirect"));
 
             // act
-            var result = this.controller.CreateRedicect(input);
+            var result = this.controller.CreateRedirect(input);
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
@@ -407,7 +407,7 @@
             this.redirectUrlServiceMock.Setup(x => x.Register(input.Url, input.ContentKey));
 
             // act
-            var result = this.controller.CreateRedicect(input);
+            var result = this.controller.CreateRedirect(input);
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
