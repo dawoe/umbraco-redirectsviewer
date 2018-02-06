@@ -82,6 +82,13 @@
             return this.Request.CreateResponse(HttpStatusCode.OK, redirects);
         }
 
+        [HttpPost]
+        [HttpDelete]
+        public HttpResponseMessage DeleteRedirect(Guid id)
+        {
+             return new HttpResponseMessage(HttpStatusCode.Gone);
+        }
+
         /// <summary>
         /// Checks if  url tracking disabled.
         /// </summary>
