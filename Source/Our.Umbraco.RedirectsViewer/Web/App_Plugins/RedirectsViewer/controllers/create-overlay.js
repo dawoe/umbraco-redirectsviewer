@@ -7,7 +7,7 @@
         vm.model = $scope.model.data;
 
         vm.properties = {
-            'OldUrl': { 'label': 'Old url', 'description': 'Enter the old url with out the domain and the leading /', 'propertyErrorMessage': 'This is a required field' }
+            'OldUrl': { 'label': 'Old url', 'description': 'Enter the old url without the domain', 'propertyErrorMessage': 'This is a required field' }
         };
     };
 

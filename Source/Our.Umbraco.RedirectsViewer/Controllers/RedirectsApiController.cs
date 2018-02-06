@@ -132,6 +132,7 @@
         /// <returns>
         /// The <see cref="HttpResponseMessage"/>.
         /// </returns>
+        [HttpPost]
         public HttpResponseMessage CreateRedicect(RedirectSave redirect)
         {
             if (this.IsUrlTrackingDisabled())

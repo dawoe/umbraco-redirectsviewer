@@ -7,7 +7,8 @@
 
         var resource = {
             getRedirects: getRedirectsForContent,
-            deleteRedirect : deleteRedirect
+            deleteRedirect: deleteRedirect,
+            createRedirect : createRedirect
         };
 
         return resource;
@@ -25,6 +26,15 @@
                 "Failed delete redirect"
             );
         }
+
+        function createRedirect(url, id) {
+            var data = JSON.stringify({ url: url, contentKey: id });
+
+            return umbRequestHelper.resourcePromise(
+                $http.post(apiUrl + "CreateRedirect", data),
+                "Failed delete redirect"
+            );
+        };
 
     }
 
