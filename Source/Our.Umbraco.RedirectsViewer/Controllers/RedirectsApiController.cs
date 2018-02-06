@@ -17,6 +17,8 @@
     using global::Umbraco.Web.Models.ContentEditing;
     using global::Umbraco.Web.WebApi;
 
+    using Our.Umbraco.RedirectsViewer.Models;
+
     /// <summary>
     /// The redirects api controller.
     /// </summary>
@@ -89,6 +91,15 @@
             return this.Request.CreateResponse(HttpStatusCode.OK, redirects);
         }
 
+        /// <summary>
+        /// Deletes a redirect
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <returns>
+        /// The <see cref="HttpResponseMessage"/>.
+        /// </returns>
         [HttpPost]
         [HttpDelete]
         public HttpResponseMessage DeleteRedirect(Guid id)
@@ -109,6 +120,20 @@
                 this.logger.Error(this.GetType(), "Error deleting redirect", e);
                 return this.Request.CreateNotificationValidationErrorResponse("Unexpected error deleting redirect");
             }           
+        }
+
+        /// <summary>
+        /// Creates a redirect
+        /// </summary>
+        /// <param name="redirect">
+        /// The redirect.
+        /// </param>
+        /// <returns>
+        /// The <see cref="HttpResponseMessage"/>.
+        /// </returns>
+        public HttpResponseMessage CreateRedicect(RedirectSave redirect)
+        {
+            return new HttpResponseMessage(HttpStatusCode.Gone);
         }
 
         /// <summary>
