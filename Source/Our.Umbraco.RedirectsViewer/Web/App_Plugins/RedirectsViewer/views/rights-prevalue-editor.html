@@ -9,7 +9,7 @@
         </ul>
        
         <ul class="unstyled" ng-if="vm.allowed">
-            <li>Select the user groups that have rights</li>
+            <li><localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have rights</localize></li>
             <li ng-repeat="item in vm.groups">
                 <label class="checkbox">
                     <input type="checkbox" name="groups" value="{{item.alias}}" ng-model="item.checked"/>
