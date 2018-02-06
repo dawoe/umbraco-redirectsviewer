@@ -6,7 +6,8 @@
         var apiUrl = Umbraco.Sys.ServerVariables["Our.Umbraco.RedirectsViewer"].RedirectsApi;
 
         var resource = {
-            getRedirects: getRedirectsForContent
+            getRedirects: getRedirectsForContent,
+            deleteRedirect : deleteRedirect
         };
 
         return resource;
@@ -15,6 +16,13 @@
             return umbRequestHelper.resourcePromise(
                 $http.get(apiUrl + "GetRedirectsForContent?contentKey=" + contentKey),
                 "Failed to load redirects for content"
+            );
+        };
+
+        function deleteRedirect(id) {
+            return umbRequestHelper.resourcePromise(
+                $http.delete(apiUrl + "DeleteRedirect?id=" + id),
+                "Failed delete redirect"
             );
         }
 
