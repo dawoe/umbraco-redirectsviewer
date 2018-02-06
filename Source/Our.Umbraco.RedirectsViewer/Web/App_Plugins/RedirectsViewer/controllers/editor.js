@@ -59,7 +59,6 @@
             });
         };
        
-
         function loadRedirects() {
             vm.loading = true;
 
@@ -71,6 +70,30 @@
                 function (err) {
                     vm.isLoading = false;
                 });
+        };
+
+        function showOverlay(title, data) {
+            vm.overlay = {};
+            vm.overlay.show = true;
+            vm.overlay.view = '/App_Plugins/RedirectsViewer/views/create-overlay.html';
+            vm.overlay.title = title;
+            vm.overlay.submit = function (newModel) {
+                resource.createRedirect(newModel.data.OldUrl, editorState.current.key).then(function (data) {
+                        notificationsService.showNotification(data.notifications[0]);
+                        loadRedirects(editorState.current.key);
+                        vm.overlay.show = false;
+                        vm.overlay = null;
+                    },
+                    function (err) {
+                        notificationsService.showNotification(err.data.notifications[0]);
+                    });
+
+            };
+            vm.overlay.close = function (oldModel) {
+                vm.overlay.show = false;
+                vm.overlay = null;
+            };
+            vm.overlay.data = data;
         };
        
         function showPrompt(item) {
@@ -98,7 +121,16 @@
             item.deletePrompt = false;
         };
 
-        vm.hidePrompt = hidePrompt;        
+        vm.hidePrompt = hidePrompt;
+
+        function createRedirect() {
+            showOverlay("Create overlay",
+                {
+                    OldUrl: ''
+                });
+        }
+
+        vm.createRedirect = createRedirect;
 
         function init() {
             checkEnabled().then(function() {
@@ -108,9 +140,7 @@
                     });                                                                      
                }
             });
-        };
-
-        
+        };        
 
         init();
     }

@@ -38,16 +38,23 @@
                         </div>
                     </div>
                 </div>
-                
+
 
                 <umb-empty-state ng-if="vm.redirects.length === 0"
                                  position="center">
                     No redirects found for this page
                 </umb-empty-state>
+
+
+                <umb-button ng-if="vm.canAdd" type="button" label="Add redirect" action="vm.createRedirect()"></umb-button>
                 
-                <div>
-                    <umb-button ng-if="vm.canAdd" type="button" label="Add redirect" action="vm.createRedirect()"></umb-button>
-                </div>
+                
+                <umb-overlay
+                    ng-if="vm.overlay.show"
+                    model="vm.overlay"
+                    view="vm.overlay.view"
+                    position="center">
+                </umb-overlay>
             </div>
             <div ng-if="vm.isCreate">
                 Redirects are not visible because you are creating a new item. After saving this will be visible
