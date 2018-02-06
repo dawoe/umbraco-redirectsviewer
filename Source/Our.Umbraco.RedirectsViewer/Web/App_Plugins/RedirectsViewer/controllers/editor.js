@@ -21,9 +21,7 @@
                     vm.isLoading = false;
                 }               
             });
-        };
-
-        vm.checkEnabled = checkEnabled;
+        };        
 
         function checkUserPermissions() {
             return authResource.getCurrentUser().then(function (user) {
@@ -60,8 +58,7 @@
                 }
             });
         };
-
-        vm.checkUserPermissions = checkUserPermissions;
+       
 
         function loadRedirects() {
             vm.loading = true;
@@ -75,9 +72,7 @@
                     vm.isLoading = false;
                 });
         };
-
-        vm.loadRedirects = loadRedirects;
-
+       
         function showPrompt(item) {
             item.deletePrompt = true;
         };
@@ -106,10 +101,10 @@
         vm.hidePrompt = hidePrompt;        
 
         function init() {
-            vm.checkEnabled().then(function() {
+            checkEnabled().then(function() {
                 if (vm.isEnabled) {
-                    vm.checkUserPermissions().then(function() {
-                        vm.loadRedirects();                        
+                    checkUserPermissions().then(function() {
+                        loadRedirects();                        
                     });                                                                      
                }
             });
