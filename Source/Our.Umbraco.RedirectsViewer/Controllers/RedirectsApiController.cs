@@ -9,6 +9,7 @@
 
     using AutoMapper;
 
+    using global::Umbraco.Core;
     using global::Umbraco.Core.Configuration;
     using global::Umbraco.Core.Logging;
     using global::Umbraco.Core.Services;
@@ -133,7 +134,33 @@
         /// </returns>
         public HttpResponseMessage CreateRedicect(RedirectSave redirect)
         {
-            return new HttpResponseMessage(HttpStatusCode.Gone);
+            if (this.IsUrlTrackingDisabled())
+            {
+                return new HttpResponseMessage(HttpStatusCode.Conflict);
+            }
+
+            if (redirect.ContentKey == Guid.Empty || string.IsNullOrEmpty(redirect.Url))
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            var urlError = this.ValidateUrl(redirect);
+
+            if (!string.IsNullOrEmpty(urlError))
+            {
+                return this.Request.CreateNotificationValidationErrorResponse(urlError);
+            }
+
+            try
+            {
+                this.redirectUrlService.Register(redirect.Url, redirect.ContentKey);
+                return this.Request.CreateNotificationSuccessResponse("Redirect is created");
+            }
+            catch (Exception ex)
+            {
+                this.logger.Error(this.GetType(), "Error creating redirect", ex);
+                return this.Request.CreateNotificationValidationErrorResponse("Unexpected error creating redirect");
+            }           
         }
 
         /// <summary>
@@ -145,6 +172,39 @@
         private bool IsUrlTrackingDisabled()
         {
             return UmbracoConfig.For.UmbracoSettings().WebRouting.DisableRedirectUrlTracking;
+        }
+
+        /// <summary>
+        /// Validates the url when creating a redirect
+        /// </summary>
+        /// <param name="redirect">
+        /// The redirect.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        private string ValidateUrl(RedirectSave redirect)
+        {
+            if (redirect.Url.StartsWith("http://"))
+            {
+                return "Url should be without domain";
+            }
+
+            if (redirect.Url.Contains("."))
+            {
+                return "Url should be without .";
+            }
+
+            if (redirect.Url.Contains(" "))
+            {
+                return "Url should be without spaces";
+            }
+
+
+            // make sure we have a valid url
+            redirect.Url = redirect.Url.ToUrlSegment().EnsureStartsWith("/").TrimEnd("/");
+
+            return string.Empty;
         }
     }
 }
