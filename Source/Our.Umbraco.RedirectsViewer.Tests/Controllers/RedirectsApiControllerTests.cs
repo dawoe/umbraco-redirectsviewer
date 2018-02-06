@@ -22,6 +22,7 @@
     using NUnit.Framework;
 
     using Our.Umbraco.RedirectsViewer.Controllers;
+    using Our.Umbraco.RedirectsViewer.Models;
 
     using umbraco;
 
@@ -45,6 +46,31 @@
         /// The controller.
         /// </summary>
         private RedirectsApiController controller;
+
+        /// <summary>
+        /// Gets the create redirect invalid input test data.
+        /// </summary>
+        public IEnumerable<TestCaseData> CreateRedirectInvalidInputTestData
+        {
+            get
+            {
+                yield return new TestCaseData(new RedirectSave { Url = "http://foo"}).SetName("Create redirect with content key not set");
+                yield return new TestCaseData(new RedirectSave {ContentKey = Guid.NewGuid()}).SetName("Create redirect with url not set");
+            }
+        }
+
+        /// <summary>
+        /// Gets the create redirect invalid url test data.
+        /// </summary>
+        public IEnumerable<TestCaseData> CreateRedirectInvalidUrlTestData
+        {
+            get
+            {                
+                yield return new TestCaseData(new RedirectSave { ContentKey = Guid.NewGuid(), Url = "http://foo"}, "Url should be without domain").SetName("Create redirect with http:// in url");
+                yield return new TestCaseData(new RedirectSave { ContentKey = Guid.NewGuid(), Url = "image.jpg" }, "Url should be without .").SetName("Create redirect with . in url");
+                yield return new TestCaseData(new RedirectSave { ContentKey = Guid.NewGuid(), Url = "image jpg" }, "Url should be without spaces").SetName("Create redirect with spaces in url");               
+            }
+        }
 
         /// <summary>
         /// Initialize test
@@ -239,6 +265,152 @@
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Delete(guid), Times.Once);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+        }
+
+        /// <summary>
+        /// The create redirect should return conflict when url tracking is disabled.
+        /// </summary>
+        [Test]
+        public void CreateRedirectShouldReturnConflictWhenUrlTrackingIsDisabled()
+        {
+            // arrange
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(true);
+
+            this.redirectUrlServiceMock.Setup(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()));
+
+            // act
+            var result = this.controller.CreateRedicect(new RedirectSave());
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.Conflict, result.StatusCode);
+        }
+
+        /// <summary>
+        /// The create redirect should return bad requestt when input is invalid.
+        /// </summary>
+        /// <param name="input">
+        /// The input.
+        /// </param>
+        [Test]
+        [TestCaseSource(nameof(CreateRedirectInvalidInputTestData))]
+        public void CreateRedirectShouldReturnBadRequestWhenInputIsInvalid(RedirectSave input)
+        {
+            // arrange
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            this.redirectUrlServiceMock.Setup(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()));
+
+            // act
+            var result = this.controller.CreateRedicect(input);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        /// <summary>
+        /// The create redirect should return bad request with message when url is invalid.
+        /// </summary>
+        /// <param name="input">
+        /// The input.
+        /// </param>
+        /// <param name="errorMessage">
+        /// The error message.
+        /// </param>
+        [Test]
+        [TestCaseSource(nameof(CreateRedirectInvalidUrlTestData))]
+        public void CreateRedirectShouldReturnBadRequestWithMessageWhenUrlIsInvalid(RedirectSave input, string errorMessage)
+        {
+            // arrange
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            this.redirectUrlServiceMock.Setup(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()));
+
+            // act
+            var result = this.controller.CreateRedicect(input);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+
+            Assert.IsNotNull(result.Content);
+            var content = (ObjectContent)result.Content;
+
+            Assert.IsNotNull(content.Value);
+            Assert.IsInstanceOf<SimpleNotificationModel>(content.Value);
+
+            Assert.AreEqual(errorMessage, ((SimpleNotificationModel)content.Value).Message);           
+        }
+
+        /// <summary>
+        /// The create redirect should return error responset when create fails.
+        /// </summary>
+        [Test]
+        public void CreateRedirectShouldReturnErrorResponsetWhenCreateFails()
+        {
+            // arrange
+            var input = new RedirectSave
+                            {
+                                Url = "/foo",
+                                ContentKey = Guid.NewGuid()
+                            };
+
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            this.redirectUrlServiceMock.Setup(x => x.Register(input.Url, input.ContentKey)).Throws(new Exception("Error during creating of redirect"));
+
+            // act
+            var result = this.controller.CreateRedicect(input);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        /// <summary>
+        /// The create redirect should return success responset when create succeeds.
+        /// </summary>
+        [Test]
+        public void CreateRedirectShouldReturnSuccessResponsetWhenCreateSucceeds()
+        {
+            // arrange
+            var input = new RedirectSave
+                            {
+                                Url = "/foo",
+                                ContentKey = Guid.NewGuid()
+                            };
+
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            this.redirectUrlServiceMock.Setup(x => x.Register(input.Url, input.ContentKey));
+
+            // act
+            var result = this.controller.CreateRedicect(input);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
 
             Assert.IsNotNull(result);
 
