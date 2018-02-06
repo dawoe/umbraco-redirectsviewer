@@ -8,5 +8,6 @@
     <key alias="noRedirects">This page doesn't have any redirects</key>
     <key alias="headerUrl">Url</key>
     <key alias="headerDate">Created (UTC-date)</key>
+    <key alias="createOverlayTitle">Add redirect</key>
   </area>
 </language>
