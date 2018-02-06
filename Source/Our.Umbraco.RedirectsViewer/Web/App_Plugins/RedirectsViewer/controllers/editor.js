@@ -1,7 +1,7 @@
 ﻿(function() {
     "use strict";
 
-    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource, notificationsService) {
+    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource, notificationsService, umbRequestHelper) {
         var vm = this;
 
         vm.isCreate = $routeParams.create;
@@ -75,7 +75,7 @@
         function showOverlay(title, data) {
             vm.overlay = {};
             vm.overlay.show = true;
-            vm.overlay.view = '/App_Plugins/RedirectsViewer/views/create-overlay.html';
+            vm.overlay.view = umbRequestHelper.convertVirtualToAbsolutePath("~/App_Plugins/RedirectsViewer/views/create-overlay.html");
             vm.overlay.title = title;
             vm.overlay.submit = function (newModel) {
                 resource.createRedirect(newModel.data.OldUrl, editorState.current.key).then(function (data) {
@@ -146,5 +146,5 @@
     }
 
     angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.EditController",
-        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'notificationsService', EditController]);
+        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'notificationsService', 'umbRequestHelper', EditController]);
 })();
