@@ -78,7 +78,7 @@
             vm.overlay.view = umbRequestHelper.convertVirtualToAbsolutePath("~/App_Plugins/RedirectsViewer/views/create-overlay.html");
             vm.overlay.title = title;
             vm.overlay.submit = function (newModel) {
-                resource.createRedirect(newModel.data.OldUrl, editorState.current.key).then(function (data) {
+                redirectsResource.createRedirect(newModel.data.OldUrl, editorState.current.key).then(function (data) {
                         notificationsService.showNotification(data.notifications[0]);
                         loadRedirects(editorState.current.key);
                         vm.overlay.show = false;
