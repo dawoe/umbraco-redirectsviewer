@@ -2,5 +2,11 @@
 <language alias="en_us" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
   <area alias="redirectsviewer">
     <key alias="prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</key>
+    <key alias="redirectsNotEnabled">Redirect url tracking is disabled. Please contact your system adminstrator to enable url tracking</key>
+    <key alias="createMode">Redirects are not visible because you are creating a new item. After publishing the redirects will be visible</key>
+    <key alias="addButtonLabel">Add redirect</key>
+    <key alias="noRedirects">This page doesn't have any redirects</key>
+    <key alias="headerUrl">Url</key>
+    <key alias="headerDate">Created (UTC-date)</key>
   </area>
 </language>

@@ -9,10 +9,14 @@
                     <div class="umb-table-head">
                         <div class="umb-table-row">
                             <div class="umb-table-cell not-fixed">
-                                Original Url
+                                <localize key="redirectsviewer_headerUrl">
+                                    Orignal url
+                                </localize>
                             </div>
                             <div class="umb-table-cell">
-                                Created date (UTC)
+                                <localize key="redirectsviewer_headerDate">
+                                    Create date
+                                </localize>
                             </div>
                             <div class="umb-table-cell  umb-table-cell--auto-width" ng-if="vm.canDelete">
                                 &nbsp;
@@ -42,11 +46,14 @@
 
                 <umb-empty-state ng-if="vm.redirects.length === 0"
                                  position="center">
-                    No redirects found for this page
+                    <localize key="redirectsviewer_noRedirects">
+                        No redirects found for this page
+                    </localize>
+                    
                 </umb-empty-state>
 
 
-                <umb-button ng-if="vm.canAdd" type="button" label="Add redirect" action="vm.createRedirect()"></umb-button>
+                <umb-button ng-if="vm.canAdd" type="button" label="Add Redirect" label-key="redirectsviewer_addButtonLabel" action="vm.createRedirect()"></umb-button>
                 
                 
                 <umb-overlay
@@ -57,11 +64,17 @@
                 </umb-overlay>
             </div>
             <div ng-if="vm.isCreate">
-                Redirects are not visible because you are creating a new item. After saving this will be visible
+                <localize key="redirectsviewer_createMode">
+                    Redirects are not visible because you are creating a new item. After saving this will be visible
+                </localize>
+                
             </div>
         </div>
         <div ng-if="!vm.isEnabled">
-            Redirects are not enabled. Contact your system administrator to enable them
+            <localize key="redirectsviewer_redirectsNotEnabled">
+                Redirects are not enabled. Contact your system administrator to enable them
+            </localize>
+            
         </div>
     </div>
 </div>
