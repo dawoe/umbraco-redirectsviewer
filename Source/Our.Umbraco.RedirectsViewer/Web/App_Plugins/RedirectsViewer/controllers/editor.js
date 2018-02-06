@@ -1,7 +1,7 @@
 ﻿(function() {
     "use strict";
 
-    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource) {
+    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource, notificationsService) {
         var vm = this;
 
         vm.isCreate = $routeParams.create;
@@ -63,11 +63,11 @@
 
         vm.checkUserPermissions = checkUserPermissions;
 
-        function loadRedirects(contentKey) {
+        function loadRedirects() {
             vm.loading = true;
 
 
-            return redirectsResource.getRedirects(contentKey).then(function (data) {
+            return redirectsResource.getRedirects(editorState.current.key).then(function (data) {
                     vm.redirects = data;
                     vm.isLoading = false;
                 },
@@ -85,7 +85,16 @@
         vm.showPrompt = showPrompt;
 
         function confirmAction(index, item) {
-            // confirm logic here
+            vm.isLoading = true;
+            item.deletePrompt = false;
+            redirectsResource.deleteRedirect(item.redirectId).then(function (data) {
+                    notificationsService.showNotification(data.notifications[0]);
+                    loadRedirects();
+                },
+                function (err) {
+                    notificationsService.showNotification(err.data.notifications[0]);
+                    vm.isLoading = false;
+                });
         };
 
         vm.confirmAction = confirmAction;
@@ -100,7 +109,7 @@
             vm.checkEnabled().then(function() {
                 if (vm.isEnabled) {
                     vm.checkUserPermissions().then(function() {
-                        vm.loadRedirects(editorState.current.key);                        
+                        vm.loadRedirects();                        
                     });                                                                      
                }
             });
@@ -112,5 +121,5 @@
     }
 
     angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.EditController",
-        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', EditController]);
+        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'notificationsService', EditController]);
 })();
