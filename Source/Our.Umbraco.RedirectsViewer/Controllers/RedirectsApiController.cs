@@ -10,10 +10,12 @@
     using AutoMapper;
 
     using global::Umbraco.Core.Configuration;
+    using global::Umbraco.Core.Logging;
     using global::Umbraco.Core.Services;
     using global::Umbraco.Web;
     using global::Umbraco.Web.Editors;
     using global::Umbraco.Web.Models.ContentEditing;
+    using global::Umbraco.Web.WebApi;
 
     /// <summary>
     /// The redirects api controller.
@@ -30,13 +32,16 @@
         /// </summary>
         private readonly IMappingEngine mapper;
 
+        private readonly ILogger logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RedirectsApiController"/> class.
         /// </summary>
         public RedirectsApiController()
         {
             this.redirectUrlService = this.Services.RedirectUrlService;
-            this.mapper = Mapper.Engine;            
+            this.mapper = Mapper.Engine;
+            this.logger = this.Logger;
         }
 
         /// <summary>
@@ -54,10 +59,12 @@
         public RedirectsApiController(
             UmbracoContext context,
             IRedirectUrlService redirectUrlService,
-            IMappingEngine mapper) : base(context)
+            IMappingEngine mapper,
+            ILogger logger) : base(context)
         {
             this.redirectUrlService = redirectUrlService;
-            this.mapper = mapper;           
+            this.mapper = mapper;
+            this.logger = logger;
         }
 
         /// <summary>

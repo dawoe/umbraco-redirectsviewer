@@ -65,7 +65,7 @@
 
             var umbracoContext = this.GetUmbracoContext("http://localhost", -1, new RouteData(), false);
 
-            this.controller = new RedirectsApiController(umbracoContext, this.redirectUrlServiceMock.Object, this.mappingEngineMock.Object)
+            this.controller = new RedirectsApiController(umbracoContext, this.redirectUrlServiceMock.Object, this.mappingEngineMock.Object, this.Logger)
                                   {
                                       Request = new HttpRequestMessage
                                                     {
@@ -171,6 +171,78 @@
             Assert.IsInstanceOf<IEnumerable<ContentRedirectUrl>>(content.Value);
 
             Assert.AreEqual(redirects.Count, actualMappedRedirects.Count);
+        }
+
+        [Test]
+        public void DeleteRedirectShouldReturnConflictWhenUrlTrackingIsDisabled()
+        {
+            // arrange
+            var guid = Guid.NewGuid();
+
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(true);
+
+            this.redirectUrlServiceMock.Setup(x => x.Delete(guid));            
+
+            // act
+            var result = this.controller.DeleteRedirect(guid);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.Delete(guid), Times.Never);           
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.Conflict, result.StatusCode);
+        }
+
+        /// <summary>
+        /// The delete redirect should return error responset when delete fails.
+        /// </summary>
+        [Test]
+        public void DeleteRedirectShouldReturnErrorResponsetWhenDeleteFails()
+        {
+            // arrange
+            var guid = Guid.NewGuid();
+
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            this.redirectUrlServiceMock.Setup(x => x.Delete(guid)).Throws(new Exception("Error during delete of redirect"));
+
+            // act
+            var result = this.controller.DeleteRedirect(guid);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.Delete(guid), Times.Once);
+            
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        /// <summary>
+        /// The delete redirect should return success responset when delete succeeds.
+        /// </summary>
+        [Test]
+        public void DeleteRedirectShouldReturnSuccessResponsetWhenDeleteSucceeds()
+        {
+            // arrange
+            var guid = Guid.NewGuid();
+
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            this.redirectUrlServiceMock.Setup(x => x.Delete(guid));
+
+            // act
+            var result = this.controller.DeleteRedirect(guid);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.Delete(guid), Times.Once);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
         }
     }
 }
