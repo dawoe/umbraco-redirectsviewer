@@ -14,7 +14,7 @@
                             <div class="umb-table-cell">
                                 Created date (UTC)
                             </div>
-                            <div class="umb-table-cell" ng-if="vm.canDelete">
+                            <div class="umb-table-cell  umb-table-cell--auto-width" ng-if="vm.canDelete">
                                 &nbsp;
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                             <div class="umb-table-cell">
                                 <td>{{item.createDateUtc}}</td>
                             </div>
-                            <div class="umb-table-cell" style="overflow: visible;" ng-if="vm.canDelete">
+                            <div class="umb-table-cell umb-table-cell--auto-width" style="overflow: visible;" ng-if="vm.canDelete">
                                 <i class="icon-trash" style="cursor: pointer" ng-click="vm.showPrompt(item)" prevent-default> </i>
                                 <umb-confirm-action ng-if="item.deletePrompt"
                                                     direction="left"
