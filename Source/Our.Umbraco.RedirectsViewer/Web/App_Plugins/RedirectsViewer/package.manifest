@@ -33,5 +33,8 @@
     "~/App_Plugins/RedirectsViewer/controllers/editor.js",
     "~/App_Plugins/RedirectsViewer/resources/usergroup-resource.js",
     "~/App_Plugins/RedirectsViewer/resources/redirects-resource.js"
-  ] 
+  ],
+  "css": [
+    "~/App_Plugins/RedirectsViewer/css/redirectsviewer.css"
+  ]  
 }
