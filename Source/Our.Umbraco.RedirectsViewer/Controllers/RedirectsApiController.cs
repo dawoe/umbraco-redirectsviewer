@@ -203,7 +203,7 @@
 
 
             // make sure we have a valid url
-            redirect.Url = redirect.Url.ToUrlSegment().EnsureStartsWith("/").TrimEnd("/");
+            redirect.Url = redirect.Url.EnsureStartsWith("/").TrimEnd("/");
 
             return string.Empty;
         }
