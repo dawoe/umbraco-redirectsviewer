@@ -93,7 +93,22 @@
         [HttpDelete]
         public HttpResponseMessage DeleteRedirect(Guid id)
         {
-             return new HttpResponseMessage(HttpStatusCode.Gone);
+            if (this.IsUrlTrackingDisabled())
+            {
+                return new HttpResponseMessage(HttpStatusCode.Conflict);
+            }
+
+            try
+            {
+                this.redirectUrlService.Delete(id);
+
+                return this.Request.CreateNotificationSuccessResponse("Redirect is deleted");
+            }
+            catch (Exception e)
+            {
+                this.logger.Error(this.GetType(), "Error deleting redirect", e);
+                return this.Request.CreateNotificationValidationErrorResponse("Unexpected error deleting redirect");
+            }           
         }
 
         /// <summary>
