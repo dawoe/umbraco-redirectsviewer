@@ -150,10 +150,19 @@
             if (!string.IsNullOrEmpty(urlError))
             {
                 return this.Request.CreateNotificationValidationErrorResponse(urlError);
-            }
+            }            
 
             try
             {
+                // check if there is already a redirect with the url
+                long total;
+                var redirects = this.redirectUrlService.GetAllRedirectUrls(0, int.MaxValue, out total);
+
+                if (redirects.Any(x => x.Url == redirect.Url))
+                {
+                    return this.Request.CreateNotificationValidationErrorResponse("A redirect with this url already exists");
+                }
+
                 this.redirectUrlService.Register(redirect.Url, redirect.ContentKey);
                 return this.Request.CreateNotificationSuccessResponse("Redirect is created");
             }
