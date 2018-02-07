@@ -290,6 +290,8 @@
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\editor.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\rights-prevalue-editor.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\css\redirectsviewer.css" />
+    <Content Include="Web\App_Plugins\RedirectsViewer\lang\en-GB.xml" />
+    <Content Include="Web\App_Plugins\RedirectsViewer\lang\nl-NL.xml" />
     <Content Include="Web\App_Plugins\RedirectsViewer\lang\en-US.xml" />
     <Content Include="Web\App_Plugins\RedirectsViewer\resources\redirects-resource.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\resources\usergroup-resource.js" />
