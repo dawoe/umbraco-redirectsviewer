@@ -43,6 +43,11 @@
         private Mock<IMappingEngine> mappingEngineMock;
 
         /// <summary>
+        /// The localize text service mock.
+        /// </summary>
+        private Mock<ILocalizedTextService> localizeTextServiceMock;
+
+        /// <summary>
         /// The controller.
         /// </summary>
         private RedirectsApiController controller;
@@ -82,16 +87,15 @@
 
             this.redirectUrlServiceMock = new Mock<IRedirectUrlService>();
             this.mappingEngineMock = new Mock<IMappingEngine>();
-
-          // Mocked settings are now necessary
+            this.localizeTextServiceMock = new Mock<ILocalizedTextService>();
+         
             SettingsForTests.ConfigureSettings(SettingsForTests.GenerateMockSettings());
-
-            //UmbracoConfig.For.UmbracoSettings().WebRouting.DisableRedirectUrlTracking
+          
 
 
             var umbracoContext = this.GetUmbracoContext("http://localhost", -1, new RouteData(), false);
 
-            this.controller = new RedirectsApiController(umbracoContext, this.redirectUrlServiceMock.Object, this.mappingEngineMock.Object, this.Logger)
+            this.controller = new RedirectsApiController(umbracoContext, this.redirectUrlServiceMock.Object, this.mappingEngineMock.Object, this.Logger, this.localizeTextServiceMock.Object)
                                   {
                                       Request = new HttpRequestMessage
                                                     {
@@ -115,6 +119,7 @@
             this.controller = null;
             this.redirectUrlServiceMock = null;
             this.mappingEngineMock = null;
+            this.localizeTextServiceMock = null;
 
             base.TearDown();
         }

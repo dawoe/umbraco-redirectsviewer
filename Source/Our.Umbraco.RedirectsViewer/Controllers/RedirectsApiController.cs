@@ -35,7 +35,15 @@
         /// </summary>
         private readonly IMappingEngine mapper;
 
+        /// <summary>
+        /// The logger.
+        /// </summary>
         private readonly ILogger logger;
+
+        /// <summary>
+        /// The localized text service.
+        /// </summary>
+        private readonly ILocalizedTextService localizedTextService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedirectsApiController"/> class.
@@ -45,6 +53,7 @@
             this.redirectUrlService = this.Services.RedirectUrlService;
             this.mapper = Mapper.Engine;
             this.logger = this.Logger;
+            this.localizedTextService = this.Services.TextService;            
         }
 
         /// <summary>
@@ -59,15 +68,23 @@
         /// <param name="mapper">
         /// The mapper.
         /// </param>
+        /// <param name="logger">
+        /// The logger.
+        /// </param>
+        /// <param name="localizedTextService">
+        /// The localized Text Service.
+        /// </param>
         public RedirectsApiController(
             UmbracoContext context,
             IRedirectUrlService redirectUrlService,
             IMappingEngine mapper,
-            ILogger logger) : base(context)
+            ILogger logger,
+            ILocalizedTextService localizedTextService) : base(context)
         {
             this.redirectUrlService = redirectUrlService;
             this.mapper = mapper;
             this.logger = logger;
+            this.localizedTextService = localizedTextService;
         }
 
         /// <summary>
