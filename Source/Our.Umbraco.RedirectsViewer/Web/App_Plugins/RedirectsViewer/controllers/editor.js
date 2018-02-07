@@ -147,6 +147,12 @@
         };        
 
         init();
+
+        $scope.$on("formSubmitted", function () {
+            // make sure we get latest values when something is published/saved
+            vm.isLoading = true;
+            init();
+        });
     }
 
     angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.EditController",
