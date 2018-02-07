@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -71,9 +72,9 @@
         {
             get
             {                
-                yield return new TestCaseData(new RedirectSave { ContentKey = Guid.NewGuid(), Url = "http://foo"}, "Url should be without domain").SetName("Create redirect with http:// in url");
-                yield return new TestCaseData(new RedirectSave { ContentKey = Guid.NewGuid(), Url = "image.jpg" }, "Url should be without .").SetName("Create redirect with . in url");
-                yield return new TestCaseData(new RedirectSave { ContentKey = Guid.NewGuid(), Url = "image jpg" }, "Url should be without spaces").SetName("Create redirect with spaces in url");               
+                yield return new TestCaseData(new RedirectSave { ContentKey = Guid.NewGuid(), Url = "http://foo"}, "redirectsviewer/urlRelativeError").SetName("Create redirect with http:// in url");
+                yield return new TestCaseData(new RedirectSave { ContentKey = Guid.NewGuid(), Url = "image.jpg" }, "redirectsviewer/urlNoDotsError").SetName("Create redirect with . in url");
+                yield return new TestCaseData(new RedirectSave { ContentKey = Guid.NewGuid(), Url = "image jpg" }, "redirectsviewer/urlNoSpacesError").SetName("Create redirect with spaces in url");               
             }
         }
 
@@ -204,6 +205,9 @@
             Assert.AreEqual(redirects.Count, actualMappedRedirects.Count);
         }
 
+        /// <summary>
+        /// The delete redirect should return conflict when url tracking is disabled.
+        /// </summary>
         [Test]
         public void DeleteRedirectShouldReturnConflictWhenUrlTrackingIsDisabled()
         {
@@ -213,13 +217,18 @@
             // disable it in config
             Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(true);
 
-            this.redirectUrlServiceMock.Setup(x => x.Delete(guid));            
+            this.redirectUrlServiceMock.Setup(x => x.Delete(guid));
+
+            this.localizeTextServiceMock.Setup(
+                x => x.Localize(It.IsAny<string>(), It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()));                            
 
             // act
             var result = this.controller.DeleteRedirect(guid);
 
             // assert
-            this.redirectUrlServiceMock.Verify(x => x.Delete(guid), Times.Never);           
+            this.redirectUrlServiceMock.Verify(x => x.Delete(guid), Times.Never);
+            this.localizeTextServiceMock.Verify(
+                x => x.Localize(It.IsAny<string>(), It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Never);
 
             Assert.IsNotNull(result);
 
@@ -234,21 +243,35 @@
         {
             // arrange
             var guid = Guid.NewGuid();
+            var msgKey = "redirectsviewer/deleteError";
 
             // disable it in config
             Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
 
             this.redirectUrlServiceMock.Setup(x => x.Delete(guid)).Throws(new Exception("Error during delete of redirect"));
+            this.localizeTextServiceMock.Setup(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
 
             // act
             var result = this.controller.DeleteRedirect(guid);
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Delete(guid), Times.Once);
-            
+            this.localizeTextServiceMock.Verify(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+
+
             Assert.IsNotNull(result);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+
+            Assert.IsNotNull(result.Content);
+            var content = (ObjectContent)result.Content;
+
+            Assert.IsNotNull(content.Value);
+            Assert.IsInstanceOf<SimpleNotificationModel>(content.Value);
+
+            Assert.AreEqual(msgKey, ((SimpleNotificationModel)content.Value).Message);
         }
 
         /// <summary>
@@ -259,9 +282,13 @@
         {
             // arrange
             var guid = Guid.NewGuid();
+            var msgKey = "redirectsviewer/deleteSuccess";
 
             // disable it in config
             Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            this.localizeTextServiceMock.Setup(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
 
             this.redirectUrlServiceMock.Setup(x => x.Delete(guid));
 
@@ -271,9 +298,21 @@
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Delete(guid), Times.Once);
 
+            this.localizeTextServiceMock.Verify(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+
+
             Assert.IsNotNull(result);
 
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+
+            Assert.IsNotNull(result.Content);
+            var content = (ObjectContent)result.Content;
+
+            Assert.IsNotNull(content.Value);
+            Assert.IsInstanceOf<SimpleNotificationModel>(content.Value);
+
+            Assert.AreEqual(msgKey, ((SimpleNotificationModel)content.Value).Message);
         }
 
         /// <summary>
@@ -345,11 +384,16 @@
 
             this.redirectUrlServiceMock.Setup(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()));
 
+            this.localizeTextServiceMock.Setup(
+                x => x.Localize(errorMessage, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(errorMessage);
+
             // act
             var result = this.controller.CreateRedirect(input);
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+            this.localizeTextServiceMock.Verify(
+                x => x.Localize(errorMessage, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
 
             Assert.IsNotNull(result);
 
@@ -377,8 +421,13 @@
                                 ContentKey = Guid.NewGuid()
                             };
 
+            var msgKey = "redirectsviewer/urlExistsError";
+
             // disable it in config
             Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            this.localizeTextServiceMock.Setup(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
 
             var redirectMock = new Mock<IRedirectUrl>();
             redirectMock.SetupGet(x => x.Url).Returns("/foo");
@@ -397,6 +446,9 @@
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
 
+            this.localizeTextServiceMock.Verify(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+
             Assert.IsNotNull(result);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
@@ -407,7 +459,7 @@
             Assert.IsNotNull(content.Value);
             Assert.IsInstanceOf<SimpleNotificationModel>(content.Value);
 
-            Assert.AreEqual("A redirect with this url already exists", ((SimpleNotificationModel)content.Value).Message);
+            Assert.AreEqual(msgKey, ((SimpleNotificationModel)content.Value).Message);
         }
 
         /// <summary>
@@ -423,6 +475,8 @@
                                 ContentKey = Guid.NewGuid()
                             };
 
+            var msgKey = "redirectsviewer/createError";
+
             // disable it in config
             Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
 
@@ -431,16 +485,29 @@
 
             this.redirectUrlServiceMock.Setup(x => x.Register(input.Url, input.ContentKey)).Throws(new Exception("Error during creating of redirect"));
 
+            this.localizeTextServiceMock.Setup(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
+
             // act
             var result = this.controller.CreateRedirect(input);
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.GetAllRedirectUrls(0, int.MaxValue, out total), Times.Once);
             this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
+            this.localizeTextServiceMock.Verify(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
 
             Assert.IsNotNull(result);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+
+            Assert.IsNotNull(result.Content);
+            var content = (ObjectContent)result.Content;
+
+            Assert.IsNotNull(content.Value);
+            Assert.IsInstanceOf<SimpleNotificationModel>(content.Value);
+
+            Assert.AreEqual(msgKey, ((SimpleNotificationModel)content.Value).Message);
         }
 
         /// <summary>
@@ -456,6 +523,8 @@
                                 ContentKey = Guid.NewGuid()
                             };
 
+            var msgKey = "redirectsviewer/createSuccess";
+
             // disable it in config
             Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
 
@@ -470,16 +539,29 @@
 
             this.redirectUrlServiceMock.Setup(x => x.Register(input.Url, input.ContentKey));
 
+            this.localizeTextServiceMock.Setup(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
+
             // act
             var result = this.controller.CreateRedirect(input);
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.GetAllRedirectUrls(0, int.MaxValue, out total), Times.Once);
             this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
+            this.localizeTextServiceMock.Verify(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
 
             Assert.IsNotNull(result);
 
             Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+
+            Assert.IsNotNull(result.Content);
+            var content = (ObjectContent)result.Content;
+
+            Assert.IsNotNull(content.Value);
+            Assert.IsInstanceOf<SimpleNotificationModel>(content.Value);
+
+            Assert.AreEqual(msgKey, ((SimpleNotificationModel)content.Value).Message);
         }
     }
 }
