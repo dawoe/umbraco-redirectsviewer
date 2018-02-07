@@ -360,6 +360,52 @@
         }
 
         /// <summary>
+        /// The create redirect should return bad request when redirect with url exists.
+        /// </summary>
+        [Test]
+        public void CreateRedirectShouldReturnBadRequestWhenRedirectWithUrlExists()
+        {
+            // arrange
+            var input = new RedirectSave
+                            {
+                                Url = "/foo",
+                                ContentKey = Guid.NewGuid()
+                            };
+
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            var redirectMock = new Mock<IRedirectUrl>();
+            redirectMock.SetupGet(x => x.Url).Returns("/foo");
+
+            long total;
+            this.redirectUrlServiceMock.Setup(x => x.GetAllRedirectUrls(0, int.MaxValue, out total)).Returns(new List<IRedirectUrl>
+                                                                                                                 {
+                                                                                                                     redirectMock.Object
+                                                                                                                 });
+
+            this.redirectUrlServiceMock.Setup(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()));
+
+            // act
+            var result = this.controller.CreateRedirect(input);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
+
+            Assert.IsNotNull(result.Content);
+            var content = (ObjectContent)result.Content;
+
+            Assert.IsNotNull(content.Value);
+            Assert.IsInstanceOf<SimpleNotificationModel>(content.Value);
+
+            Assert.AreEqual("A redirect with this url already exists", ((SimpleNotificationModel)content.Value).Message);
+        }
+
+        /// <summary>
         /// The create redirect should return error responset when create fails.
         /// </summary>
         [Test]
@@ -375,12 +421,16 @@
             // disable it in config
             Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
 
+            long total;
+            this.redirectUrlServiceMock.Setup(x => x.GetAllRedirectUrls(0, int.MaxValue, out total)).Returns(new List<IRedirectUrl>()); 
+
             this.redirectUrlServiceMock.Setup(x => x.Register(input.Url, input.ContentKey)).Throws(new Exception("Error during creating of redirect"));
 
             // act
             var result = this.controller.CreateRedirect(input);
 
             // assert
+            this.redirectUrlServiceMock.Verify(x => x.GetAllRedirectUrls(0, int.MaxValue, out total), Times.Once);
             this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
 
             Assert.IsNotNull(result);
@@ -404,12 +454,22 @@
             // disable it in config
             Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
 
+            var redirectMock = new Mock<IRedirectUrl>();
+            redirectMock.SetupGet(x => x.Url).Returns("/bar");
+
+            long total;
+            this.redirectUrlServiceMock.Setup(x => x.GetAllRedirectUrls(0, int.MaxValue, out total)).Returns(new List<IRedirectUrl>
+                                                                                                                 {
+                                                                                                                     redirectMock.Object
+                                                                                                                 });
+
             this.redirectUrlServiceMock.Setup(x => x.Register(input.Url, input.ContentKey));
 
             // act
             var result = this.controller.CreateRedirect(input);
 
             // assert
+            this.redirectUrlServiceMock.Verify(x => x.GetAllRedirectUrls(0, int.MaxValue, out total), Times.Once);
             this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
 
             Assert.IsNotNull(result);
