@@ -131,12 +131,12 @@
             {
                 this.redirectUrlService.Delete(id);
 
-                return this.Request.CreateNotificationSuccessResponse("Redirect is deleted");
+                return this.Request.CreateNotificationSuccessResponse(this.localizedTextService.Localize("redirectsviewer/deleteSuccess"));
             }
             catch (Exception e)
             {
                 this.logger.Error(this.GetType(), "Error deleting redirect", e);
-                return this.Request.CreateNotificationValidationErrorResponse("Unexpected error deleting redirect");
+                return this.Request.CreateNotificationValidationErrorResponse(this.localizedTextService.Localize("redirectsviewer/deleteError"));
             }           
         }
 
@@ -177,16 +177,16 @@
 
                 if (redirects.Any(x => x.Url == redirect.Url))
                 {
-                    return this.Request.CreateNotificationValidationErrorResponse("A redirect with this url already exists");
+                    return this.Request.CreateNotificationValidationErrorResponse(this.localizedTextService.Localize("redirectsviewer/urlExistsError"));
                 }
 
                 this.redirectUrlService.Register(redirect.Url, redirect.ContentKey);
-                return this.Request.CreateNotificationSuccessResponse("Redirect is created");
+                return this.Request.CreateNotificationSuccessResponse(this.localizedTextService.Localize("redirectsviewer/createSuccess"));
             }
             catch (Exception ex)
             {
                 this.logger.Error(this.GetType(), "Error creating redirect", ex);
-                return this.Request.CreateNotificationValidationErrorResponse("Unexpected error creating redirect");
+                return this.Request.CreateNotificationValidationErrorResponse(this.localizedTextService.Localize("redirectsviewer/createError"));
             }           
         }
 
@@ -214,17 +214,17 @@
         {
             if (redirect.Url.StartsWith("http://"))
             {
-                return "Url should be without domain";
+                return this.localizedTextService.Localize("redirectsviewer/urlRelativeError");
             }
 
             if (redirect.Url.Contains("."))
             {
-                return "Url should be without .";
+                return this.localizedTextService.Localize("redirectsviewer/urlNoDotsError");
             }
 
             if (redirect.Url.Contains(" "))
             {
-                return "Url should be without spaces";
+                return this.localizedTextService.Localize("redirectsviewer/urlNoSpacesError");
             }
 
 
