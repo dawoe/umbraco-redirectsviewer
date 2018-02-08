@@ -193,6 +193,44 @@
 
             try
             {
+                // check if we there is a domain configured for this node in umbraco
+                var rootNode = string.Empty;
+
+                // get all the domains that have a root content id set
+                var domains = this.domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
+                
+                if (domains.Any())
+                {
+                    // get the content item
+                    var content = this.contentService.GetById(redirect.ContentKey);
+
+                    if (content == null)
+                    {
+                        throw new Exception("Content does not exist");
+                    }
+
+                    // get all the ids in the path
+                    var pathIds = content.Path.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                    if (pathIds.Any())
+                    {
+                        // find a domain that is in the path of the item
+                        var assignedDomain = domains.FirstOrDefault(x => pathIds.Contains(x.RootContentId.Value.ToString()));
+
+                        if (assignedDomain != null)
+                        {
+                            // get the root content node
+                            rootNode = assignedDomain.RootContentId.Value.ToString();
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(rootNode))
+                {
+                    // prefix the url with the root content node
+                    redirect.Url = rootNode + redirect.Url;
+                }
+
                 // check if there is already a redirect with the url
                 long total;
                 var redirects = this.redirectUrlService.GetAllRedirectUrls(0, int.MaxValue, out total);
