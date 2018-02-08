@@ -1,0 +1,23 @@
+﻿<div ng-controller="Our.Umbraco.RedirectsViewer.RightsPrevalueEditorController as vm">
+    <div ng-if="!vm.loading">
+        <ul class="unstyled">
+            <li>
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="vm.allowed"/>
+                </label>
+            </li>
+        </ul>
+       
+        <ul class="unstyled" ng-if="vm.allowed">
+            <li><localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have rights</localize></li>
+            <li ng-repeat="item in vm.groups">
+                <label class="checkbox">
+                    <input type="checkbox" name="groups" value="{{item.alias}}" ng-model="item.checked"/>
+                    {{item.name}}
+                </label>
+            </li>
+        </ul>
+
+    </div>
+    
+</div>
