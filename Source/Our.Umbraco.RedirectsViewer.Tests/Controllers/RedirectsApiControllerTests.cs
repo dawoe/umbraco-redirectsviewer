@@ -49,6 +49,16 @@
         private Mock<ILocalizedTextService> localizeTextServiceMock;
 
         /// <summary>
+        /// The content service mock.
+        /// </summary>
+        private Mock<IContentService> contentServiceMock;
+
+        /// <summary>
+        /// The domain service mock.
+        /// </summary>
+        private Mock<IDomainService> domainServiceMock;
+
+        /// <summary>
         /// The controller.
         /// </summary>
         private RedirectsApiController controller;
@@ -89,6 +99,8 @@
             this.redirectUrlServiceMock = new Mock<IRedirectUrlService>();
             this.mappingEngineMock = new Mock<IMappingEngine>();
             this.localizeTextServiceMock = new Mock<ILocalizedTextService>();
+            this.contentServiceMock = new Mock<IContentService>();
+            this.domainServiceMock = new Mock<IDomainService>();
          
             SettingsForTests.ConfigureSettings(SettingsForTests.GenerateMockSettings());
           
@@ -96,7 +108,7 @@
 
             var umbracoContext = this.GetUmbracoContext("http://localhost", -1, new RouteData(), false);
 
-            this.controller = new RedirectsApiController(umbracoContext, this.redirectUrlServiceMock.Object, this.mappingEngineMock.Object, this.Logger, this.localizeTextServiceMock.Object)
+            this.controller = new RedirectsApiController(umbracoContext, this.redirectUrlServiceMock.Object, this.mappingEngineMock.Object, this.Logger, this.localizeTextServiceMock.Object, this.contentServiceMock.Object, this.domainServiceMock.Object)
                                   {
                                       Request = new HttpRequestMessage
                                                     {
@@ -121,6 +133,8 @@
             this.redirectUrlServiceMock = null;
             this.mappingEngineMock = null;
             this.localizeTextServiceMock = null;
+            this.contentServiceMock = null;
+            this.domainServiceMock = null;
 
             base.TearDown();
         }

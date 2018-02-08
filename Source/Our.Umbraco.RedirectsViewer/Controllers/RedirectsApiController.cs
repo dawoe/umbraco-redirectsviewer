@@ -46,6 +46,16 @@
         private readonly ILocalizedTextService localizedTextService;
 
         /// <summary>
+        /// The content service.
+        /// </summary>
+        private readonly IContentService contentService;
+
+        /// <summary>
+        /// The domain service.
+        /// </summary>
+        private readonly IDomainService domainService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RedirectsApiController"/> class.
         /// </summary>
         public RedirectsApiController()
@@ -53,7 +63,9 @@
             this.redirectUrlService = this.Services.RedirectUrlService;
             this.mapper = Mapper.Engine;
             this.logger = this.Logger;
-            this.localizedTextService = this.Services.TextService;            
+            this.localizedTextService = this.Services.TextService;
+            this.contentService = this.Services.ContentService;
+            this.domainService = this.Services.DomainService;
         }
 
         /// <summary>
@@ -74,17 +86,27 @@
         /// <param name="localizedTextService">
         /// The localized Text Service.
         /// </param>
+        /// <param name="contentService">
+        /// The content Service.
+        /// </param>
+        /// <param name="domainService">
+        /// The domain Service.
+        /// </param>
         public RedirectsApiController(
             UmbracoContext context,
             IRedirectUrlService redirectUrlService,
             IMappingEngine mapper,
             ILogger logger,
-            ILocalizedTextService localizedTextService) : base(context)
+            ILocalizedTextService localizedTextService,
+            IContentService contentService,
+            IDomainService domainService) : base(context)
         {
             this.redirectUrlService = redirectUrlService;
             this.mapper = mapper;
             this.logger = logger;
             this.localizedTextService = localizedTextService;
+            this.contentService = contentService;
+            this.domainService = domainService;
         }
 
         /// <summary>
