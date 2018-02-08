@@ -443,6 +443,9 @@
             this.localizeTextServiceMock.Setup(
                 x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
 
+
+            this.domainServiceMock.Setup(x => x.GetAll(true)).Returns(new List<IDomain>());
+
             var redirectMock = new Mock<IRedirectUrl>();
             redirectMock.SetupGet(x => x.Url).Returns("/foo");
 
@@ -459,6 +462,7 @@
 
             // assert
             this.redirectUrlServiceMock.Verify(x => x.Register(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
+            this.domainServiceMock.Verify(x => x.GetAll(true), Times.Once);
 
             this.localizeTextServiceMock.Verify(
                 x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
@@ -502,6 +506,8 @@
             this.localizeTextServiceMock.Setup(
                 x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
 
+            this.domainServiceMock.Setup(x => x.GetAll(true)).Returns(new List<IDomain>());
+
             // act
             var result = this.controller.CreateRedirect(input);
 
@@ -510,6 +516,7 @@
             this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
             this.localizeTextServiceMock.Verify(
                 x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+            this.domainServiceMock.Verify(x => x.GetAll(true), Times.Once);
 
             Assert.IsNotNull(result);
 
@@ -556,6 +563,8 @@
             this.localizeTextServiceMock.Setup(
                 x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
 
+            this.domainServiceMock.Setup(x => x.GetAll(true)).Returns(new List<IDomain>());
+
             // act
             var result = this.controller.CreateRedirect(input);
 
@@ -564,6 +573,75 @@
             this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
             this.localizeTextServiceMock.Verify(
                 x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+            this.domainServiceMock.Verify(x => x.GetAll(true), Times.Once);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+
+            Assert.IsNotNull(result.Content);
+            var content = (ObjectContent)result.Content;
+
+            Assert.IsNotNull(content.Value);
+            Assert.IsInstanceOf<SimpleNotificationModel>(content.Value);
+
+            Assert.AreEqual(msgKey, ((SimpleNotificationModel)content.Value).Message);
+        }
+
+        [Test]
+        public void CreateRedirectWhenDomainIsAssignedShouldAppendDomainRootNode()
+        {
+            // arrange
+            var url = "/foo";
+            var input = new RedirectSave
+                            {
+                                Url = url,
+                                ContentKey = Guid.NewGuid()
+                            };
+
+            var msgKey = "redirectsviewer/createSuccess";
+
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            var redirectMock = new Mock<IRedirectUrl>();
+            redirectMock.SetupGet(x => x.Url).Returns("/bar");
+
+            long total;
+            this.redirectUrlServiceMock.Setup(x => x.GetAllRedirectUrls(0, int.MaxValue, out total)).Returns(new List<IRedirectUrl>
+                                                                                                                 {
+                                                                                                                     redirectMock.Object
+                                                                                                                 });
+            
+
+            this.localizeTextServiceMock.Setup(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
+
+            var domainMock = new Mock<IDomain>();
+
+            domainMock.SetupGet(x => x.RootContentId).Returns(1086);
+
+            this.domainServiceMock.Setup(x => x.GetAll(true)).Returns(new List<IDomain> { domainMock.Object });
+
+            var contentMock = new Mock<IContent>();
+
+            contentMock.SetupGet(x => x.Path).Returns("-1,1086,1186,1286");
+
+            this.contentServiceMock.Setup(x => x.GetById(input.ContentKey)).Returns(contentMock.Object);
+
+
+            this.redirectUrlServiceMock.Setup(x => x.Register("1086" + url , input.ContentKey));
+
+            // act
+            var result = this.controller.CreateRedirect(input);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.GetAllRedirectUrls(0, int.MaxValue, out total), Times.Once);
+            this.redirectUrlServiceMock.Verify(x => x.Register("1086" + url, input.ContentKey), Times.Once);
+            this.localizeTextServiceMock.Verify(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+            this.domainServiceMock.Verify(x => x.GetAll(true), Times.Once);
+            this.contentServiceMock.Verify(x => x.GetById(input.ContentKey), Times.Once);
 
             Assert.IsNotNull(result);
 
