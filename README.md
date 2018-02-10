@@ -17,3 +17,8 @@ This package will install a property editor that will allow you to view and mana
 
 Deleting and creating is by default disabled (except for admins), but can be enabled in the datatype settings. It will allow you to select which user groups have the rights to do these actions.
 
+## Buy me a beer ##
+
+If you like this package and use it in your website, consider giving me a small donation through paypal.me for maintaining this package.
+
+[![Donate](https://img.shields.io/badge/donate-paypal.me-blue.svg)](https://www.paypal.me/dawoe21)
