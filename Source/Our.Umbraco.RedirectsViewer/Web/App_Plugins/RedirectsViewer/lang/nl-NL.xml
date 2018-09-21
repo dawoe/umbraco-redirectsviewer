@@ -7,7 +7,7 @@
     <key alias="addButtonLabel">Add redirect</key>
     <key alias="noRedirects">This page doesn't have any redirects</key>
     <key alias="headerUrl">Url</key>
-    <key alias="headerDate">Created (UTC-date)</key>
+    <key alias="headerDate">Created</key>
     <key alias="createOverlayTitle">Add redirect</key>
     <key alias="oldUrlLabel">Url to redirect</key>
     <key alias="oldUrlDescription">The url  to redirect should be relative (no http) and can not contain spaces or dots</key>
