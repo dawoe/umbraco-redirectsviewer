@@ -589,6 +589,62 @@
         }
 
         [Test]
+        public void CreateRedirectShouldSaveUrlInLowerCase()
+        {
+            // arrange
+            var input = new RedirectSave
+            {
+                Url = "/Foo",
+                ContentKey = Guid.NewGuid()
+            };
+
+            var msgKey = "redirectsviewer/createSuccess";
+
+            // disable it in config
+            Mock.Get(UmbracoConfig.For.UmbracoSettings().WebRouting).SetupGet(x => x.DisableRedirectUrlTracking).Returns(false);
+
+            var redirectMock = new Mock<IRedirectUrl>();
+            redirectMock.SetupGet(x => x.Url).Returns("/bar");
+
+            long total;
+            this.redirectUrlServiceMock.Setup(x => x.GetAllRedirectUrls(0, int.MaxValue, out total)).Returns(new List<IRedirectUrl>
+                                                                                                                 {
+                                                                                                                     redirectMock.Object
+                                                                                                                 });
+
+            this.redirectUrlServiceMock.Setup(x => x.Register(input.Url, input.ContentKey));
+
+            this.localizeTextServiceMock.Setup(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>())).Returns(msgKey);
+
+            this.domainServiceMock.Setup(x => x.GetAll(true)).Returns(new List<IDomain>());
+
+            // act
+            var result = this.controller.CreateRedirect(input);
+
+            // assert
+            this.redirectUrlServiceMock.Verify(x => x.GetAllRedirectUrls(0, int.MaxValue, out total), Times.Once);
+            this.redirectUrlServiceMock.Verify(x => x.Register(input.Url, input.ContentKey), Times.Once);
+            this.localizeTextServiceMock.Verify(
+                x => x.Localize(msgKey, It.IsAny<CultureInfo>(), It.IsAny<IDictionary<string, string>>()), Times.Once);
+            this.domainServiceMock.Verify(x => x.GetAll(true), Times.Once);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+
+            Assert.IsTrue(input.Url == "/foo");
+
+            Assert.IsNotNull(result.Content);
+            var content = (ObjectContent)result.Content;
+
+            Assert.IsNotNull(content.Value);
+            Assert.IsInstanceOf<SimpleNotificationModel>(content.Value);
+
+            Assert.AreEqual(msgKey, ((SimpleNotificationModel)content.Value).Message);
+        }
+
+        [Test]
         public void CreateRedirectWhenDomainIsAssignedShouldAppendDomainRootNode()
         {
             // arrange

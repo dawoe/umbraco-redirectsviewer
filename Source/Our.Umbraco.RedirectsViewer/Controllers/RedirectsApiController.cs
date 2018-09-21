@@ -289,7 +289,7 @@
 
 
             // make sure we have a valid url
-            redirect.Url = redirect.Url.EnsureStartsWith("/").TrimEnd("/");
+            redirect.Url = redirect.Url.ToLower().EnsureStartsWith("/").TrimEnd("/");
 
             return string.Empty;
         }

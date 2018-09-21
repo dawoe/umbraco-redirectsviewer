@@ -29,7 +29,7 @@
                                 <a class="umb-table-body__link" href="{{item.originalUrl}}" target="_blank">{{item.originalUrl}}</a>
                             </div>
                             <div class="umb-table-cell">
-                                <td>{{item.createDateUtc}}</td>
+                                <td>{{item.createDateUtc | date: 'short'}}</td>
                             </div>
                             <div class="umb-table-cell umb-table-cell--auto-width" style="overflow: visible;" ng-if="vm.canDelete">
                                 <i class="icon-trash" style="cursor: pointer" ng-click="vm.showPrompt(item)" prevent-default> </i>
@@ -60,7 +60,7 @@
                     ng-if="vm.overlay.show"
                     model="vm.overlay"
                     view="vm.overlay.view"
-                    position="center">
+                    position="right">
                 </umb-overlay>
             </div>
             <div ng-if="vm.isCreate">
