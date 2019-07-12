@@ -1,4 +1,5 @@
 ﻿using Umbraco.Core.Cache;
+using Umbraco.Core.Configuration.UmbracoSettings;
 using Umbraco.Core.Persistence;
 
 namespace Our.Umbraco.RedirectsViewer.Controllers
@@ -33,6 +34,8 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </summary>
         private readonly IRedirectUrlService _redirectUrlService;
 
+        private readonly IUmbracoSettingsSection _umbracoSettings;
+
         /// <summary>
         /// The mapper.
         /// </summary>
@@ -61,7 +64,8 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="RedirectsApiController"/> class.
         /// </summary>
-        public RedirectsApiController(IGlobalSettings globalSettings, 
+        public RedirectsApiController(IUmbracoSettingsSection umbracoSettings, 
+                                      IGlobalSettings globalSettings, 
                                       IUmbracoContextAccessor umbracoContextAccessor, 
                                       ISqlContext sqlContext, 
                                       ServiceContext services, 
@@ -71,6 +75,8 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                                       UmbracoHelper umbracoHelper,IMappingEngine mapper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
             _redirectUrlService = this.Services.RedirectUrlService;
+
+            _umbracoSettings = umbracoSettings;
             _mapper = mapper;
             _logger = this.Logger;
             _localizedTextService = this.Services.TextService;
@@ -227,7 +233,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </returns>
         private bool IsUrlTrackingDisabled()
         {
-            return UmbracoConfig.For.UmbracoSettings().WebRouting.DisableRedirectUrlTracking;
+            return _umbracoSettings.WebRouting.DisableRedirectUrlTracking;
         }
 
         /// <summary>
