@@ -63,7 +63,7 @@
 		<BuildNuGetDir>$(MSBuildProjectDirectory)\NugetBuild</BuildNuGetDir>
 		<ArtifactsDir>$(RootDir)\artifacts</ArtifactsDir>
 		<CoreProjectDir>$(RootDir)\Source\Our.Umbraco.RedirectsViewer</CoreProjectDir>	
-		<CoreProjectTestDir>$(RootDir)\Source\Our.Umbraco.RedirectsViewer.Tests</CoreProjectTestDir>			
+		<!--<CoreProjectTestDir>$(RootDir)\Source\Our.Umbraco.RedirectsViewer.Tests</CoreProjectTestDir>			-->
 	</PropertyGroup>
 	
 	<!-- PROJECTS TO BUILD -->
