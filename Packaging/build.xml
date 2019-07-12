@@ -71,9 +71,9 @@
 		<ProjectToBuild Include="$(CoreProjectDir)\Our.Umbraco.RedirectsViewer.csproj" >
 			<Properties>Configuration=Release</Properties>
 		</ProjectToBuild>
-		<ProjectToBuild Include="$(CoreProjectTestDir)\Our.Umbraco.RedirectsViewer.Tests.csproj" >
+	<!--	<ProjectToBuild Include="$(CoreProjectTestDir)\Our.Umbraco.RedirectsViewer.Tests.csproj" >
 			<Properties>Configuration=Release</Properties>
-		</ProjectToBuild>		
+		</ProjectToBuild>		-->
 	</ItemGroup>
 	
 	<!-- TARGETS -->
