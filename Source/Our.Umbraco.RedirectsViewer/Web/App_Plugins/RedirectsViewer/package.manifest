@@ -7,7 +7,7 @@
       "icon": "icon-axis-rotation",
       "editor": {
         "view": "~/App_Plugins/RedirectsViewer/views/editor.html",
-        "valueType ": "STRING",
+        "valueType": "STRING",
         "isReadOnly": true
       },
       "prevalues": {

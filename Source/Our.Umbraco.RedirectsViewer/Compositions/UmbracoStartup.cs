@@ -25,10 +25,6 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
 
         private void ServerVariablesParser_Parsing(object sender, System.Collections.Generic.Dictionary<string, object> e)
         {
-            throw new NotImplementedException();
-        }
-         private void ServerVariablesParserParsing(object sender, Dictionary<string, object> e)
-        {
             if (HttpContext.Current == null)
             {
                 return;
@@ -36,10 +32,18 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
 
             var urlHelper = new UrlHelper(new RequestContext(new HttpContextWrapper(HttpContext.Current), new RouteData()));
 
-            var urlDictionairy = new Dictionary<string, object>();
+            var urlDictionairy = new Dictionary<string, object>
+            {
+                {
+                    "UserGroupApi",
+                    urlHelper.GetUmbracoApiServiceBaseUrl<UserGroupsApiController>(c => c.GetUserGroups())
+                },
+                {
+                    "RedirectsApi", urlHelper.GetUmbracoApiServiceBaseUrl<RedirectsApiController>(c =>
+                        c.GetRedirectsForContent(Guid.Empty))
+                }
+            };
 
-            urlDictionairy.Add("UserGroupApi", urlHelper.GetUmbracoApiServiceBaseUrl<UserGroupsApiController>(c => c.GetUserGroups()));
-            urlDictionairy.Add("RedirectsApi", urlHelper.GetUmbracoApiServiceBaseUrl<RedirectsApiController>(c => c.GetRedirectsForContent(Guid.Empty)));
 
             if (!e.Keys.Contains("Our.Umbraco.RedirectsViewer"))
             {
