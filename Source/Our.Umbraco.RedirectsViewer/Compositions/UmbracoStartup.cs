@@ -1,8 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using AutoMapper;
+using Our.Umbraco.RedirectsViewer.Controllers;
 using Our.Umbraco.RedirectsViewer.Mapping;
 using Umbraco.Core;
 using Umbraco.Core.Composing;
+using Umbraco.Web;
+using Umbraco.Web.JavaScript;
 
 namespace Our.Umbraco.RedirectsViewer.Compositions
 {
@@ -11,6 +19,32 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
         public void Compose(Composition composition)
         {
             composition.Register<Profile, UserGroupProfile>();
+
+            ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
+        }
+
+        private void ServerVariablesParser_Parsing(object sender, System.Collections.Generic.Dictionary<string, object> e)
+        {
+            throw new NotImplementedException();
+        }
+         private void ServerVariablesParserParsing(object sender, Dictionary<string, object> e)
+        {
+            if (HttpContext.Current == null)
+            {
+                return;
+            }
+
+            var urlHelper = new UrlHelper(new RequestContext(new HttpContextWrapper(HttpContext.Current), new RouteData()));
+
+            var urlDictionairy = new Dictionary<string, object>();
+
+            urlDictionairy.Add("UserGroupApi", urlHelper.GetUmbracoApiServiceBaseUrl<UserGroupsApiController>(c => c.GetUserGroups()));
+            urlDictionairy.Add("RedirectsApi", urlHelper.GetUmbracoApiServiceBaseUrl<RedirectsApiController>(c => c.GetRedirectsForContent(Guid.Empty)));
+
+            if (!e.Keys.Contains("Our.Umbraco.RedirectsViewer"))
+            {
+                e.Add("Our.Umbraco.RedirectsViewer", urlDictionairy);
+            }
         }
     }
 }
