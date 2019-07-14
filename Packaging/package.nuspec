@@ -18,7 +18,7 @@
         <dependencies>
             <dependency id="UmbracoCms.Core" version="8.1.0" />
 			<dependency id="UmbracoCms.Web" version="8.1.0" />
-			<dependency id="AutoMapper" version="3.3.1" />
+			<dependency id="AutoMapper" version="8.1.1" />
         </dependencies>		
     </metadata>    	
 </package>

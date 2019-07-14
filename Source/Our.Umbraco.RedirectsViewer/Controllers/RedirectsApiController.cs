@@ -39,7 +39,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// <summary>
         /// The mapper.
         /// </summary>
-        private readonly IMappingEngine _mapper;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// The logger.
@@ -72,7 +72,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                                       AppCaches appCaches, 
                                       IProfilingLogger logger, 
                                       IRuntimeState runtimeState, 
-                                      UmbracoHelper umbracoHelper,IMappingEngine mapper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+                                      UmbracoHelper umbracoHelper, IMapper mapper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
             _redirectUrlService = this.Services.RedirectUrlService;
 

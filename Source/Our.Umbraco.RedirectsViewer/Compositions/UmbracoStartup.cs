@@ -18,9 +18,13 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
     {
         public void Compose(Composition composition)
         {
-            composition.Register<Profile, UserGroupProfile>();
+            var config = new MapperConfiguration(cfg => {
+                cfg.AddProfile<UserGroupProfile>();
+            });
 
-            composition.Register<IMappingEngine,MappingEngine>(Lifetime.Singleton);
+            IMapper mapper = new Mapper(config);
+
+            composition.Register(mapper);
 
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
         }

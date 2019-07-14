@@ -33,7 +33,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// <summary>
         /// The mapper.
         /// </summary>
-        private readonly IMappingEngine _mapper;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupsApiController"/> class.
@@ -46,8 +46,8 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             AppCaches appCaches,
             IProfilingLogger logger,
             IRuntimeState runtimeState,
-            UmbracoHelper umbracoHelper, 
-            IMappingEngine mapper,IUserService userService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+            UmbracoHelper umbracoHelper,
+            IMapper mapper,IUserService userService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
             _userService = userService;
             _mapper = mapper;
@@ -72,10 +72,10 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             if (allUserTypes.Any())
             {
-                model = this._mapper.Map<IEnumerable<UserGroupDisplay>>(allUserTypes).ToList();
+                model = _mapper.Map<IEnumerable<UserGroupDisplay>>(allUserTypes).ToList();
             }
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, model);
+            return Request.CreateResponse(HttpStatusCode.OK, model);
         }
     }
 }
