@@ -20,6 +20,8 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
         {
             composition.Register<Profile, UserGroupProfile>();
 
+            composition.Register<IMappingEngine,MappingEngine>(Lifetime.Singleton);
+
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
         }
 
@@ -30,6 +32,11 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
                 return;
             }
 
+            SetUpDictionaryForAngularPropertyEditor(e);
+        }
+
+        private static void SetUpDictionaryForAngularPropertyEditor(Dictionary<string, object> e)
+        {
             var urlHelper = new UrlHelper(new RequestContext(new HttpContextWrapper(HttpContext.Current), new RouteData()));
 
             var urlDictionairy = new Dictionary<string, object>
