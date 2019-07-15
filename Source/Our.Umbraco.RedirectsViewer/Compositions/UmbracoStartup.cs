@@ -5,9 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Our.Umbraco.RedirectsViewer.Controllers;
-using Our.Umbraco.RedirectsViewer.Mapping;
 using Umbraco.Core.Composing;
-using Umbraco.Core.Persistence.Mappers;
 using Umbraco.Web;
 using Umbraco.Web.JavaScript;
 
@@ -17,8 +15,6 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
     {
         public void Compose(Composition composition)
         {
-            composition.WithCollectionBuilder<MapperCollectionBuilder>().Add<UserGroupProfile>();
-
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
         }
 

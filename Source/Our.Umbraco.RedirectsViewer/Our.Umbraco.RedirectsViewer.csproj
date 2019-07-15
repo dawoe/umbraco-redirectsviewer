@@ -264,7 +264,6 @@
     <Compile Include="Compositions\UmbracoStartup.cs" />
     <Compile Include="Controllers\RedirectsApiController.cs" />
     <Compile Include="Controllers\UserGroupsApiController.cs" />
-    <Compile Include="Mapping\UserGroupProfile.cs" />
     <Compile Include="Models\RedirectSave.cs" />
     <Compile Include="Models\UserGroupDisplay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

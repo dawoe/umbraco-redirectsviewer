@@ -74,8 +74,6 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             if (allUserTypes.Any())
             {
-                //todo fix mapping
-                // model = _mapper.MapEnumerable<IUserGroup, UserGroupDisplay>(allUserTypes).ToList();
                 model = Map(allUserTypes);
             }
 
