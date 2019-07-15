@@ -89,9 +89,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             foreach (var item in allUserTypes)
             {
-                UserGroupDisplay ug=new UserGroupDisplay();
-                ug.Name = item.Name;
-                ug.Alias = item.Alias;
+                UserGroupDisplay ug = new UserGroupDisplay {Name = item.Name, Alias = item.Alias};
                 model.Add(ug);
             }
 

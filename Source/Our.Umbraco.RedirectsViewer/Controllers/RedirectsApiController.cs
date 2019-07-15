@@ -72,10 +72,10 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             _umbracoSettings = umbracoSettings;
             _mapper = mapper;
-            _logger = this.Logger;
-            _localizedTextService = this.Services.TextService;
-            _contentService = this.Services.ContentService;
-            _domainService = this.Services.DomainService;
+            _logger = logger;
+            _localizedTextService = services.TextService;
+            _contentService = services.ContentService;
+            _domainService = services.DomainService;
         }
 
         /// <summary>
