@@ -17,7 +17,7 @@
 	 <!-- SHARED PROPERTIES -->
 	 <PropertyGroup>
 		<PackageName>Our.Umbraco.RedirectsViewer</PackageName>
-		<MinUmbracoVersion>7.7.0</MinUmbracoVersion>
+		<MinUmbracoVersion>8.1.0</MinUmbracoVersion>
 		<Readme><![CDATA[This package implements a property editor that allows you to view and manage 301 redirects]]></Readme>
 		<AuthorName>Dave Woestenborghs</AuthorName>
 		<AuthorUrl>https://github.com/dawoe/</AuthorUrl>
