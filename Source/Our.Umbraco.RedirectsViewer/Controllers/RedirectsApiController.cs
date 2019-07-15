@@ -241,7 +241,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </returns>
         private string ValidateUrl(RedirectSave redirect)
         {
-            if (redirect.Url.StartsWith("http://"))
+            if (redirect.Url.StartsWith("http://") || redirect.Url.StartsWith("https://"))
             {
                 return this._localizedTextService.Localize("redirectsviewer/urlRelativeError");
             }
