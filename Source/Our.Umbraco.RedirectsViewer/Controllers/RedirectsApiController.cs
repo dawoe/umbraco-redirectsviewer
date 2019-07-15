@@ -1,5 +1,6 @@
 ﻿using Umbraco.Core.Cache;
 using Umbraco.Core.Configuration.UmbracoSettings;
+using Umbraco.Core.Mapping;
 using Umbraco.Core.Models;
 using Umbraco.Core.Persistence;
 
@@ -10,9 +11,6 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
-
-    using AutoMapper;
-
     using global::Umbraco.Core;
     using global::Umbraco.Core.Configuration;
     using global::Umbraco.Core.Logging;
@@ -35,6 +33,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         private readonly IRedirectUrlService _redirectUrlService;
 
         private readonly IUmbracoSettingsSection _umbracoSettings;
+        private readonly UmbracoMapper _mapper;
 
         /// <summary>
         /// The logger.
@@ -67,11 +66,12 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                                       AppCaches appCaches, 
                                       IProfilingLogger logger, 
                                       IRuntimeState runtimeState, 
-                                      UmbracoHelper umbracoHelper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+                                      UmbracoHelper umbracoHelper,UmbracoMapper mapper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
             _redirectUrlService = this.Services.RedirectUrlService;
 
             _umbracoSettings = umbracoSettings;
+            _mapper = mapper;
             _logger = this.Logger;
             _localizedTextService = this.Services.TextService;
             _contentService = this.Services.ContentService;
@@ -95,7 +95,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                 return new HttpResponseMessage(HttpStatusCode.Conflict);
             }
 
-            var redirects = Mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).ToArray());
+            var redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).ToArray());
 
             return this.Request.CreateResponse(HttpStatusCode.OK, redirects);
         }

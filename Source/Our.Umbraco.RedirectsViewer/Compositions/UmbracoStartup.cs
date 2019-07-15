@@ -4,11 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using AutoMapper;
 using Our.Umbraco.RedirectsViewer.Controllers;
 using Our.Umbraco.RedirectsViewer.Mapping;
-using Umbraco.Core;
 using Umbraco.Core.Composing;
+using Umbraco.Core.Persistence.Mappers;
 using Umbraco.Web;
 using Umbraco.Web.JavaScript;
 
@@ -18,13 +17,7 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
     {
         public void Compose(Composition composition)
         {
-            var config = new MapperConfiguration(cfg => {
-                cfg.AddProfile<UserGroupProfile>();
-            });
-
-            IMapper mapper = new Mapper(config);
-
-            composition.Register(mapper);
+            composition.WithCollectionBuilder<MapperCollectionBuilder>().Add<UserGroupProfile>();
 
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
         }

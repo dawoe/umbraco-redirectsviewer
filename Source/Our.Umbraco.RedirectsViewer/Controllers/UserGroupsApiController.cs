@@ -3,16 +3,19 @@ using Umbraco.Core.Cache;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Configuration.UmbracoSettings;
 using Umbraco.Core.Logging;
+using Umbraco.Core.Mapping;
+using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 
 namespace Our.Umbraco.RedirectsViewer.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
-    using AutoMapper;
+
 
     using global::Umbraco.Core.Services;
     using global::Umbraco.Web;
@@ -33,7 +36,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// <summary>
         /// The mapper.
         /// </summary>
-        private readonly IMapper _mapper;
+        private readonly UmbracoMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupsApiController"/> class.
@@ -46,8 +49,8 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             AppCaches appCaches,
             IProfilingLogger logger,
             IRuntimeState runtimeState,
-            UmbracoHelper umbracoHelper,
-            IMapper mapper,IUserService userService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+            UmbracoHelper umbracoHelper
+            , UmbracoMapper mapper, IUserService userService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
             _userService = userService;
             _mapper = mapper;
@@ -72,10 +75,27 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             if (allUserTypes.Any())
             {
-                model = _mapper.Map<IEnumerable<UserGroupDisplay>>(allUserTypes).ToList();
+                //todo fix mapping
+                // model = _mapper.MapEnumerable<IUserGroup, UserGroupDisplay>(allUserTypes).ToList();
+                model = Map(allUserTypes);
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, model);
+        }
+
+        private List<UserGroupDisplay> Map(List<IUserGroup> allUserTypes)
+        {
+            List<UserGroupDisplay>  model = new List<UserGroupDisplay>();
+
+            foreach (var item in allUserTypes)
+            {
+                UserGroupDisplay ug=new UserGroupDisplay();
+                ug.Name = item.Name;
+                ug.Alias = item.Alias;
+                model.Add(ug);
+            }
+
+            return model;
         }
     }
 }

@@ -1,16 +1,38 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Concurrent;
 using Our.Umbraco.RedirectsViewer.Models;
+using Umbraco.Core.Mapping;
 using Umbraco.Core.Models.Membership;
+using Umbraco.Core.Persistence;
+using Umbraco.Core.Persistence.Mappers;
 
 namespace Our.Umbraco.RedirectsViewer.Mapping
 {
-    internal class UserGroupProfile:Profile
+
+    public sealed class UserGroupProfile: BaseMapper
     {
-        public UserGroupProfile()
+
+        //public void DefineMaps(UmbracoMapper mapper)
+        //{
+        //    mapper.Define<IUserGroup,UserGroupDisplay>(
+        //        (source, context) => new UserGroupDisplay()
+        //        ,
+        //        (source, target, context) =>
+        //        {
+        //            target.Name = source.Name;
+        //            target.Alias = source.Alias;
+        //        }   
+        //    );
+        //}
+
+        public UserGroupProfile(Lazy<ISqlContext> sqlContext, ConcurrentDictionary<Type, ConcurrentDictionary<string, string>> maps) : base(sqlContext, maps)
         {
-            CreateMap<IUserGroup, UserGroupDisplay>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Alias, opt => opt.MapFrom(src => src.Alias));
+        }
+
+        protected override void DefineMaps()
+        {
+            DefineMap<IUserGroup, UserGroupDisplay>(nameof(IUserGroup.Name), nameof(UserGroupDisplay.Name));
+            DefineMap<IUserGroup, UserGroupDisplay>(nameof(IUserGroup.Alias), nameof(UserGroupDisplay.Alias));
         }
     }
 }
