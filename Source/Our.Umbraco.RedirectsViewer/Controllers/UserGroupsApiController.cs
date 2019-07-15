@@ -9,7 +9,6 @@ using Umbraco.Core.Persistence;
 
 namespace Our.Umbraco.RedirectsViewer.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
