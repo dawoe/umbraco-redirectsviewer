@@ -1,4 +1,5 @@
-﻿using Umbraco.Core;
+﻿using Newtonsoft.Json;
+using Umbraco.Core;
 using Umbraco.Core.Cache;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Configuration.UmbracoSettings;
@@ -32,6 +33,8 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </summary>
         private readonly IUserService _userService;
 
+        private readonly IKeyValueService _keyValueService;
+
         /// <summary>
         /// The mapper.
         /// </summary>
@@ -49,9 +52,10 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             IProfilingLogger logger,
             IRuntimeState runtimeState,
             UmbracoHelper umbracoHelper
-            , UmbracoMapper mapper, IUserService userService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+            , UmbracoMapper mapper, IUserService userService,IKeyValueService keyValueService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
             _userService = userService;
+            _keyValueService = keyValueService;
             _mapper = mapper;
         }
 
@@ -76,6 +80,24 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             {
                 model = Map(allUserTypes);
             }
+
+            return Request.CreateResponse(HttpStatusCode.OK, model);
+        }
+
+        [HttpPost]
+        public HttpResponseMessage SaveConfig(RedirectSettings settings)
+        {
+            _keyValueService.SetValue("redirectSettings",JsonConvert.SerializeObject(settings));
+
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetConfig()
+        {
+            var settings = _keyValueService.GetValue("redirectSettings");
+
+            var model = JsonConvert.DeserializeObject<RedirectSettings>(settings);
 
             return Request.CreateResponse(HttpStatusCode.OK, model);
         }
