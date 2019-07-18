@@ -8,7 +8,7 @@
         var resource = {
             getAll: getAllUserGroups,
             getSettings: getRedirectSettings,
-            saveSettings: saveRedirectSettings
+            saveRedirectSettings: saveRedirectSettings
         };
 
         return resource;
@@ -18,20 +18,19 @@
                 $http.get(apiUrl + "GetUserGroups"), "Failed to get list");
         }
 
-        function getRedirectSettings() {
+        function getRedirectSettings(key) {
             return umbRequestHelper.resourcePromise(
-                $http.get(apiUrl + "GetConfig"), "Failed to get settings");
+                $http.get(apiUrl + "GetConfig?key=" + key), "Failed to get settings");
         }
 
         function saveRedirectSettings(redirectSettings) {
 
-            var data = JSON.stringify({ settings: redirectSettings});
-
             return umbRequestHelper.resourcePromise(
-                $http.post(apiUrl + "SaveConfig", data),
+                $http.post(apiUrl + "SaveConfig", redirectSettings),
                 "Failed so save settings"
             );
         }
+
 
     }
 

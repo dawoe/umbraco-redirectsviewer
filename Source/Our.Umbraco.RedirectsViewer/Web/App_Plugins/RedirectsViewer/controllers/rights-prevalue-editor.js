@@ -1,14 +1,14 @@
 ﻿(function () {
     "use strict";
 
-    function RightsPrevalueEditorController($scope, userGroupResource) {
+    function RightsPrevalueEditorController($scope, userGroupResource, redirectsResource) {
         var vm = this;
 
         vm.loading = true;
         vm.allowed = false;
         vm.groups = [];
         vm.selectedGroups = [];
-
+        vm.settings = {};
 
         if ($scope.model.value) {          
             vm.allowed = $scope.model.value.allowed;
@@ -23,10 +23,20 @@
 
             vm.selectedGroups = selectedAliases;
 
-            $scope.model.value = {
+            var settings = {
                 allowed: vm.allowed,
                 usergroups: vm.selectedGroups
-            }
+            };
+            settings.key = $scope.model.alias;
+
+            $scope.model.value = settings;
+
+            userGroupResource.saveRedirectSettings(settings).then(
+                function (data) {
+
+                }
+            );
+
         });
 
        
@@ -40,6 +50,13 @@
                 function(data) {                   
                     vm.groups = data;
                     applySelection();
+                    vm.loading = false;
+                }
+            );
+
+            userGroupResource.getSettings($scope.model.alias).then(
+                function (data) {
+                    vm.settings = data;
                     vm.loading = false;
                 }
             );

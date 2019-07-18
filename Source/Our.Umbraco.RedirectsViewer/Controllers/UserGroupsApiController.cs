@@ -87,17 +87,24 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         [HttpPost]
         public HttpResponseMessage SaveConfig(RedirectSettings settings)
         {
-            _keyValueService.SetValue("redirectSettings",JsonConvert.SerializeObject(settings));
+            _keyValueService.SetValue("redirectSettings_" + settings.Key,JsonConvert.SerializeObject(settings));
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [HttpGet]
-        public HttpResponseMessage GetConfig()
+        public HttpResponseMessage GetConfig(string key)
         {
-            var settings = _keyValueService.GetValue("redirectSettings");
 
-            var model = JsonConvert.DeserializeObject<RedirectSettings>(settings);
+            var settings = _keyValueService.GetValue("redirectSettings_" + key);
+
+            var model = new RedirectSettings();
+
+            if (settings != null)
+            {
+                 model = JsonConvert.DeserializeObject<RedirectSettings>(settings);
+            }
+
 
             return Request.CreateResponse(HttpStatusCode.OK, model);
         }

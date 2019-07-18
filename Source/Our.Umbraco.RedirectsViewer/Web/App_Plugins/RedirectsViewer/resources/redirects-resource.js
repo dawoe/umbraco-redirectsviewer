@@ -8,7 +8,7 @@
         var resource = {
             getRedirects: getRedirectsForContent,
             deleteRedirect: deleteRedirect,
-            createRedirect : createRedirect
+            createRedirect: createRedirect
         };
 
         return resource;
