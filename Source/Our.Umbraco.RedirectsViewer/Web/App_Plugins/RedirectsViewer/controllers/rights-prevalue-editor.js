@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    function RightsPrevalueEditorController($scope, userGroupResource, redirectsResource) {
+    function RightsPrevalueEditorController($scope, userGroupResource) {
         var vm = this;
 
         vm.loading = true;

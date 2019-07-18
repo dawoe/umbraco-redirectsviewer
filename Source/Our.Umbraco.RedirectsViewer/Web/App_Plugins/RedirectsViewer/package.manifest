@@ -1,4 +1,4 @@
-﻿﻿{
+﻿{
   "propertyEditors": [
     {
       "alias": "Our.Umbraco.RedirectsViewer",
@@ -28,6 +28,20 @@
       }
     }
   ],
+
+  "contentApps": [
+    {
+      "name": "Redirects",
+      "alias": "redirects",
+      "weight": 0,
+      "icon": "icon-trafic",
+      "view": "~/App_Plugins/RedirectsViewer/views/editor.html",
+      "show": [
+        "+content/*"
+      ]
+    }
+  ],
+
   "javascript": [
     "~/App_Plugins/RedirectsViewer/controllers/rights-prevalue-editor.js",
     "~/App_Plugins/RedirectsViewer/controllers/editor.js",
@@ -37,5 +51,5 @@
   ],
   "css": [
     "~/App_Plugins/RedirectsViewer/css/redirectsviewer.css"
-  ]  
+  ]
 }
