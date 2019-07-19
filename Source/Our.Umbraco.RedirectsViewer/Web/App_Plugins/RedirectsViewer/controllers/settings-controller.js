@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    function SettingsController(userGroupResource) {
+    function SettingsController($scope,userGroupResource) {
         var vm = this;
 
         vm.loading = true;
@@ -19,8 +19,9 @@
             //}
 
             userGroupResource.getAll().then(
+                //groups from umbraco clean
                 function(data) {                   
-                    vm.createGroups = data; //groups from umbraco clean
+                    vm.createGroups = data;
                     vm.deleteGroups = data;
                     
                     vm.loading = false;
@@ -42,6 +43,40 @@
                 allGroups[i].checked = isChecked;
             }
         };       
+
+        vm.saveSettings = saveSettings;
+
+        //sync things up on save
+        function saveSettings() {
+
+            var settingsCreate = buildSetting(vm.allowed, vm.createGroups, "createAllowed");
+
+            //var settingsDelete = buildSetting(vm.deleteAllowed, vm.deleteGroups, "deleteAllowed");
+
+            var settings = [settingsCreate];
+
+            userGroupResource.saveRedirectSettings(settings).then(
+                function (data) {
+                    //todo notifications handler?
+                }
+            );
+
+            function buildSetting(allowed, createGroups, key) {
+
+                var selectedCreateGroups = _.filter(createGroups, function (x) { return x.checked === true });
+
+                var selectedCreateAliases = _.map(selectedCreateGroups, function (x) { return x.alias });
+
+                var settingsCreate = {
+                    allowed: allowed,
+                    usergroups: selectedCreateAliases,
+                    key: key
+                };
+
+                return settingsCreate;
+            }
+
+        };
 
         init();
     }
