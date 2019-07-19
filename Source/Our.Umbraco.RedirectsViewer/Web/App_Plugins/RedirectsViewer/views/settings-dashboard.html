@@ -3,14 +3,14 @@
         <ul class="unstyled">
             <li>
                 <label class="checkbox">
-                    <input type="checkbox" ng-model="vm.settings.createAllowed" />
+                    <input type="checkbox" ng-model="vm.settings[0].allowed" />
                 </label>
             </li>
         </ul>
 
-        <ul class="unstyled" ng-if="vm.settings.createAllowed">
-            <li><localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have rights</localize></li>
-            <li ng-repeat="item in vm.groups">
+        <ul class="unstyled" ng-if="vm.settings[0].allowed">
+            <li><localize key="redirectsviewer_prevalueUsergroupsCreate">Select the user groups that have rights to create</localize></li>
+            <li ng-repeat="item in vm.createGroups">
                 <label class="checkbox">
                     <input type="checkbox" name="groups" value="{{item.alias}}" ng-model="item.checked" />
                     {{item.name}}

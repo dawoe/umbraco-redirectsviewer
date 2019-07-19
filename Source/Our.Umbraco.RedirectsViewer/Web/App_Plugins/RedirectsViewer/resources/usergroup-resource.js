@@ -18,9 +18,9 @@
                 $http.get(apiUrl + "GetUserGroups"), "Failed to get list");
         }
 
-        function getRedirectSettings(key) {
+        function getRedirectSettings() {
             return umbRequestHelper.resourcePromise(
-                $http.get(apiUrl + "GetConfig?key=" + key), "Failed to get settings");
+                $http.get(apiUrl + "GetConfig"), "Failed to get settings");
         }
 
         function saveRedirectSettings(redirectSettings) {

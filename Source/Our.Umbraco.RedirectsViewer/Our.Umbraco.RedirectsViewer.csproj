@@ -279,7 +279,6 @@
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\create-overlay.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\editor.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\settings-controller.js" />
-    <Content Include="Web\App_Plugins\RedirectsViewer\controllers\rights-prevalue-editor.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\css\redirectsviewer.css" />
     <Content Include="Web\App_Plugins\RedirectsViewer\lang\en-GB.xml" />
     <Content Include="Web\App_Plugins\RedirectsViewer\lang\nl-NL.xml" />

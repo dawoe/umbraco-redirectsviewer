@@ -6,7 +6,8 @@
 
         vm.loading = true;
         vm.allowed = false;
-        vm.groups = [];
+        vm.createGroups = [];
+        vm.deleteGroups = [];
         vm.selectedGroups = [];
         vm.settings = {};
 
@@ -19,24 +20,26 @@
 
             userGroupResource.getAll().then(
                 function(data) {                   
-                    vm.groups = data;
-                   // applySelection();
+                    vm.createGroups = data; //groups from umbraco clean
+                    vm.deleteGroups = data;
+                    
                     vm.loading = false;
                 }
             );
 
-            userGroupResource.getSettings($scope.model.alias).then(
+            userGroupResource.getSettings().then(
                 function (data) {
                     vm.settings = data;
+                    applySelection(vm.settings[0].usergroups,vm.createGroups);
                     vm.loading = false;
                 }
             );
         }
 
-        function applySelection() {
-            for (var i = 0; i < vm.groups.length; i++) {
-                var isChecked = _.contains(vm.selectedGroups, vm.groups[i].alias);
-                vm.groups[i].checked = isChecked;
+        function applySelection(selectedGroups,allGroups) {
+            for (var i = 0; i < allGroups.length; i++) {
+                var isChecked = _.contains(selectedGroups, allGroups[i].alias);
+                allGroups[i].checked = isChecked;
             }
         };       
 
