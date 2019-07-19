@@ -1,34 +1,4 @@
 ﻿{
-  "propertyEditors": [
-    {
-      "alias": "Our.Umbraco.RedirectsViewer",
-      "isParameterEditor": false,
-      "name": "Redirects Viewer",
-      "icon": "icon-axis-rotation",
-      "editor": {
-        "view": "~/App_Plugins/RedirectsViewer/views/editor.html",
-        "valueType": "STRING",
-        "isReadOnly": true
-      },
-      "prevalues": {
-        "fields": [
-          {
-            "label": "Allow creating",
-            "description": "Allow creating of redirects for the selected user groups (admins will always have rights)",
-            "key": "allowcreate",
-            "view": "~/App_Plugins/RedirectsViewer/views/rights-prevalue-editor.html"
-          },
-          {
-            "label": "Allow deleting",
-            "description": "Allow deleting of redirects for the selected user groups (admins will always have rights)",
-            "key": "allowdelete",
-            "view": "~/App_Plugins/RedirectsViewer/views/rights-prevalue-editor.html"
-          }
-        ]
-      }
-    }
-  ],
-
   "dashboards": [
     {
       "alias": "Redirects settings",
@@ -52,7 +22,6 @@
   ],
 
   "javascript": [
-    "~/App_Plugins/RedirectsViewer/controllers/rights-prevalue-editor.js",
     "~/App_Plugins/RedirectsViewer/controllers/settings-dashboard.js",
     "~/App_Plugins/RedirectsViewer/controllers/editor.js",
     "~/App_Plugins/RedirectsViewer/resources/usergroup-resource.js",
