@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Umbraco.Core;
 using Umbraco.Core.Cache;
 using Umbraco.Core.Configuration;
@@ -35,10 +36,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
         private readonly IKeyValueService _keyValueService;
 
-        /// <summary>
-        /// The mapper.
-        /// </summary>
-        private readonly UmbracoMapper _mapper;
+        private Guid _key = new Guid("4cf3ae6f-dbde-42de-be3f-6e8f86f55381");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupsApiController"/> class.
@@ -56,7 +54,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         {
             _userService = userService;
             _keyValueService = keyValueService;
-            _mapper = mapper;
+           
         }
 
         /// <summary>
@@ -93,20 +91,38 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetConfig(string key)
+        public HttpResponseMessage GetConfig()
         {
 
-            var settings = _keyValueService.GetValue("redirectSettings_" + key);
+            var settings = _keyValueService.GetValue("redirectSettings_" + _key);
 
-            var model = new RedirectSettings();
-
+            List<RedirectSettings> model;
+            
             if (settings != null)
             {
-                 model = JsonConvert.DeserializeObject<RedirectSettings>(settings);
+                model = JsonConvert.DeserializeObject<List<RedirectSettings>>(settings);
+            }
+            else
+            {
+                model = CreateEmptySettings();
             }
 
 
             return Request.CreateResponse(HttpStatusCode.OK, model);
+        }
+
+        private List<RedirectSettings> CreateEmptySettings()
+        {
+            List<RedirectSettings> settings = new List<RedirectSettings>();
+
+            RedirectSettings createSettings = new RedirectSettings("createAllowed");
+
+            RedirectSettings deleteSettings = new RedirectSettings("deleteAllowed");
+
+            settings.Add(createSettings);
+            settings.Add(deleteSettings);
+
+            return settings;
         }
 
         private List<UserGroupDisplay> Map(List<IUserGroup> allUserTypes)

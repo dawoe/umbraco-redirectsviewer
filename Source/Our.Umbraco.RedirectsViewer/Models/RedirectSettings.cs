@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Umbraco.Web.Mvc;
 
 namespace Our.Umbraco.RedirectsViewer.Models
 {
@@ -16,8 +15,9 @@ namespace Our.Umbraco.RedirectsViewer.Models
         [DataMember(Name = "key")]
         public string Key { get; set; }
 
-        public RedirectSettings()
+        public RedirectSettings(string key)
         {
+            Key = key;
             UserGroups=new List<string>();
         }
     }
