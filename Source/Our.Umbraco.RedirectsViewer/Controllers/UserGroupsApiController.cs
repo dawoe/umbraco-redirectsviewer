@@ -49,8 +49,8 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             AppCaches appCaches,
             IProfilingLogger logger,
             IRuntimeState runtimeState,
-            UmbracoHelper umbracoHelper
-            , UmbracoMapper mapper, IUserService userService,IKeyValueService keyValueService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+            UmbracoHelper umbracoHelper, 
+            IUserService userService,IKeyValueService keyValueService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
             _userService = userService;
             _keyValueService = keyValueService;
@@ -85,7 +85,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         [HttpPost]
         public HttpResponseMessage SaveConfig(RedirectSettings settings)
         {
-            _keyValueService.SetValue("redirectSettings_" + settings.Key,JsonConvert.SerializeObject(settings));
+            _keyValueService.SetValue("redirectSettings_" + _key,JsonConvert.SerializeObject(settings));
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
