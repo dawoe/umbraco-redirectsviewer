@@ -9,7 +9,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2DD3AD41-BBFD-4796-BA89-BDC1789A08D9}</ProjectGuid>
+    <ProjectGuid>{804EE5D6-675B-49F2-B603-24EA82548F62}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -398,20 +398,6 @@
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.html" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.resource.js" />
-    <Content Include="App_Plugins\RedirectsViewer\controllers\create-overlay.js" />
-    <Content Include="App_Plugins\RedirectsViewer\controllers\editor.js" />
-    <Content Include="App_Plugins\RedirectsViewer\controllers\settings-dashboard.js" />
-    <Content Include="App_Plugins\RedirectsViewer\controllers\rights-prevalue-editor.js" />
-    <Content Include="App_Plugins\RedirectsViewer\css\redirectsviewer.css" />
-    <Content Include="App_Plugins\RedirectsViewer\lang\en-GB.xml" />
-    <Content Include="App_Plugins\RedirectsViewer\lang\en-US.xml" />
-    <Content Include="App_Plugins\RedirectsViewer\lang\nl-NL.xml" />
-    <Content Include="App_Plugins\RedirectsViewer\resources\redirects-resource.js" />
-    <Content Include="App_Plugins\RedirectsViewer\resources\usergroup-resource.js" />
-    <Content Include="App_Plugins\RedirectsViewer\views\create-overlay.html" />
-    <Content Include="App_Plugins\RedirectsViewer\views\editor.html" />
-    <Content Include="App_Plugins\RedirectsViewer\views\settings-dashboard.html" />
-    <Content Include="App_Plugins\RedirectsViewer\views\rights-prevalue-editor.html" />
     <Content Include="config\grid.editors.config.js" />
     <Content Include="config\Lang\cs-CZ.user.xml" />
     <Content Include="config\Lang\da-DK.user.xml" />
@@ -451,7 +437,6 @@
     <Content Include="config\HealthChecks.config" />
     <Content Include="config\ClientDependency.config" />
     <Content Include="config\BackOfficeTours\getting-started.json" />
-    <Content Include="App_Plugins\RedirectsViewer\package.manifest" />
     <None Include="packages.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
@@ -473,12 +458,6 @@
     <Analyzer Include="..\Our.Umbraco.RedirectsViewer\packages\Microsoft.CodeAnalysis.Analyzers.2.6.1\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\Our.Umbraco.RedirectsViewer\packages\Microsoft.CodeAnalysis.Analyzers.2.6.1\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Our.Umbraco.RedirectsViewer\Our.Umbraco.RedirectsViewer.csproj">
-      <Project>{37e9a4f8-8d1f-4117-836d-583a5301318d}</Project>
-      <Name>Our.Umbraco.RedirectsViewer</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -492,7 +471,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>50306</DevelopmentServerPort>
+          <DevelopmentServerPort>50181</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>https://localhost:44363/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
