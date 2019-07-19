@@ -46,6 +46,6 @@
         init();
     }
 
-    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['Our.Umbraco.RedirectsViewer.UserGroupResource', SettingsController]);
+    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope','Our.Umbraco.RedirectsViewer.UserGroupResource', SettingsController]);
 
 })();
