@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<language alias="nl" intName="Dutch" localName="Nederlands" lcid="19" culture="nl-NL">
+  <area alias="redirectsviewer">
+    <key alias="prevalueUsergroups">Kies de gebruikersgroep die deze rechten krijgt. Admins hebben altijd deze rechten</key>
+    <key alias="redirectsNotEnabled">Redirect url tracking is uitgeschakeld. Contacteer uw systeem beheerder om url tracking in te schakelen</key>
+    <key alias="createMode">Redirects zijn niet zichtbaar voor nieuwe items. Na het opslaan van het item is het mogelijk om redirects toe te voegen</key>
+    <key alias="addButtonLabel">Redirect toevoegen</key>
+    <key alias="noRedirects">Er zijn nog geen redirects toegevoegd voor deze pagina</key>
+    <key alias="headerUrl">Url</key>
+    <key alias="headerDate">Aangemaakt</key>
+    <key alias="createOverlayTitle">Redirect toevoegen</key>
+    <key alias="oldUrlLabel">Url voor redirect</key>
+    <key alias="oldUrlDescription">De url voor de redirect moet relatief zijn (geen http(s) en domeinnaam) en mag geen punten of spaties bevatten</key>
+    <key alias="oldUrlError">Url voor redirect is een verplicht veld</key>
+    <key alias="deleteSuccess">De redirect is verwijderd</key>
+    <key alias="deleteError">Er ging iets mis bij het verwijderen van de redirect</key>
+    <key alias="urlRelativeError">De url moet relatief zijn. Dus zonder http(s) en domein naam</key>
+    <key alias="urlNoDotsError">De url mag geen punten bevatten</key>
+    <key alias="urlNoSpacesError">De url mag geen spaties bevatten</key>
+    <key alias="urlExistsError">Er bestaat al een redirect voor deze url</key>
+    <key alias="createSuccess">De redirect is aangemaakt</key>
+    <key alias="createError">Er ging iets mis bij het aanmaken van de redirect</key>
+  </area>
+</language>

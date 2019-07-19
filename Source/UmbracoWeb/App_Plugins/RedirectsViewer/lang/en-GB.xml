@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<language alias="en" intName="English (UK)" localName="English (UK)" lcid="" culture="en-GB">
+  <area alias="redirectsviewer">
+    <key alias="prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</key>
+    <key alias="redirectsNotEnabled">Redirect url tracking is disabled. Please contact your system adminstrator to enable url tracking</key>
+    <key alias="createMode">Redirects are not visible because you are creating a new item. After publishing the redirects will be visible</key>
+    <key alias="addButtonLabel">Add redirect</key>
+    <key alias="noRedirects">This page doesn't have any redirects</key>
+    <key alias="headerUrl">Url</key>
+    <key alias="headerDate">Created</key>
+    <key alias="createOverlayTitle">Add redirect</key>
+    <key alias="oldUrlLabel">Url to redirect</key>
+    <key alias="oldUrlDescription">The url  to redirect should be relative (no http) and can not contain spaces or dots</key>
+    <key alias="oldUrlError">Url to redirect is a required field</key>
+    <key alias="deleteSuccess">The redirect is deleted</key>
+    <key alias="deleteError">Something went wrong deleting the redirect</key>
+    <key alias="urlRelativeError">The url should be relative, so it can not contain a domain</key>
+    <key alias="urlNoDotsError">The url can not contain any dots</key>
+    <key alias="urlNoSpacesError">The url can not contain any spaces</key>
+    <key alias="urlExistsError">There is already a existing redirect with this url</key>
+    <key alias="createSuccess">The redirect is created</key>
+    <key alias="createError">Something went wrong creating the redirect</key>
+  </area>
+</language>
