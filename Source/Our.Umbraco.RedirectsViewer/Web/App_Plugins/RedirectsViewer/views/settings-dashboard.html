@@ -18,6 +18,26 @@
                 </label>
             </li>
         </ul>
+    </div>
+    <div ng-if="!vm.loading">
+        <h3><localize key="redirectsviewer_deleteHeading">Delete</localize></h3>
+        <ul class="unstyled">
+            <li>
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="vm.settings[1].allowed"/>
+                </label>
+            </li>
+        </ul>
+
+        <ul class="unstyled" ng-if="vm.settings[1].allowed">
+            <li><localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</localize></li>
+            <li ng-repeat="item in vm.deleteGroups">
+                <label class="checkbox">
+                    <input type="checkbox" name="groups" value="{{item.alias}}" ng-model="item.checked"/>
+                    {{item.name}}
+                </label>
+            </li>
+        </ul>
         <umb-button type="button"
                     button-style="success"
                     label-key="redirectsviewer_saveSettings"

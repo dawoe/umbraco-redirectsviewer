@@ -1,11 +1,10 @@
 ﻿(function () {
     "use strict";
 
-    function SettingsController($scope,userGroupResource) {
+    function SettingsController($scope, userGroupResource, notificationsService) {
         var vm = this;
 
         vm.loading = true;
-        vm.allowed = false;
         vm.createGroups = [];
         vm.deleteGroups = [];
         vm.selectedGroups = [];
@@ -13,16 +12,14 @@
 
        
         function init() {
-            //if ($scope.model.value) {
-            //    vm.allowed = $scope.model.value.allowed;
-            //    vm.selectedGroups = $scope.model.value.usergroups;
-            //}
-
+            
             userGroupResource.getAll().then(
                 //groups from umbraco clean
-                function(data) {                   
-                    vm.createGroups = data;
-                    vm.deleteGroups = data;
+                function (data) {                   
+
+                    vm.createGroups = angular.copy(data);
+
+                    vm.deleteGroups = angular.copy(data);
                     
                     vm.loading = false;
                 }
@@ -31,7 +28,11 @@
             userGroupResource.getSettings().then(
                 function (data) {
                     vm.settings = data;
-                    applySelection(vm.settings[0].usergroups,vm.createGroups);
+
+                    applySelection(vm.settings[0].usergroups, vm.createGroups);
+
+                    applySelection(vm.settings[1].usergroups, vm.deleteGroups);
+
                     vm.loading = false;
                 }
             );
@@ -44,43 +45,42 @@
             }
         };       
 
-        vm.saveSettings = saveSettings;
-
-        //sync things up on save
         function saveSettings() {
 
-            var settingsCreate = buildSetting(vm.allowed, vm.createGroups, "createAllowed");
+            var settingsCreate = buildSetting(vm.settings[0].allowed, vm.createGroups, "createAllowed");
 
-            //var settingsDelete = buildSetting(vm.deleteAllowed, vm.deleteGroups, "deleteAllowed");
+            var settingsDelete = buildSetting(vm.settings[1].allowed, vm.deleteGroups, "deleteAllowed");
 
-            var settings = [settingsCreate];
+            var settings = [settingsCreate, settingsDelete]; //array this passed to controller to save
 
-            userGroupResource.saveRedirectSettings(settings).then(
-                function (data) {
-                    //todo notifications handler?
-                }
-            );
+            function buildSetting(allowed, groups, key) {
 
-            function buildSetting(allowed, createGroups, key) {
+                var selectedGroups = _.filter(groups, function (x) { return x.checked === true });
 
-                var selectedCreateGroups = _.filter(createGroups, function (x) { return x.checked === true });
+                var selectedAliases = _.map(selectedGroups, function (x) { return x.alias });
 
-                var selectedCreateAliases = _.map(selectedCreateGroups, function (x) { return x.alias });
-
-                var settingsCreate = {
+                var settingsTmp = {
                     allowed: allowed,
-                    usergroups: selectedCreateAliases,
+                    usergroups: selectedAliases,
                     key: key
                 };
 
-                return settingsCreate;
+                return settingsTmp;
             }
 
+            userGroupResource.saveRedirectSettings(settings).then(
+                function (data) {
+                    notificationsService.success("Save", "Settings saved");
+                }
+            );
+
         };
+
+        vm.saveSettings = saveSettings;
 
         init();
     }
 
-    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope','Our.Umbraco.RedirectsViewer.UserGroupResource', SettingsController]);
+    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource','notificationsService', SettingsController]);
 
 })();
