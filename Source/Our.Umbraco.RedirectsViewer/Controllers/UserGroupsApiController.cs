@@ -5,7 +5,6 @@ using Umbraco.Core.Cache;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Configuration.UmbracoSettings;
 using Umbraco.Core.Logging;
-using Umbraco.Core.Mapping;
 using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Persistence;
 

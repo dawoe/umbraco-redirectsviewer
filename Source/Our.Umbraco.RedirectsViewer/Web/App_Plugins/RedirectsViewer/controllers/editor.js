@@ -1,7 +1,7 @@
 ﻿(function() {
     "use strict";
 
-    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource, notificationsService, umbRequestHelper, localizationService) {
+    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource, notificationsService, umbRequestHelper, localizationService,userGroupResource) {
         var vm = this;
 
         vm.isCreate = $routeParams.create;
@@ -12,6 +12,7 @@
         vm.canDelete = false;
         vm.canAdd = false;
         vm.overlayTitle = 'Create redirect';
+        vm.redirectSettings = [];
 
         function checkEnabled() {
             return redirectUrlsResource.getEnableState().then(function(data) {
@@ -34,10 +35,10 @@
                 } else {
                     var groups = user.userGroups;
                     
-                    if ($scope.model.config.allowdelete.allowed) {
+                    if (vm.redirectSettings[1].allowed) {
                         // we need to check if the user has rights to delete
                        for (var i = 0; i < groups.length; i++) {
-                            vm.canDelete = _.contains($scope.model.config.allowdelete.usergroups, groups[i]);
+                           vm.canDelete = _.contains(vm.redirectSettings[1].usergroups, groups[i]);
 
                             if (vm.canDelete) {
                                 break;
@@ -45,11 +46,11 @@
                         }
                     }
 
-                    if ($scope.model.config.allowcreate.allowed) {
+                    if (vm.redirectSettings[0].allowed) {
                         // we need to check if the user has rights to add
                        
                         for (var i = 0; i < groups.length; i++) {
-                            vm.canAdd = _.contains($scope.model.config.allowcreate.usergroups, groups[i]);
+                            vm.canAdd = _.contains(vm.redirectSettings[0].usergroups, groups[i]);
 
                             if (vm.canAdd) {
                                 break;
@@ -134,6 +135,13 @@
         vm.createRedirect = createRedirect;
 
         function init() {
+
+            userGroupResource.getSettings().then(
+                function (data) {
+                    vm.redirectSettings = data;
+                }
+            );
+
             checkEnabled().then(function() {
                 if (vm.isEnabled) {
                     checkUserPermissions().then(function () {
@@ -156,5 +164,5 @@
     }
 
     angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.EditController",
-        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'notificationsService', 'umbRequestHelper','localizationService', EditController]);
+        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'notificationsService', 'umbRequestHelper', 'localizationService','Our.Umbraco.RedirectsViewer.UserGroupResource', EditController]);
 })();
