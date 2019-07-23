@@ -1,7 +1,7 @@
 ﻿(function() {
     "use strict";
 
-    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource, notificationsService, umbRequestHelper, localizationService,userGroupResource) {
+    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource,umbRequestHelper, localizationService,userGroupResource) {
         var vm = this;
 
         vm.isCreate = $routeParams.create;
@@ -81,13 +81,12 @@
             vm.overlay.title = title;
             vm.overlay.submit = function (newModel) {
                 redirectsResource.createRedirect(newModel.data.OldUrl, editorState.current.key).then(function (data) {
-                        notificationsService.showNotification(data.notifications[0]);
                         loadRedirects(editorState.current.key);
                         vm.overlay.show = false;
                         vm.overlay = null;
                     },
                     function (err) {
-                        notificationsService.showNotification(err.data.notifications[0]);
+                        console.error(err.data.notifications[0]);
                     });
 
             };
@@ -108,11 +107,9 @@
             vm.isLoading = true;
             item.deletePrompt = false;
             redirectsResource.deleteRedirect(item.redirectId).then(function (data) {
-                    notificationsService.showNotification(data.notifications[0]);
                     loadRedirects();
                 },
                 function (err) {
-                    notificationsService.showNotification(err.data.notifications[0]);
                     vm.isLoading = false;
                 });
         };
@@ -164,5 +161,5 @@
     }
 
     angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.EditController",
-        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'notificationsService', 'umbRequestHelper', 'localizationService','Our.Umbraco.RedirectsViewer.UserGroupResource', EditController]);
+        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'umbRequestHelper', 'localizationService','Our.Umbraco.RedirectsViewer.UserGroupResource', EditController]);
 })();
