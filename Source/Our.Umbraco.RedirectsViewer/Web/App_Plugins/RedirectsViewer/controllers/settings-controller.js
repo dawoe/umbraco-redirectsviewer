@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    function SettingsController($scope, userGroupResource, notificationsService) {
+    function SettingsController($scope, userGroupResource, notificationsService, angularHelper) {
         var vm = this;
 
         vm.loading = true;
@@ -73,6 +73,8 @@
 
             userGroupResource.saveRedirectSettings(settings).then(
                 function (data) {
+                    var currForm = angularHelper.getCurrentForm($scope);
+                    currForm.$setPristine();
                     notificationsService.success("Save", "Settings saved");
                 },
                 function (err) {
@@ -88,6 +90,6 @@
         init();
     }
 
-    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource','notificationsService', SettingsController]);
+    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService','angularHelper', SettingsController]);
 
 })();
