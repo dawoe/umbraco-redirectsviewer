@@ -20,22 +20,25 @@
                     vm.createGroups = angular.copy(data);
 
                     vm.deleteGroups = angular.copy(data);
-                    
+
+                    //get previously saved settings via webapi controller that uses keyvalue service
+                    userGroupResource.getSettings().then(
+                        function (data) {
+                            vm.settings = data;
+
+                            applySelection(vm.settings[0].usergroups, vm.createGroups);
+
+                            applySelection(vm.settings[1].usergroups, vm.deleteGroups);
+
+                            vm.loading = false;
+                        }
+                    );
+
                     vm.loading = false;
                 }
             );
 
-            userGroupResource.getSettings().then(
-                function (data) {
-                    vm.settings = data;
 
-                    applySelection(vm.settings[0].usergroups, vm.createGroups);
-
-                    applySelection(vm.settings[1].usergroups, vm.deleteGroups);
-
-                    vm.loading = false;
-                }
-            );
         }
 
         function applySelection(selectedGroups,allGroups) {
@@ -71,6 +74,10 @@
             userGroupResource.saveRedirectSettings(settings).then(
                 function (data) {
                     notificationsService.success("Save", "Settings saved");
+                },
+                function (err) {
+                    console.error(err);
+                    notificationsService.error("Save", "Error saving settings");
                 }
             );
 

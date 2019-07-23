@@ -84,9 +84,16 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         [HttpPost]
         public HttpResponseMessage SaveConfig(IEnumerable<RedirectSettings> settings)
         {
-            _keyValueService.SetValue("redirectSettings_" + _key,JsonConvert.SerializeObject(settings));
+            try
+            {
+                _keyValueService.SetValue("redirectSettings_" + _key, JsonConvert.SerializeObject(settings));
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,ex);
+            }
         }
 
         [HttpGet]
