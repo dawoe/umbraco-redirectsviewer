@@ -1,5 +1,5 @@
 ﻿<div ng-controller="Our.Umbraco.RedirectsViewer.SettingsController as vm">
-    <div ng-if="!vm.loading">
+    <div ng-if="!vm.loading" class="umb-permission">
         <h3><localize key="redirectsviewer_createHeading">Create</localize></h3>
         <ul class="unstyled">
             <li>
@@ -19,7 +19,7 @@
             </li>
         </ul>
     </div>
-    <div ng-if="!vm.loading">
+    <div ng-if="!vm.loading" class="umb-permission">
         <h3><localize key="redirectsviewer_deleteHeading">Delete</localize></h3>
         <ul class="unstyled">
             <li>
