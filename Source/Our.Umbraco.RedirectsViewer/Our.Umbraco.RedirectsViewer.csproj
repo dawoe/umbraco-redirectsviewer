@@ -265,7 +265,7 @@
     <Compile Include="Controllers\RedirectsApiController.cs" />
     <Compile Include="Controllers\UserGroupsApiController.cs" />
     <Compile Include="Models\RedirectSave.cs" />
-    <Compile Include="Models\RedirectSettings.cs" />
+    <Compile Include="Models\RedirectSetting.cs" />
     <Compile Include="Models\UserGroupDisplay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

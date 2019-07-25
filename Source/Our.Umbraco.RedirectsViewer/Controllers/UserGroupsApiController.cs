@@ -35,7 +35,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
         private readonly IKeyValueService _keyValueService;
 
-        private Guid _key = new Guid("4cf3ae6f-dbde-42de-be3f-6e8f86f55381");
+        private Guid _key = new Guid("c96635a2-2bbb-4a4e-a961-aa5f44a9212e");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupsApiController"/> class.
@@ -82,7 +82,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage SaveConfig(IEnumerable<RedirectSettings> settings)
+        public HttpResponseMessage SaveConfig(RedirectSettings settings)
         {
             try
             {
@@ -102,11 +102,11 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             var settings = _keyValueService.GetValue("redirectSettings_" + _key);
 
-            IEnumerable<RedirectSettings> model;
+            RedirectSettings model;
             
             if (settings != null)
             {
-                model = JsonConvert.DeserializeObject<List<RedirectSettings>>(settings);
+                model = JsonConvert.DeserializeObject<RedirectSettings>(settings);
             }
             else
             {
@@ -117,17 +117,18 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, model);
         }
 
-        private List<RedirectSettings> CreateEmptySettings()
+        private RedirectSettings CreateEmptySettings()
         {
-            List<RedirectSettings> settings = new List<RedirectSettings>();
+            RedirectSettings settings = new RedirectSettings();
 
-            RedirectSettings createSettings = new RedirectSettings("createAllowed");
+            RedirectSetting createSettings = new RedirectSetting("createAllowed");
 
-            RedirectSettings deleteSettings = new RedirectSettings("deleteAllowed");
+            RedirectSetting deleteSettings = new RedirectSetting("deleteAllowed");
 
-            settings.Add(createSettings);
-            settings.Add(deleteSettings);
+            settings.Create = createSettings;
 
+            settings.Delete = deleteSettings;
+            
             return settings;
         }
 

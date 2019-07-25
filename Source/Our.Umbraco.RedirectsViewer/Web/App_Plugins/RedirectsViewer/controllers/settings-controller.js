@@ -26,9 +26,9 @@
                         function (data) {
                             vm.settings = data;
 
-                            applySelection(vm.settings[0].usergroups, vm.createGroups);
+                            applySelection(vm.settings.create.usergroups, vm.createGroups);
 
-                            applySelection(vm.settings[1].usergroups, vm.deleteGroups);
+                            applySelection(vm.settings.delete.usergroups, vm.deleteGroups);
 
                             vm.loading = false;
                         }
@@ -50,12 +50,15 @@
 
         function saveSettings() {
 
-            var settingsCreate = buildSetting(vm.settings[0].allowed, vm.createGroups, "createAllowed");
+            var settingsCreate = buildSetting(vm.settings.create.allowed, vm.createGroups, "createAllowed");
 
-            var settingsDelete = buildSetting(vm.settings[1].allowed, vm.deleteGroups, "deleteAllowed");
+            var settingsDelete = buildSetting(vm.settings.delete.allowed, vm.deleteGroups, "deleteAllowed");
 
-            var settings = [settingsCreate, settingsDelete]; //array this passed to controller to save
-
+            var settings = {
+                create: settingsCreate,
+                delete: settingsDelete
+            };
+            
             function buildSetting(allowed, groups, key) {
 
                 var selectedGroups = _.filter(groups, function (x) { return x.checked === true });

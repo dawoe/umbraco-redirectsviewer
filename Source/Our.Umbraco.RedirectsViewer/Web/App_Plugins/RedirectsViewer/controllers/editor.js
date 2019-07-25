@@ -35,10 +35,10 @@
                 } else {
                     var groups = user.userGroups;
                     
-                    if (vm.redirectSettings[1].allowed) {
-                        // we need to check if the user has rights to delete
+                    if (vm.redirectSettings.delete.allowed) {
+                       
                        for (var i = 0; i < groups.length; i++) {
-                           vm.canDelete = _.contains(vm.redirectSettings[1].usergroups, groups[i]);
+                           vm.canDelete = _.contains(vm.redirectSettings.delete.usergroups, groups[i]);
 
                             if (vm.canDelete) {
                                 break;
@@ -46,11 +46,10 @@
                         }
                     }
 
-                    if (vm.redirectSettings[0].allowed) {
-                        // we need to check if the user has rights to add
+                    if (vm.redirectSettings.create.allowed) {
                        
                         for (var i = 0; i < groups.length; i++) {
-                            vm.canAdd = _.contains(vm.redirectSettings[0].usergroups, groups[i]);
+                            vm.canAdd = _.contains(vm.redirectSettings.create.usergroups, groups[i]);
 
                             if (vm.canAdd) {
                                 break;

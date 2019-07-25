@@ -15,15 +15,15 @@
             <ul class="unstyled">
                 <li>
                     <label class="checkbox">
-                        <input type="checkbox" ng-model="vm.settings[0].allowed" />
+                        <input type="checkbox" ng-model="vm.settings.create.allowed" />
                     </label>
                 </li>
             </ul>
 
-            <div class="umb-panel-group__details-check-description" ng-if="vm.settings[0].allowed">
+            <div class="umb-panel-group__details-check-description" ng-if="vm.settings.create.allowed">
                 <localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</localize>
             </div>
-            <ul class="unstyled" ng-if="vm.settings[0].allowed">
+            <ul class="unstyled" ng-if="vm.settings.create.allowed">
                 
                 <li ng-repeat="item in vm.createGroups">
                     <label class="checkbox">
@@ -44,15 +44,15 @@
         <ul class="unstyled">
             <li>
                 <label class="checkbox">
-                    <input type="checkbox" ng-model="vm.settings[1].allowed"/>
+                    <input type="checkbox" ng-model="vm.settings.delete.allowed"/>
                 </label>
             </li>
         </ul>
 
-        <div class="umb-panel-group__details-check-description" ng-if="vm.settings[1].allowed">
+        <div class="umb-panel-group__details-check-description" ng-if="vm.settings.delete.allowed">
             <localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</localize>
         </div>
-        <ul class="unstyled" ng-if="vm.settings[1].allowed">
+        <ul class="unstyled" ng-if="vm.settings.delete.allowed">
             <li ng-repeat="item in vm.deleteGroups">
                 <label class="checkbox">
                     <input type="checkbox" name="groups" value="{{item.alias}}" ng-model="item.checked"/>
@@ -60,10 +60,13 @@
                 </label>
             </li>
         </ul>
-        <umb-button type="button"
-                    button-style="success"
-                    label-key="redirectsviewer_saveSettings"
-                    action="vm.saveSettings()"
-                    disabled="vm.working"/>
+        <div>
+            <umb-button type="button"
+                        button-style="success"
+                        label-key="redirectsviewer_saveSettings"
+                        action="vm.saveSettings()"
+                        disabled="vm.working" />
+        </div>
+
     </div>
 </div>

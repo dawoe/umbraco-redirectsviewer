@@ -6,6 +6,17 @@ namespace Our.Umbraco.RedirectsViewer.Models
     [DataContract(Name = "RedirectSettings")]
     public class RedirectSettings
     {
+        [DataMember(Name = "create")]
+        public RedirectSetting Create { get; set; }
+
+        [DataMember(Name = "delete")]
+        public RedirectSetting Delete { get; set; }
+
+    }
+
+    [DataContract(Name = "RedirectSetting")]
+    public class RedirectSetting
+    {
         [DataMember(Name = "allowed")]
         public bool Allowed { get; set; }
 
@@ -15,7 +26,7 @@ namespace Our.Umbraco.RedirectsViewer.Models
         [DataMember(Name = "key")]
         public string Key { get; set; }
 
-        public RedirectSettings(string key)
+        public RedirectSetting(string key)
         {
             Key = key;
             UserGroups=new List<string>();
