@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.RedirectsViewer", "Our.Umbraco.RedirectsViewer.csproj", "{37E9A4F8-8D1F-4117-836D-583A5301318D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbracoWeb", "..\UmbracoWeb\UmbracoWeb.csproj", "{804EE5D6-675B-49F2-B603-24EA82548F62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{37E9A4F8-8D1F-4117-836D-583A5301318D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37E9A4F8-8D1F-4117-836D-583A5301318D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37E9A4F8-8D1F-4117-836D-583A5301318D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{804EE5D6-675B-49F2-B603-24EA82548F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{804EE5D6-675B-49F2-B603-24EA82548F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{804EE5D6-675B-49F2-B603-24EA82548F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{804EE5D6-675B-49F2-B603-24EA82548F62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
