@@ -1,26 +1,39 @@
-os: Visual Studio 2015
+image: Visual Studio 2017
 
 # Version format
-version: 1.3.0.{build}
-
-cache:
-  - Source\Our.Umbraco.RedirectsViewer\packages -> **\packages.config   # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+version: 2.0.0.{build}
 
 branches:
   only:
     - develop
     - master
-    
-# UMBRACO_PACKAGE_PRERELEASE_SUFFIX if a rtm release build this should be blank, otherwise if empty will default to alpha
-# example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
-init:
-  - set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
-  
-test: 
-    assemblies:
-    - '**\Our.Umbraco.RedirectsViewer.Tests.dll'
 
-build_script:
+init:
+  - set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta 
+
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "{version}"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+
+cache:
+  - Source\Our.Umbraco.RedirectsViewer\packages -> **\packages.config   # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+platform: Any CPU
+
+configuration: Release
+
+before_build:
+    - nuget restore Source\Our.Umbraco.RedirectsViewer\
+
+build:
+  parallel: true                  
+  project: Source\Our.Umbraco.RedirectsViewer\Our.Umbraco.RedirectsViewer.sln
+  verbosity: minimal
+
+after_build:
   - cd Packaging
   - build-appveyor.bat
 
@@ -28,6 +41,8 @@ artifacts:
   - path: artifacts\*.nupkg
   - path: artifacts\*.zip
   
+
+
 deploy:
  # MyGet Deployment for beta releases  
   - provider: NuGet
@@ -58,11 +73,3 @@ deploy:
     on:
       branch: master
       appveyor_repo_tag: true
-      
-notifications:
-- provider: Email  
-  subject: Umbraco redirects build
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: true
-
