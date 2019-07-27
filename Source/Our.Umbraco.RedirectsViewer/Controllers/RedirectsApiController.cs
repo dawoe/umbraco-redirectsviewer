@@ -1,14 +1,16 @@
-﻿namespace Our.Umbraco.RedirectsViewer.Controllers
+﻿using Umbraco.Core.Cache;
+using Umbraco.Core.Configuration.UmbracoSettings;
+using Umbraco.Core.Mapping;
+using Umbraco.Core.Models;
+using Umbraco.Core.Persistence;
+
+namespace Our.Umbraco.RedirectsViewer.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
-
-    using AutoMapper;
-
     using global::Umbraco.Core;
     using global::Umbraco.Core.Configuration;
     using global::Umbraco.Core.Logging;
@@ -18,7 +20,7 @@
     using global::Umbraco.Web.Models.ContentEditing;
     using global::Umbraco.Web.WebApi;
 
-    using Our.Umbraco.RedirectsViewer.Models;
+    using Models;
 
     /// <summary>
     /// The redirects api controller.
@@ -28,85 +30,52 @@
         /// <summary>
         /// The redirect url service.
         /// </summary>
-        private readonly IRedirectUrlService redirectUrlService;
+        private readonly IRedirectUrlService _redirectUrlService;
 
-        /// <summary>
-        /// The mapper.
-        /// </summary>
-        private readonly IMappingEngine mapper;
+        private readonly IUmbracoSettingsSection _umbracoSettings;
+        private readonly UmbracoMapper _mapper;
 
         /// <summary>
         /// The logger.
         /// </summary>
-        private readonly ILogger logger;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// The localized text service.
         /// </summary>
-        private readonly ILocalizedTextService localizedTextService;
+        private readonly ILocalizedTextService _localizedTextService;
 
         /// <summary>
         /// The content service.
         /// </summary>
-        private readonly IContentService contentService;
+        private readonly IContentService _contentService;
 
         /// <summary>
         /// The domain service.
         /// </summary>
-        private readonly IDomainService domainService;
+        private readonly IDomainService _domainService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedirectsApiController"/> class.
         /// </summary>
-        public RedirectsApiController()
+        public RedirectsApiController(IUmbracoSettingsSection umbracoSettings, 
+                                      IGlobalSettings globalSettings, 
+                                      IUmbracoContextAccessor umbracoContextAccessor, 
+                                      ISqlContext sqlContext, 
+                                      ServiceContext services, 
+                                      AppCaches appCaches, 
+                                      IProfilingLogger logger, 
+                                      IRuntimeState runtimeState, 
+                                      UmbracoHelper umbracoHelper,UmbracoMapper mapper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
-            this.redirectUrlService = this.Services.RedirectUrlService;
-            this.mapper = Mapper.Engine;
-            this.logger = this.Logger;
-            this.localizedTextService = this.Services.TextService;
-            this.contentService = this.Services.ContentService;
-            this.domainService = this.Services.DomainService;
-        }
+            _redirectUrlService = this.Services.RedirectUrlService;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RedirectsApiController"/> class.
-        /// </summary>
-        /// <param name="context">
-        /// The context.
-        /// </param>
-        /// <param name="redirectUrlService">
-        /// The redirect url service.
-        /// </param>
-        /// <param name="mapper">
-        /// The mapper.
-        /// </param>
-        /// <param name="logger">
-        /// The logger.
-        /// </param>
-        /// <param name="localizedTextService">
-        /// The localized Text Service.
-        /// </param>
-        /// <param name="contentService">
-        /// The content Service.
-        /// </param>
-        /// <param name="domainService">
-        /// The domain Service.
-        /// </param>
-        public RedirectsApiController(
-            UmbracoContext context,
-            IRedirectUrlService redirectUrlService,
-            IMappingEngine mapper,
-            ILogger logger,
-            ILocalizedTextService localizedTextService,
-            IContentService contentService,
-            IDomainService domainService) : base(context)
-        {
-            this.redirectUrlService = redirectUrlService;
-            this.mapper = mapper;
-            this.logger = logger;
-            this.localizedTextService = localizedTextService;
-            this.contentService = contentService;
-            this.domainService = domainService;
+            _umbracoSettings = umbracoSettings;
+            _mapper = mapper;
+            _logger = logger;
+            _localizedTextService = services.TextService;
+            _contentService = services.ContentService;
+            _domainService = services.DomainService;
         }
 
         /// <summary>
@@ -126,7 +95,7 @@
                 return new HttpResponseMessage(HttpStatusCode.Conflict);
             }
 
-            var redirects = this.mapper.Map<IEnumerable<ContentRedirectUrl>>(this.redirectUrlService.GetContentRedirectUrls(contentKey)).ToArray();
+            var redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).ToArray());
 
             return this.Request.CreateResponse(HttpStatusCode.OK, redirects);
         }
@@ -151,14 +120,14 @@
 
             try
             {
-                this.redirectUrlService.Delete(id);
+                this._redirectUrlService.Delete(id);
 
-                return this.Request.CreateNotificationSuccessResponse(this.localizedTextService.Localize("redirectsviewer/deleteSuccess"));
+                return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/deleteSuccess"));
             }
             catch (Exception e)
             {
-                this.logger.Error(this.GetType(), "Error deleting redirect", e);
-                return this.Request.CreateNotificationValidationErrorResponse(this.localizedTextService.Localize("redirectsviewer/deleteError"));
+                this._logger.Error(this.GetType(), "Error deleting redirect", e);
+                return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/deleteError"));
             }           
         }
 
@@ -197,12 +166,12 @@
                 var rootNode = string.Empty;
 
                 // get all the domains that have a root content id set
-                var domains = this.domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
+                var domains = this._domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
                 
                 if (domains.Any())
                 {
                     // get the content item
-                    var content = this.contentService.GetById(redirect.ContentKey);
+                    var content = this._contentService.GetById(redirect.ContentKey);
 
                     if (content == null)
                     {
@@ -233,20 +202,20 @@
 
                 // check if there is already a redirect with the url
                 long total;
-                var redirects = this.redirectUrlService.GetAllRedirectUrls(0, int.MaxValue, out total);
+                var redirects = this._redirectUrlService.GetAllRedirectUrls(0, int.MaxValue, out total);
 
                 if (redirects.Any(x => x.Url == redirect.Url))
                 {
-                    return this.Request.CreateNotificationValidationErrorResponse(this.localizedTextService.Localize("redirectsviewer/urlExistsError"));
+                    return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/urlExistsError"));
                 }
 
-                this.redirectUrlService.Register(redirect.Url, redirect.ContentKey);
-                return this.Request.CreateNotificationSuccessResponse(this.localizedTextService.Localize("redirectsviewer/createSuccess"));
+                this._redirectUrlService.Register(redirect.Url, redirect.ContentKey);
+                return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/createSuccess"));
             }
             catch (Exception ex)
             {
-                this.logger.Error(this.GetType(), "Error creating redirect", ex);
-                return this.Request.CreateNotificationValidationErrorResponse(this.localizedTextService.Localize("redirectsviewer/createError"));
+                this._logger.Error(this.GetType(), "Error creating redirect", ex);
+                return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/createError"));
             }           
         }
 
@@ -258,7 +227,7 @@
         /// </returns>
         private bool IsUrlTrackingDisabled()
         {
-            return UmbracoConfig.For.UmbracoSettings().WebRouting.DisableRedirectUrlTracking;
+            return _umbracoSettings.WebRouting.DisableRedirectUrlTracking;
         }
 
         /// <summary>
@@ -272,19 +241,19 @@
         /// </returns>
         private string ValidateUrl(RedirectSave redirect)
         {
-            if (redirect.Url.StartsWith("http://"))
+            if (redirect.Url.StartsWith("http://") || redirect.Url.StartsWith("https://"))
             {
-                return this.localizedTextService.Localize("redirectsviewer/urlRelativeError");
+                return this._localizedTextService.Localize("redirectsviewer/urlRelativeError");
             }
 
             if (redirect.Url.Contains("."))
             {
-                return this.localizedTextService.Localize("redirectsviewer/urlNoDotsError");
+                return this._localizedTextService.Localize("redirectsviewer/urlNoDotsError");
             }
 
             if (redirect.Url.Contains(" "))
             {
-                return this.localizedTextService.Localize("redirectsviewer/urlNoSpacesError");
+                return this._localizedTextService.Localize("redirectsviewer/urlNoSpacesError");
             }
 
 

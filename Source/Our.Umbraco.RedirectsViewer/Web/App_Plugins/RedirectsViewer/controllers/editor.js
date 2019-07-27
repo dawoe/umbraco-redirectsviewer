@@ -1,7 +1,7 @@
 ﻿(function() {
     "use strict";
 
-    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource, notificationsService, umbRequestHelper, localizationService) {
+    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource,umbRequestHelper, localizationService,userGroupResource) {
         var vm = this;
 
         vm.isCreate = $routeParams.create;
@@ -12,6 +12,7 @@
         vm.canDelete = false;
         vm.canAdd = false;
         vm.overlayTitle = 'Create redirect';
+        vm.redirectSettings = [];
 
         function checkEnabled() {
             return redirectUrlsResource.getEnableState().then(function(data) {
@@ -34,10 +35,10 @@
                 } else {
                     var groups = user.userGroups;
                     
-                    if ($scope.model.config.allowdelete.allowed) {
-                        // we need to check if the user has rights to delete
+                    if (vm.redirectSettings.delete.allowed) {
+                       
                        for (var i = 0; i < groups.length; i++) {
-                            vm.canDelete = _.contains($scope.model.config.allowdelete.usergroups, groups[i]);
+                           vm.canDelete = _.contains(vm.redirectSettings.delete.usergroups, groups[i]);
 
                             if (vm.canDelete) {
                                 break;
@@ -45,11 +46,10 @@
                         }
                     }
 
-                    if ($scope.model.config.allowcreate.allowed) {
-                        // we need to check if the user has rights to add
+                    if (vm.redirectSettings.create.allowed) {
                        
                         for (var i = 0; i < groups.length; i++) {
-                            vm.canAdd = _.contains($scope.model.config.allowcreate.usergroups, groups[i]);
+                            vm.canAdd = _.contains(vm.redirectSettings.create.usergroups, groups[i]);
 
                             if (vm.canAdd) {
                                 break;
@@ -80,13 +80,12 @@
             vm.overlay.title = title;
             vm.overlay.submit = function (newModel) {
                 redirectsResource.createRedirect(newModel.data.OldUrl, editorState.current.key).then(function (data) {
-                        notificationsService.showNotification(data.notifications[0]);
                         loadRedirects(editorState.current.key);
                         vm.overlay.show = false;
                         vm.overlay = null;
                     },
                     function (err) {
-                        notificationsService.showNotification(err.data.notifications[0]);
+                        console.error(err.data.notifications[0]);
                     });
 
             };
@@ -107,11 +106,9 @@
             vm.isLoading = true;
             item.deletePrompt = false;
             redirectsResource.deleteRedirect(item.redirectId).then(function (data) {
-                    notificationsService.showNotification(data.notifications[0]);
                     loadRedirects();
                 },
                 function (err) {
-                    notificationsService.showNotification(err.data.notifications[0]);
                     vm.isLoading = false;
                 });
         };
@@ -134,6 +131,13 @@
         vm.createRedirect = createRedirect;
 
         function init() {
+
+            userGroupResource.getSettings().then(
+                function (data) {
+                    vm.redirectSettings = data;
+                }
+            );
+
             checkEnabled().then(function() {
                 if (vm.isEnabled) {
                     checkUserPermissions().then(function () {
@@ -156,5 +160,5 @@
     }
 
     angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.EditController",
-        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'notificationsService', 'umbRequestHelper','localizationService', EditController]);
+        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'umbRequestHelper', 'localizationService','Our.Umbraco.RedirectsViewer.UserGroupResource', EditController]);
 })();

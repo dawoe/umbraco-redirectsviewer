@@ -1,0 +1,72 @@
+﻿<div ng-controller="Our.Umbraco.RedirectsViewer.SettingsController as vm">
+    <div class="umb-box">
+        <div class="umb-box-content">
+            <h3 class="bold"><localize key="redirectsviewer_headerText">Redirect viewer permissions</localize></h3>
+            <p><localize key="redirectsviewer_introText">Redirect content app permissions can be set here, select groups that can create or delete redirects</localize></p>
+        </div>
+    </div>
+    <div ng-if="!vm.loading" class="umb-box">
+        <div class="umb-panel-group__details-group-title">
+            <div class="umb-panel-group__details-group-name">
+                <localize key="redirectsviewer_createHeading">Create</localize>
+            </div>
+        </div>
+        <div>
+            <ul class="unstyled">
+                <li>
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="vm.settings.create.allowed" />
+                    </label>
+                </li>
+            </ul>
+
+            <div class="umb-panel-group__details-check-description" ng-if="vm.settings.create.allowed">
+                <localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</localize>
+            </div>
+            <ul class="unstyled" ng-if="vm.settings.create.allowed">
+                
+                <li ng-repeat="item in vm.createGroups">
+                    <label class="checkbox">
+                        <input type="checkbox" name="groups" value="{{item.alias}}" ng-model="item.checked" />
+                        {{item.name}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div ng-if="!vm.loading" class="umb-box">
+        <div class="umb-panel-group__details-group-title">
+            <div class="umb-panel-group__details-group-name">
+                <localize key="redirectsviewer_deleteHeading">Delete</localize>
+            </div>
+        </div>
+        <ul class="unstyled">
+            <li>
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="vm.settings.delete.allowed"/>
+                </label>
+            </li>
+        </ul>
+
+        <div class="umb-panel-group__details-check-description" ng-if="vm.settings.delete.allowed">
+            <localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</localize>
+        </div>
+        <ul class="unstyled" ng-if="vm.settings.delete.allowed">
+            <li ng-repeat="item in vm.deleteGroups">
+                <label class="checkbox">
+                    <input type="checkbox" name="groups" value="{{item.alias}}" ng-model="item.checked"/>
+                    {{item.name}}
+                </label>
+            </li>
+        </ul>
+        <div>
+            <umb-button type="button"
+                        button-style="success"
+                        label-key="redirectsviewer_saveSettings"
+                        action="vm.saveSettings()"
+                        disabled="vm.working" />
+        </div>
+
+    </div>
+</div>
