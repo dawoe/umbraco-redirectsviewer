@@ -1,4 +1,13 @@
-﻿using Umbraco.Core.Cache;
+﻿using System.IO;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Web;
+using Our.Umbraco.RedirectsViewer.Models.Import;
+using Our.Umbraco.RedirectsViewer.Services;
+using Skybrud.Umbraco.Redirects.Import.Csv;
+using Skybrud.Umbraco.Redirects.Models.Import;
+using Skybrud.Umbraco.Redirects.Models.Import.File;
+using Umbraco.Core.Cache;
 using Umbraco.Core.Configuration.UmbracoSettings;
 using Umbraco.Core.Mapping;
 using Umbraco.Core.Models;
@@ -50,6 +59,8 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </summary>
         private readonly IContentService _contentService;
 
+        private readonly RedirectService _redirectService;
+
         /// <summary>
         /// The domain service.
         /// </summary>
@@ -62,6 +73,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                                       IGlobalSettings globalSettings, 
                                       IUmbracoContextAccessor umbracoContextAccessor, 
                                       ISqlContext sqlContext, 
+                                      RedirectService redirectService,
                                       ServiceContext services, 
                                       AppCaches appCaches, 
                                       IProfilingLogger logger, 
@@ -76,6 +88,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             _localizedTextService = services.TextService;
             _contentService = services.ContentService;
             _domainService = services.DomainService;
+            _redirectService = redirectService;
         }
 
         /// <summary>
@@ -163,54 +176,25 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             try
             {
                 // check if we there is a domain configured for this node in umbraco
-                var rootNode = string.Empty;
-
-                // get all the domains that have a root content id set
                 var domains = this._domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
-                
+                var status = 0;
                 if (domains.Any())
                 {
                     // get the content item
                     var content = this._contentService.GetById(redirect.ContentKey);
-
-                    if (content == null)
-                    {
-                        throw new Exception("Content does not exist");
-                    }
-
-                    // get all the ids in the path
-                    var pathIds = content.Path.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-                    if (pathIds.Any())
-                    {
-                        // find a domain that is in the path of the item
-                        var assignedDomain = domains.FirstOrDefault(x => pathIds.Contains(x.RootContentId.Value.ToString()));
-
-                        if (assignedDomain != null)
-                        {
-                            // get the root content node
-                            rootNode = assignedDomain.RootContentId.Value.ToString();
-                        }
-                    }
+                    status = _redirectService.AddRedirect(content,domains,redirect.Url);
                 }
 
-                if (!string.IsNullOrEmpty(rootNode))
-                {
-                    // prefix the url with the root content node
-                    redirect.Url = rootNode + redirect.Url;
-                }
-
-                // check if there is already a redirect with the url
-                long total;
-                var redirects = this._redirectUrlService.GetAllRedirectUrls(0, int.MaxValue, out total);
-
-                if (redirects.Any(x => x.Url == redirect.Url))
+                if (status == 1)
                 {
                     return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/urlExistsError"));
                 }
 
-                this._redirectUrlService.Register(redirect.Url, redirect.ContentKey);
-                return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/createSuccess"));
+                if (status == 0)
+                {
+                    return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/createSuccess"));
+                }
+               
             }
             catch (Exception ex)
             {
@@ -261,6 +245,94 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             redirect.Url = redirect.Url.ToLower().EnsureStartsWith("/").TrimEnd("/");
 
             return string.Empty;
+        }
+        private const string FileUploadPath = "~/App_Data/TEMP/FileUploads/";
+        private const string FileName = "redirects{0}.csv";
+
+        [System.Web.Http.HttpPost]
+        public async Task<HttpResponseMessage> Import()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.UnsupportedMediaType,
+                    Content = new StringContent("File must be a valid CSV or Excel file")
+                });
+            }
+
+            var uploadFolder = HttpContext.Current.Server.MapPath(FileUploadPath);
+            Directory.CreateDirectory(uploadFolder);
+            var provider = new CustomMultipartFormDataStreamProvider(uploadFolder);
+
+            var result = await Request.Content.ReadAsMultipartAsync(provider);
+
+            var file = result.FileData[0];
+            var path = file.LocalFileName;
+            var ext = path.Substring(path.LastIndexOf('.')).ToLower();
+
+            if (ext != ".csv" && ext != ".xlst")
+            {
+                throw new HttpResponseException(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.UnsupportedMediaType,
+                    Content = new StringContent("File must be a valid CSV or Excel file")
+                });
+            }
+
+            var fileNameAndPath = HttpContext.Current.Server.MapPath(FileUploadPath + string.Format(FileName, DateTime.Now.Ticks));
+
+            System.IO.File.Copy(file.LocalFileName, fileNameAndPath, true);
+            
+            var importer = new RedirectsImporterService(_redirectService,_domainService);
+            
+            IRedirectsFile redirectsFile;
+
+            switch (ext)
+            {   
+                default:
+                    var csvFile = new CsvRedirectsFile(new RedirectPublishedContentFinder(UmbracoContext.ContentCache))
+                        {
+                            FileName = fileNameAndPath,
+                            Seperator = CsvSeparator.Comma
+                        };
+
+                    redirectsFile = csvFile;
+
+                    break;
+            }
+                
+            var response = importer.Import(redirectsFile);
+
+            using (var ms = new MemoryStream())
+            {
+                using (var outputFile = new FileStream(response.File.FileName, FileMode.Open, FileAccess.Read))
+                {
+                    byte[] bytes = new byte[outputFile.Length];
+                    outputFile.Read(bytes, 0, (int)outputFile.Length);
+                    ms.Write(bytes, 0, (int)outputFile.Length);
+
+                    HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
+                    httpResponseMessage.Content = new ByteArrayContent(bytes.ToArray());
+                    httpResponseMessage.Content.Headers.Add("x-filename", "redirects.csv");
+                    httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                    httpResponseMessage.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                    httpResponseMessage.Content.Headers.ContentDisposition.FileName = "redirects.csv";
+                    httpResponseMessage.StatusCode = HttpStatusCode.OK;
+
+                    return httpResponseMessage;
+                }
+            }
+        }
+
+        public class CustomMultipartFormDataStreamProvider : MultipartFormDataStreamProvider
+        {
+            public CustomMultipartFormDataStreamProvider(string path) : base(path) { }
+
+            public override string GetLocalFileName(HttpContentHeaders headers)
+            {
+                return headers.ContentDisposition.FileName.Replace("\"", string.Empty);
+            }
         }
     }
 }

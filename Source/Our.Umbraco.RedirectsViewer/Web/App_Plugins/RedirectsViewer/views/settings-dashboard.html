@@ -60,13 +60,30 @@
                 </label>
             </li>
         </ul>
-        <div>
+        <div class="umb-panel-group__details-status-action">
             <umb-button type="button"
                         button-style="success"
                         label-key="redirectsviewer_saveSettings"
                         action="vm.saveSettings()"
                         disabled="vm.working" />
         </div>
+
+    </div>
+    <div ng-if="!vm.loading" class="umb-box">
+        <div class="umb-panel-group__details-group-title">
+            <div class="umb-panel-group__details-group-name">
+                <localize key="redirectsviewer_import">Import</localize>
+            </div>
+        </div>
+        <div class="umb-panel-group__details-status-action">
+                <umb-button type="button"
+                            button-style="success"
+                            label-key="redirectsviewer_import"
+                            action="vm.import()"
+                            disabled="vm.working" />
+        </div>
+
+      
 
     </div>
 </div>

@@ -1,0 +1,77 @@
+﻿<div class="ImportDialog umb-editor-container umb-panel-body umb-scrollable"
+     ng-controller="Our.Umbraco.RedirectsViewer.ImportDialog.Controller">
+    <div class="umb-editor-header">
+        <h4 class="umb-overlay__title">
+            <localize key="redirectsviewer_importRedirects">Import redirects</localize>
+        </h4>
+        <p class="umb-overlay__subtitle">
+            <localize key="redirectsviewer_addNewRedirectSubTitle">Import redirects from CSV or Excel.</localize>
+        </p>
+    </div>
+
+    <div class="umb-editor-sub-view">
+        <div class="umb-editor-sub-view__content">
+            <div class="redirects-basic-options">
+                <label class="sky-option">
+                    <strong>
+                        <localize key="redirectsviewer_selectFile">File</localize>
+                    </strong>
+
+                    <umb-single-file-upload rebuild="rebuildInput"></umb-single-file-upload>
+
+                    <div ng-show="invalidFileFormat" class="alert alert-error property-error">
+                        <localize key="redirectsviewer_incorrectFileType">The uploaded file must be in CSV or Excel
+                            format.
+                        </localize>
+                    </div>
+                    <!--<div class="btn-group">
+                        <input type="submit" ng-click="upload()" class="btn btn-success" value="Upload file" />
+                    </div>-->
+                    <div ng-show="noFile" class="alert alert-error property-error">
+                        <localize key="redirectsviewer_noFile">A CSV file must be selected.</localize>
+                    </div>
+                </label>
+            </div>
+
+            <!--<div class="umb-dialog-body form-horizontal">
+                <div class="umb-pane" ng-hide="processing || processed">
+                    <p>
+                        Upload a metadata <b>CSV</b> file
+                    </p>
+                  
+                </div>
+                <div class="umb-pane" ng-show="processing">
+                    <div class="alert alert-info">Processing file {{fileName}}</div>
+                    <umb-load-indicator></umb-load-indicator>
+                </div>
+                <div class="umb-pane" ng-show="processed">
+                    <div ng-show="success" class="alert alert-success"><b>Success -</b>{{success}}</div>
+                    <div ng-show="error" class="alert alert-error"><b>Error processing file {{fileName}} - </b>{{error}}</div>
+                    <a ng-preventdefault href="" ng-click="back()">Back to upload</a>
+                </div>
+            </div>-->
+        </div>
+      
+    </div>
+    <div class="umb-editor-footer-content" >
+
+        <div class="umb-editor-footer-content__left-side ng-scope" ng-transclude="">
+
+            <div class="umb-keyboard-shortcuts-overview flex items-center ng-scope ng-isolate-scope" data-hotkey="alt+shift+k" ng-click="toggleShortcutsOverlay()" model="vm.page.keyboardShortcutsOverview"> <div class="umb-keyboard-shortcuts-overview__description"><localize key="shortcuts_showShortcuts" class="ng-isolate-scope">show shortcuts</localize></div> <div class="umb-keyboard-keys"> <div class="umb-keyboard-key-wrapper"> <div class="umb-keyboard-key">alt</div> <div>+</div> </div> <div class="umb-keyboard-key-wrapper"> <div class="umb-keyboard-key">shift</div> <div>+</div> </div> <div class="umb-keyboard-key-wrapper"> <div class="umb-keyboard-key">k</div> </div> </div> </div>
+
+        </div>
+
+        <div class="umb-editor-footer-content__right-side ng-scope" ng-transclude="">
+
+
+            <a href="#" prevent-default ng-click="close()" class="btn btn-default">
+                <localize key="redirectsviewer_cancel">Cancel</localize>
+            </a>
+            <a href="#" prevent-default ng-click="upload()" class="btn btn-success btn-loader"
+               ng-class="{loading: loading}">
+                <localize key="redirectsviewer_import">Import</localize>
+                <div class="umb-button__progress -white"></div>
+            </a>
+        </div>
+    </div>
+</div>

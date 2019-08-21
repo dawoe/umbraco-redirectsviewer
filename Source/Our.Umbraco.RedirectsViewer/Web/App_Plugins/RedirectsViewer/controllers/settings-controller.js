@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    function SettingsController($scope, userGroupResource, notificationsService, angularHelper) {
+    function SettingsController($scope, userGroupResource, notificationsService, angularHelper,editorService) {
         var vm = this;
 
         vm.loading = true;
@@ -10,12 +10,12 @@
         vm.selectedGroups = [];
         vm.settings = {};
 
-       
+
         function init() {
-            
+
             userGroupResource.getAll().then(
                 //groups from umbraco clean
-                function (data) {                   
+                function (data) {
 
                     vm.createGroups = angular.copy(data);
 
@@ -41,12 +41,12 @@
 
         }
 
-        function applySelection(selectedGroups,allGroups) {
+        function applySelection(selectedGroups, allGroups) {
             for (var i = 0; i < allGroups.length; i++) {
                 var isChecked = _.contains(selectedGroups, allGroups[i].alias);
                 allGroups[i].checked = isChecked;
             }
-        };       
+        };
 
         function saveSettings() {
 
@@ -58,12 +58,16 @@
                 create: settingsCreate,
                 delete: settingsDelete
             };
-            
+
             function buildSetting(allowed, groups, key) {
 
-                var selectedGroups = _.filter(groups, function (x) { return x.checked === true });
+                var selectedGroups = _.filter(groups, function (x) {
+                    return x.checked === true
+                });
 
-                var selectedAliases = _.map(selectedGroups, function (x) { return x.alias });
+                var selectedAliases = _.map(selectedGroups, function (x) {
+                    return x.alias
+                });
 
                 var settingsTmp = {
                     allowed: allowed,
@@ -87,12 +91,33 @@
             );
 
         };
+        
+        vm.import = function (options) {
+                console.log("test");
+                if (!options) options = {};
+                if (typeof (options) == 'function') options = {callback: options};
 
-        vm.saveSettings = saveSettings;
+                var d = editorService.open({
+                    title: "Import",
+                    view: '/App_Plugins/RedirectsViewer/Views/Dialogs/Import.html',
+                    submit: function(model) {
+                        editorService.close();
+                    },
+                    close: function() {
+                        editorService.close();
+                    },
+                    callback: function (value) {
+                        if (options.callback) options.callback(value);
+                    }
+                });
+
+            };
+
+            vm.saveSettings = saveSettings;
 
         init();
     }
 
-    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService','angularHelper', SettingsController]);
+    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService', 'angularHelper', 'editorService', SettingsController]);
 
 })();
