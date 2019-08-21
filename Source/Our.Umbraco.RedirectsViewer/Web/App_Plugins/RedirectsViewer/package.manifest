@@ -1,7 +1,7 @@
 ﻿{
   "dashboards": [
     {
-      "alias": "Redirects settings",
+      "alias": "redirectsSettings",
       "view": "/App_Plugins/RedirectsViewer/views/settings-dashboard.html",
       "sections": [ "settings" ],
       "weight": -10

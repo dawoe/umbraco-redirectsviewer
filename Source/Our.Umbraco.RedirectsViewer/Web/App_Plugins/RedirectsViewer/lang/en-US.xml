@@ -25,5 +25,14 @@
     <key alias="urlExistsError">There is already a existing redirect with this url</key>
     <key alias="createSuccess">The redirect is created</key>
     <key alias="createError">Something went wrong creating the redirect</key>
+    <key alias="importRedirects">Import redirects</key>
+    <key alias="addNewRedirectSubTitle">Import redirects from CSV or Excel.</key>
+    <key alias="selectFile">File</key>
+    <key alias="incorrectFileType">The uploaded file must be in CSV or Excel format.</key>
+    <key alias="noFile">A CSV file must be selected.</key>
+    <key alias="cancel">Cancel</key>
+    <key alias="import">Import</key>
   </area>
-</language>
+  <area alias="dashboardTabs">
+    <key alias="redirectsSettings">Redirects</key>
+  </area>
