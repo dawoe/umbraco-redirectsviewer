@@ -273,6 +273,8 @@
     <Compile Include="Controllers\RedirectsApiController.cs" />
     <Compile Include="Controllers\UserGroupsApiController.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="Hubs\HubClientService.cs" />
+    <Compile Include="Hubs\redirectsHub.cs" />
     <Compile Include="Import\Csv\CsvCell.cs" />
     <Compile Include="Import\Csv\CsvCellList.cs" />
     <Compile Include="Import\Csv\CsvColumn.cs" />
@@ -306,6 +308,7 @@
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\ImportDialog.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\controllers\settings-controller.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\css\redirectsviewer.css" />
+    <Content Include="Web\App_Plugins\RedirectsViewer\Hubs\redirectsHub.js" />
     <Content Include="Web\App_Plugins\RedirectsViewer\lang\en-GB.xml" />
     <Content Include="Web\App_Plugins\RedirectsViewer\lang\en-US.xml" />
     <Content Include="Web\App_Plugins\RedirectsViewer\lang\nl-NL.xml" />

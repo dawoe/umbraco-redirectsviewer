@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Our.Umbraco.RedirectsViewer.Hubs;
 using Our.Umbraco.RedirectsViewer.Services;
 using Skybrud.Umbraco.Redirects.Models.Import.File;
 using Umbraco.Core.Services;
@@ -53,7 +54,7 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public virtual ImporterResponse Import(IRedirectsFile file)
+        public virtual ImporterResponse Import(IRedirectsFile file,string clientId)
         {
             var response = new ImporterResponse();
 
@@ -63,6 +64,7 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
             response.ImportedItems = file.Redirects;
             var domains = this._domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
             Dictionary<int, Dictionary<string, string>> List = new Dictionary<int, Dictionary<string, string>>();
+            int redirects = 0;
             foreach (var redirect in file.Redirects)
             {
                 if (domains.Any())
@@ -74,11 +76,21 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
                         var urlDictionary = new Dictionary<string,string>();
                         urlDictionary.Add(redirect.Url,redirect.Target);
                         List.Add(status,urlDictionary);
+
+                       
                     }
                     else
                     {
                         List[status].Add(redirect.Url,redirect.Target);
                     }
+                    redirects++;
+                    var hubClient = new HubClientService(clientId);
+                    hubClient.SendUpdate(new
+                    {
+                        Message = List,
+                        Count = redirects, 
+                        Total = file.Redirects.Count
+                    });
                    
                 }
             }

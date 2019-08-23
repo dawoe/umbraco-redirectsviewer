@@ -37,9 +37,13 @@
         $scope.fileName = $scope.file.name;
         $scope.processing = true;
 
-       
+        var client = getClientId();
+        editorService.closeAll();
         return Upload.upload({
             file: $scope.file,
+            fields: {
+                'clientId': client
+            },
             url:    apiUrl + "/import",
         
         }).then(function (response) {
@@ -52,11 +56,8 @@
 
                 //var file = new Blob([data], { type: 'text/csv' });
                 //saveAs(file, 'redirects.csv');
-            $rootScope.statusImportItems =JSON.parse(response.data);
-            console.log($rootScope);
-            editorService.closeAll();
-
-                //return fileName;
+            $rootScope.statusImportItems =JSON.parse(response.data);             
+            //return fileName;
         });
     }
 
@@ -106,7 +107,12 @@
         localizationService.localize('redirectsviewer_addSuccessfulMessage').then(function (value) { $scope.labels.saveSuccessful.message = value; });
 
     }
-
+    function getClientId() {
+        if ($.connection !== undefined && $.connection.hub !== undefined) {
+            return $.connection.hub.id;
+        }
+        return "";
+    }
     initLabels();
 
 });

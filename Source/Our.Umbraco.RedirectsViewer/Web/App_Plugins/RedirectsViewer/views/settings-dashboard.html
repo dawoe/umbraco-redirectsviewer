@@ -86,39 +86,43 @@
             </div>
         </div>
         <div ng-if="!vm.loading" class="umb-box">
-            <table class="unstyled" ng-if="statusImportItems">
-                <tr>
-                    <th></th>
-                    <th>Source URL</th>
-                    <th>Target (URL/ID/GUID)</th>
-                    <th>Status</th>
-                </tr>
-                <tbody ng-repeat="(key,item) in statusImportItems">
-                <tr ng-repeat="(source,target) in item">
-                    <td>
-                        <i class="umb-healthcheck-status-icon icon-check color-green" ng-if="key == 1"></i>
-                        <i class="umb-healthcheck-status-icon icon-delete icon-delete color-red" ng-if="key == 2"></i>
-                    </td>
-                    <td>{{source}}</td>
-                    <td>{{target}}</td>
-                    <td>
+            <div class="" ng-if="statusImportItems">
+                {{vm.importedCount}} / {{vm.total}}
+                <table class="unstyled">
+                    <tr>
+                        <th></th>
+                        <th>Source URL</th>
+                        <th>Target (URL/ID/GUID)</th>
+                        <th>Status</th>
+                    </tr>
+                    <tbody ng-repeat="(key,item) in statusImportItems">
+                    <tr ng-repeat="(source,target) in item">
+                        <td>
+                            <i class="umb-healthcheck-status-icon icon-check color-green" ng-if="key == 1"></i>
+                            <i class="umb-healthcheck-status-icon icon-delete icon-delete color-red"
+                               ng-if="key == 2"></i>
+                        </td>
+                        <td>{{source}}</td>
+                        <td>{{target}}</td>
+                        <td>
                         <span ng-if="key == 1">
                                 <localize key="redirectsviewer_headerDate">
                                     Created
                                 </localize>
                         </span>
-                        <span ng-if="key == 2">
+                            <span ng-if="key == 2">
                                 <localize key="redirectsviewer_noContent">
                                     Target Content doesn't exists
                                 </localize>
                         </span>
-                    </td>
+                        </td>
 
 
-                </tr>
+                    </tr>
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="umb-panel-group__details-status-action">
             <umb-button type="button"

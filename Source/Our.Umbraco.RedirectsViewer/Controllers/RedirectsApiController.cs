@@ -305,7 +305,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                     break;
             }
                 
-            var response = Newtonsoft.Json.JsonConvert.SerializeObject(importer.Import(redirectsFile).StatusImportItems);
+            var response = Newtonsoft.Json.JsonConvert.SerializeObject(importer.Import(redirectsFile,result.FormData.Get("clientId")).StatusImportItems);
           
             return Request.CreateResponse(HttpStatusCode.OK, response);
         }

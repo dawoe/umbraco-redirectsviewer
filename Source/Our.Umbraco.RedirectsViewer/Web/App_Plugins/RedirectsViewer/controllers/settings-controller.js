@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    function SettingsController($scope, userGroupResource, notificationsService, angularHelper,editorService) {
+    function SettingsController($scope, userGroupResource, notificationsService, angularHelper, editorService, redirectsHub) {
         var vm = this;
 
         vm.loading = true;
@@ -12,7 +12,7 @@
 
 
         function init() {
-
+            InitHub();
             userGroupResource.getAll().then(
                 //groups from umbraco clean
                 function (data) {
@@ -91,33 +91,51 @@
             );
 
         };
-        
-        vm.import = function (options) {
-                console.log("test");
-                if (!options) options = {};
-                if (typeof (options) == 'function') options = {callback: options};
 
-                var d = editorService.open({
-                    title: "Import",
-                    view: '/App_Plugins/RedirectsViewer/Views/Dialogs/Import.html',
-                    submit: function(model) {
-                        editorService.close();
-                    },
-                    close: function() {
-                        editorService.close();
-                    },
-                    callback: function (value) {
-                        if (options.callback) options.callback(value);
-                    }
+        vm.import = function (options) {
+            console.log("test");
+            if (!options) options = {};
+            if (typeof (options) == 'function') options = {callback: options};
+
+            var d = editorService.open({
+                title: "Import",
+                view: '/App_Plugins/RedirectsViewer/Views/Dialogs/Import.html',
+                submit: function (model) {
+                    editorService.close();
+                },
+                close: function () {
+                    editorService.close();
+                },
+                callback: function (value) {
+                    if (options.callback) options.callback(value);
+                }
+            });
+
+        };
+
+        vm.saveSettings = saveSettings;
+
+        function InitHub() {
+            redirectsHub.initHub(function (hub) {
+
+                vm.hub = hub;
+
+                vm.hub.on('update', function (data) {
+                    vm.statusImportItems =data.Message;
+                    
+                    vm.importedCount = data.Count;
+                    vm.total = data.Total;
+
                 });
 
-            };
-
-            vm.saveSettings = saveSettings;
+                vm.hub.start();
+            });
+        }
 
         init();
+      
     }
-
-    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService', 'angularHelper', 'editorService', SettingsController]);
+   
+    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService', 'angularHelper', 'editorService', "redirectsHub", SettingsController]);
 
 })();
