@@ -42,7 +42,7 @@ namespace Skybrud.Umbraco.Redirects.Models.Import.File
 
             File.Columns.AddColumn("Status");
             File.Columns.AddColumn("ErrorMessage");
-
+    
             Redirects = File.Rows.Select(Parse).ToList();
 
         }
@@ -81,6 +81,7 @@ namespace Skybrud.Umbraco.Redirects.Models.Import.File
 
             var destinationRaw = row.Cells[1] == null ? null : row.Cells[1].Value.Replace("\"", string.Empty).Trim();
             IPublishedContent content;
+            redirectItem.Target = destinationRaw;
             if (int.TryParse(destinationRaw,out int id))
             {
                 content = contentFinder.Find(id);

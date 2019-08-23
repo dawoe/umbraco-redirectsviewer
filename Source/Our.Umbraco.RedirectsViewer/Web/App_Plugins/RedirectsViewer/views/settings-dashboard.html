@@ -1,8 +1,14 @@
 ﻿<div ng-controller="Our.Umbraco.RedirectsViewer.SettingsController as vm">
     <div class="umb-box">
         <div class="umb-box-content">
-            <h3 class="bold"><localize key="redirectsviewer_headerText">Redirect viewer permissions</localize></h3>
-            <p><localize key="redirectsviewer_introText">Redirect content app permissions can be set here, select groups that can create or delete redirects</localize></p>
+            <h3 class="bold">
+                <localize key="redirectsviewer_headerText">Redirect viewer permissions</localize>
+            </h3>
+            <p>
+                <localize key="redirectsviewer_introText">Redirect content app permissions can be set here, select
+                    groups that can create or delete redirects
+                </localize>
+            </p>
         </div>
     </div>
     <div ng-if="!vm.loading" class="umb-box">
@@ -15,19 +21,21 @@
             <ul class="unstyled">
                 <li>
                     <label class="checkbox">
-                        <input type="checkbox" ng-model="vm.settings.create.allowed" />
+                        <input type="checkbox" ng-model="vm.settings.create.allowed"/>
                     </label>
                 </li>
             </ul>
 
             <div class="umb-panel-group__details-check-description" ng-if="vm.settings.create.allowed">
-                <localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</localize>
+                <localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have these rights. Admins
+                    will always have these rights
+                </localize>
             </div>
             <ul class="unstyled" ng-if="vm.settings.create.allowed">
-                
+
                 <li ng-repeat="item in vm.createGroups">
                     <label class="checkbox">
-                        <input type="checkbox" name="groups" value="{{item.alias}}" ng-model="item.checked" />
+                        <input type="checkbox" name="groups" value="{{item.alias}}" ng-model="item.checked"/>
                         {{item.name}}
                     </label>
                 </li>
@@ -50,7 +58,9 @@
         </ul>
 
         <div class="umb-panel-group__details-check-description" ng-if="vm.settings.delete.allowed">
-            <localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</localize>
+            <localize key="redirectsviewer_prevalueUsergroups">Select the user groups that have these rights. Admins
+                will always have these rights
+            </localize>
         </div>
         <ul class="unstyled" ng-if="vm.settings.delete.allowed">
             <li ng-repeat="item in vm.deleteGroups">
@@ -65,7 +75,7 @@
                         button-style="success"
                         label-key="redirectsviewer_saveSettings"
                         action="vm.saveSettings()"
-                        disabled="vm.working" />
+                        disabled="vm.working"/>
         </div>
 
     </div>
@@ -75,15 +85,49 @@
                 <localize key="redirectsviewer_import">Import</localize>
             </div>
         </div>
+        <div ng-if="!vm.loading" class="umb-box">
+            <table class="unstyled" ng-if="statusImportItems">
+                <tr>
+                    <th></th>
+                    <th>Source URL</th>
+                    <th>Target (URL/ID/GUID)</th>
+                    <th>Status</th>
+                </tr>
+                <tbody ng-repeat="(key,item) in statusImportItems">
+                <tr ng-repeat="(source,target) in item">
+                    <td>
+                        <i class="umb-healthcheck-status-icon icon-check color-green" ng-if="key == 1"></i>
+                        <i class="umb-healthcheck-status-icon icon-delete icon-delete color-red" ng-if="key == 2"></i>
+                    </td>
+                    <td>{{source}}</td>
+                    <td>{{target}}</td>
+                    <td>
+                        <span ng-if="key == 1">
+                                <localize key="redirectsviewer_headerDate">
+                                    Created
+                                </localize>
+                        </span>
+                        <span ng-if="key == 2">
+                                <localize key="redirectsviewer_noContent">
+                                    Target Content doesn't exists
+                                </localize>
+                        </span>
+                    </td>
+
+
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
         <div class="umb-panel-group__details-status-action">
-                <umb-button type="button"
-                            button-style="success"
-                            label-key="redirectsviewer_import"
-                            action="vm.import()"
-                            disabled="vm.working" />
+            <umb-button type="button"
+                        button-style="success"
+                        label-key="redirectsviewer_import"
+                        action="vm.import()"
+                        disabled="vm.working"/>
         </div>
 
-      
 
     </div>
 </div>

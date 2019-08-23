@@ -5,17 +5,21 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Our.Umbraco.RedirectsViewer.Controllers;
+using Our.Umbraco.RedirectsViewer.Services;
 using Umbraco.Core.Composing;
+using Umbraco.Core.Services;
 using Umbraco.Web;
 using Umbraco.Web.JavaScript;
 
 namespace Our.Umbraco.RedirectsViewer.Compositions
 {
-    public class UmbracoStartup:IUserComposer
+    public class UmbracoStartup : IUserComposer
     {
         public void Compose(Composition composition)
         {
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
+
+            composition.RegisterAuto(typeof(RedirectService));
         }
 
         private void ServerVariablesParser_Parsing(object sender, System.Collections.Generic.Dictionary<string, object> e)

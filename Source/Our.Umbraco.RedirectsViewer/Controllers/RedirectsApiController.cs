@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
+using NPoco.fastJSON;
 using Our.Umbraco.RedirectsViewer.Models.Import;
 using Our.Umbraco.RedirectsViewer.Services;
 using Skybrud.Umbraco.Redirects.Import.Csv;
@@ -200,7 +201,9 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             {
                 this._logger.Error(this.GetType(), "Error creating redirect", ex);
                 return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/createError"));
-            }           
+            }
+
+            return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/createError"));
         }
 
         /// <summary>
@@ -302,27 +305,9 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                     break;
             }
                 
-            var response = importer.Import(redirectsFile);
-
-            using (var ms = new MemoryStream())
-            {
-                using (var outputFile = new FileStream(response.File.FileName, FileMode.Open, FileAccess.Read))
-                {
-                    byte[] bytes = new byte[outputFile.Length];
-                    outputFile.Read(bytes, 0, (int)outputFile.Length);
-                    ms.Write(bytes, 0, (int)outputFile.Length);
-
-                    HttpResponseMessage httpResponseMessage = new HttpResponseMessage();
-                    httpResponseMessage.Content = new ByteArrayContent(bytes.ToArray());
-                    httpResponseMessage.Content.Headers.Add("x-filename", "redirects.csv");
-                    httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                    httpResponseMessage.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                    httpResponseMessage.Content.Headers.ContentDisposition.FileName = "redirects.csv";
-                    httpResponseMessage.StatusCode = HttpStatusCode.OK;
-
-                    return httpResponseMessage;
-                }
-            }
+            var response = Newtonsoft.Json.JsonConvert.SerializeObject(importer.Import(redirectsFile).StatusImportItems);
+          
+            return Request.CreateResponse(HttpStatusCode.OK, response);
         }
 
         public class CustomMultipartFormDataStreamProvider : MultipartFormDataStreamProvider

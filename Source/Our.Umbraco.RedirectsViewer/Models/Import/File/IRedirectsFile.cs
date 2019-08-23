@@ -10,7 +10,6 @@ namespace Skybrud.Umbraco.Redirects.Models.Import.File
         void Load();
 
 
-
         List<RedirectItem> Redirects { get; }
 
     }

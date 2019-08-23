@@ -1,10 +1,9 @@
-﻿angular.module('umbraco').controller('Our.Umbraco.RedirectsViewer.ImportDialog.Controller', function ($rootScope, $scope, $http, notificationsService, localizationService, dialogService, $timeout) {
+﻿angular.module('umbraco').controller('Our.Umbraco.RedirectsViewer.ImportDialog.Controller', function ($rootScope, $scope, $http, notificationsService, localizationService, editorService, Upload, $timeout) {
 
     // Get the Umbraco version
     var v = Umbraco.Sys.ServerVariables.application.version.split('.');
     $scope.gte81 = v[0] == 8 && v[1] >= 1;
-
-    $scope.options = $scope.dialogOptions.options || {};
+    var apiUrl = Umbraco.Sys.ServerVariables["Our.Umbraco.RedirectsViewer"].RedirectsApi;
 
     $scope.invalidFileFormat = false;
     $scope.rebuildInput = 1;
@@ -38,22 +37,12 @@
         $scope.fileName = $scope.file.name;
         $scope.processing = true;
 
-        var request = {
-            file: $scope.file
-        };
-
-        return $http({
-            method: 'POST',
-            url: "/umbraco/backoffice/api/Redirects/import",
-            responseType: 'arraybuffer',
-            headers: { 'Content-Type': undefined },
-            transformRequest: function (data) {
-                var formData = new FormData();
-                formData.append("file", data.file);
-                return formData;
-            },
-            data: request
-        }).success(function (response, status, headers) {
+       
+        return Upload.upload({
+            file: $scope.file,
+            url:    apiUrl + "/import",
+        
+        }).then(function (response) {
             if (response) 
                 //var fileName = response.data;
 
@@ -63,36 +52,11 @@
 
                 //var file = new Blob([data], { type: 'text/csv' });
                 //saveAs(file, 'redirects.csv');
-
-                dialogService.closeAll();
+            $rootScope.statusImportItems =JSON.parse(response.data);
+            console.log($rootScope);
+            editorService.closeAll();
 
                 //return fileName;
-
-                var filename = headers['x-filename'];
-                var contentType = headers['content-type'];
-                console.log(contentType);
-
-                var linkElement = document.createElement('a');
-                try {
-                    var blob = new Blob([response], { type: 'text/csv' });
-                    var url = window.URL.createObjectURL(blob);
-
-                    linkElement.setAttribute('href', url);
-                    linkElement.setAttribute("download", 'redirects.csv');
-
-                    var clickEvent = new MouseEvent("click", {
-                        "view": window,
-                        "bubbles": true,
-                        "cancelable": false
-                    });
-
-                    linkElement.dispatchEvent(clickEvent);
-
-                    $rootScope.updateList(1);
-                } catch (ex) {
-                    console.log(ex);
-                }
-
         });
     }
 

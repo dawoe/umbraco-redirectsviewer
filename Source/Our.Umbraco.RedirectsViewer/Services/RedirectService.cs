@@ -31,7 +31,7 @@ namespace Our.Umbraco.RedirectsViewer.Services
         {
             if (content == null)
             {
-                throw new Exception("Content does not exist");
+                return 2;
             }
 
             return AddRedirect(domains, url, content.Path, content.Key);
@@ -39,6 +39,7 @@ namespace Our.Umbraco.RedirectsViewer.Services
 
         public int AddRedirect(List<IDomain> domains, string url,string path, Guid key)
         {
+            var redirectUrl = url;
             var rootNode = string.Empty;
 
             // get all the domains that have a root content id set
@@ -47,7 +48,7 @@ namespace Our.Umbraco.RedirectsViewer.Services
             if (!string.IsNullOrEmpty(rootNode))
             {
                 // prefix the url with the root content node
-                url = rootNode + url;
+                redirectUrl = rootNode + url;
             }
 
             // check if there is already a redirect with the url
@@ -70,11 +71,15 @@ namespace Our.Umbraco.RedirectsViewer.Services
                 }
             }
 
-            if (redirects.Any(x => x.Url == url))
+            if (!string.IsNullOrEmpty(rootNode))
+            {
+                redirectUrl = rootNode + url;
+            }
+            if (redirects.Any(x => x.Url == redirectUrl))
             {
                 return 1;
             }
-            this._redirectUrlService.Register(url, key);
+            this._redirectUrlService.Register(redirectUrl, key);
             return 0;
         
         }

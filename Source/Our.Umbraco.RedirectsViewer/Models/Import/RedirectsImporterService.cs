@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Our.Umbraco.RedirectsViewer.Services;
 using Skybrud.Umbraco.Redirects.Models.Import.File;
@@ -7,7 +8,6 @@ using Umbraco.Core.Services.Implement;
 
 namespace Our.Umbraco.RedirectsViewer.Models.Import
 {
-
     public class ImportedEventArgs : EventArgs
     {
         public ImportedEventArgs(ImporterResponse response)
@@ -25,9 +25,10 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
     {
         RedirectService _redirectService;
         IDomainService _domainService;
+
         public delegate void ImportedHandler(Object sender, ImportedEventArgs e);
 
-        public RedirectsImporterService(RedirectService redirectService,DomainService domainService)
+        public RedirectsImporterService(RedirectService redirectService, IDomainService domainService)
         {
             _redirectService = redirectService;
             _domainService = domainService;
@@ -55,22 +56,34 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
         public virtual ImporterResponse Import(IRedirectsFile file)
         {
             var response = new ImporterResponse();
-            
-            file.Load();
 
+            file.Load();
+            
             response.File = file;
             response.ImportedItems = file.Redirects;
             var domains = this._domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
-
+            Dictionary<int, Dictionary<string, string>> List = new Dictionary<int, Dictionary<string, string>>();
             foreach (var redirect in file.Redirects)
             {
-                var status = 0;
                 if (domains.Any())
                 {
-                    _redirectService.AddRedirect(redirect.Content, domains, redirect.Url);
+                    var status = _redirectService.AddRedirect(redirect.Content, domains, redirect.Url);
+                   
+                    if (!List.ContainsKey(status))
+                    {
+                        var urlDictionary = new Dictionary<string,string>();
+                        urlDictionary.Add(redirect.Url,redirect.Target);
+                        List.Add(status,urlDictionary);
+                    }
+                    else
+                    {
+                        List[status].Add(redirect.Url,redirect.Target);
+                    }
+                   
                 }
             }
-            
+
+            response.StatusImportItems = List;
 
             RaiseEvent(response);
 

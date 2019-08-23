@@ -1,5 +1,6 @@
 using System;
 using Our.Umbraco.RedirectsViewer.Models.Import;
+using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web.PublishedCache;
@@ -21,7 +22,7 @@ namespace Skybrud.Umbraco.Redirects.Models.Import
 
         public IPublishedContent Find(string url)
         {
-            return publishedCache.GetByRoute(false, url, false);
+            return publishedCache.GetByRoute(false,  new Uri(url).LocalPath.TrimEnd('/'), false);
         }
         public IPublishedContent Find(int id)
         {
