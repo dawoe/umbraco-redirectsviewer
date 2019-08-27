@@ -86,42 +86,55 @@
             </div>
         </div>
         <div ng-if="!vm.loading" class="umb-box">
-            <div class="" ng-if="statusImportItems">
-                {{vm.importedCount}} / {{vm.total}}
-                <table class="unstyled">
-                    <tr>
-                        <th></th>
-                        <th>Source URL</th>
-                        <th>Target (URL/ID/GUID)</th>
-                        <th>Status</th>
-                    </tr>
-                    <tbody ng-repeat="(key,item) in statusImportItems">
-                    <tr ng-repeat="(source,target) in item">
-                        <td>
-                            <i class="umb-healthcheck-status-icon icon-check color-green" ng-if="key == 1"></i>
-                            <i class="umb-healthcheck-status-icon icon-delete icon-delete color-red"
-                               ng-if="key == 2"></i>
-                        </td>
-                        <td>{{source}}</td>
-                        <td>{{target}}</td>
-                        <td>
+            <div class="umb-dashboard__content">
+                <div class="" ng-if="statusImportItems">
+                    {{vm.importedCount}} / {{vm.total}}
+                    <table class="unstyled status-table">
+                        <tr>
+                            <th></th>
+                            <th>Source URL</th>
+                            <th>Target (URL/ID/GUID)</th>
+                            <th>Status</th>
+                        </tr>
+                        <tbody ng-repeat="(key,item) in statusImportItems">
+                        <tr ng-repeat="(source,target) in item">
+                            <td>
+                                <i class="umb-healthcheck-status-icon icon-check color-green" ng-if="key == 1"></i>
+                                <i class="umb-healthcheck-status-icon icon-delete icon-delete color-red"
+                                   ng-if="key == 2"></i>
+                            </td>
+                            <td>{{source}}</td>
+                            <td>{{target}}</td>
+                            <td>
                         <span ng-if="key == 1">
-                                <localize key="redirectsviewer_headerDate">
+                                <localize key="redirectsviewer_created">
                                     Created
                                 </localize>
                         </span>
-                            <span ng-if="key == 2">
+                                <span ng-if="key == 2">
                                 <localize key="redirectsviewer_noContent">
                                     Target Content doesn't exists
                                 </localize>
-                        </span>
-                        </td>
+                                                        </span>
+
+                                <span ng-if="key == 3">
+                                <localize key="redirectsviewer_exists">
+                                    New URL does not exist in Umbraco
+                                </localize>
+                                </span>
+                                <span ng-if="key == 4">
+                                <localize key="redirectsviewer_unknown">
+                                   Unknown error
+                                </localize>
+                                </span>
+                            </td>
 
 
-                    </tr>
+                        </tr>
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="umb-panel-group__details-status-action">

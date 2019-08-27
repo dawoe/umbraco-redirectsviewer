@@ -203,6 +203,7 @@
       <HintPath>packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Linq.Expressions" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -283,6 +284,23 @@
     <Compile Include="Import\Csv\CsvRow.cs" />
     <Compile Include="Import\Csv\CsvRowList.cs" />
     <Compile Include="Import\Csv\CsvSeparator.cs" />
+    <Compile Include="Import\Excel\Cell.cs" />
+    <Compile Include="Import\Excel\CellRange.cs" />
+    <Compile Include="Import\Excel\DefinedName.cs" />
+    <Compile Include="Import\Excel\DefinedNameLoadException.cs" />
+    <Compile Include="Import\Excel\DefinedNamesExtensions.cs" />
+    <Compile Include="Import\Excel\ExcelColumnAttribute.cs" />
+    <Compile Include="Import\Excel\FastExcel.cs" />
+    <Compile Include="Import\Excel\FastExcel.DefinedName.cs" />
+    <Compile Include="Import\Excel\FastExcel.Read.cs" />
+    <Compile Include="Import\Excel\FastExcel.Update.cs" />
+    <Compile Include="Import\Excel\FastExcel.Worksheets.cs" />
+    <Compile Include="Import\Excel\FastExcel.Write.cs" />
+    <Compile Include="Import\Excel\Row.cs" />
+    <Compile Include="Import\Excel\SharedStrings.cs" />
+    <Compile Include="Import\Excel\Worksheet.cs" />
+    <Compile Include="Import\Excel\WorksheetAddSettings.cs" />
+    <Compile Include="Import\Excel\WorksheetProperties.cs" />
     <Compile Include="Models\Import\File\CsvRedirectsFile.cs" />
     <Compile Include="Models\Import\File\IRedirectsFile.cs" />
     <Compile Include="Models\Import\ImporterResponse.cs" />

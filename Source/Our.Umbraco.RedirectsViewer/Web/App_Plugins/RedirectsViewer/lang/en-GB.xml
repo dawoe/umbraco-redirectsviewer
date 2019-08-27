@@ -29,10 +29,15 @@
     <key alias="addNewRedirectSubTitle">Import redirects from CSV or Excel.</key>
     <key alias="selectFile">File</key>
     <key alias="incorrectFileType">The uploaded file must be in CSV or Excel format.</key>
-    <key alias="noFile">A CSV file must be selected.</key>
+    <key alias="noFile">A CSV or XLSX file must be selected.</key>
     <key alias="cancel">Cancel</key>
     <key alias="import">Import</key>
-    <key alias="noContent">Target Content doesn't exists</key>
+    <key alias="noContent">New URL does not exist in Umbraco</key>
+    <key alias="created">Redirect created</key>
+    <key alias="exists">New URL does not exist in Umbraco</key>
+    <key alias="unknown">Unknown error</key>
+
+    
   </area>
   <area alias="dashboardTabs">
     <key alias="redirectsSettings">Redirects</key>

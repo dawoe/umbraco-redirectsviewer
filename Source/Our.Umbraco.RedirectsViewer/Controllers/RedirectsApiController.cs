@@ -274,7 +274,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             var path = file.LocalFileName;
             var ext = path.Substring(path.LastIndexOf('.')).ToLower();
 
-            if (ext != ".csv" && ext != ".xlst")
+            if (ext != ".csv" && ext != ".xlsx")
             {
                 throw new HttpResponseException(new HttpResponseMessage
                 {
@@ -293,6 +293,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             switch (ext)
             {   
+             
                 default:
                     var csvFile = new CsvRedirectsFile(new RedirectPublishedContentFinder(UmbracoContext.ContentCache))
                         {

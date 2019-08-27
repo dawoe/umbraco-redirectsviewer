@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using ICSharpCode.SharpZipLib.Zip;
+
 
 namespace FastExcel
 {

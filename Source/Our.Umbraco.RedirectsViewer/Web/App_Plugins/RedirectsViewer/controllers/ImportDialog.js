@@ -69,7 +69,8 @@
         $scope.noFile = false;
         var file = args.files[0];
         var extension = file.name.substring(file.name.lastIndexOf(".") + 1, file.name.length).toLowerCase();
-        if (extension !== "csv") {
+        console.log(extension);
+        if (extension !== "csv" && extension !== "xlsx") {
             $scope.invalidFileFormat = true;
 
             $timeout(function () {

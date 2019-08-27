@@ -17,3 +17,12 @@
     color: #444;
     margin-top: 2px;
 }
+.status-table th:not(:first-child) {
+    width: 32%;
+    text-align: left;
+    padding: 15px;
+}
+
+.status-table td:not(:first-child) {
+    padding: 15px;
+}
