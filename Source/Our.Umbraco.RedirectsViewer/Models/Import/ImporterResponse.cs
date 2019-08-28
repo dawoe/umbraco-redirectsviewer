@@ -15,6 +15,6 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
         public IRedirectsFile File { get; set; }
 
         public IEnumerable<RedirectItem> ImportedItems { get; set;  }
-        public Dictionary<int,Dictionary<string,string>> StatusImportItems { get; set; }
+        public List<Tuple<int, string, string>> StatusImportItems { get; set; }
     }
 }

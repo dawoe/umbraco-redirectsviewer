@@ -63,27 +63,15 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
             response.File = file;
             response.ImportedItems = file.Redirects;
             var domains = this._domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
-            Dictionary<int, Dictionary<string, string>> list = new Dictionary<int, Dictionary<string, string>>();
-             
+            List<Tuple<int, string, string>> list = new List<Tuple<int, string, string>>();
             int redirects = 0;
             foreach (var redirect in file.Redirects)
             {
                 if (domains.Any())
                 {
                     var status = _redirectService.AddRedirect(redirect.Content, domains, redirect.Url);
-                   
-                    if (!list.ContainsKey(status))
-                    {
-                        var urlDictionary = new Dictionary<string,string>();
-                        urlDictionary.Add(redirect.Url,redirect.Target);
-                        list.Add(status,urlDictionary);
-
-                       
-                    }
-                    else
-                    {
-                        list[status].Add(redirect.Url,redirect.Target);
-                    }
+                    list.Add(new Tuple<int, string, string>(status,redirect.Url,redirect.Target));
+                  
                     redirects++;
                     var hubClient = new HubClientService(clientId);
                     hubClient.SendUpdate(new
@@ -95,8 +83,7 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
                    
                 }
             }
-
-            response.StatusImportItems = list;
+            response.StatusImportItems = list.OrderBy(e=>e.Item1).ToList();
 
             RaiseEvent(response);
 
