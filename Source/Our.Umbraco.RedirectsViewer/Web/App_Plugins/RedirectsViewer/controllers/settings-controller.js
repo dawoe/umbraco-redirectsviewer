@@ -130,7 +130,7 @@
 
                     // Iterate over cells
                     for (var j = 1, jLen = cells.length; j < jLen; j++) {
-                        t.push(cells[j].textContent.trim());
+                        t.push(cells[j].textContent.trim().replace(","," "));
                     }
                     result.push(t);
                 }

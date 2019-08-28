@@ -101,7 +101,7 @@
                             <td>
                                 <i class="umb-healthcheck-status-icon icon-check color-green" ng-if="key == 1"></i>
                                 <i class="umb-healthcheck-status-icon icon-delete icon-delete color-red"
-                                   ng-if="key == 2"></i>
+                                   ng-if="key != 1"></i>
                             </td>
                             <td>{{source}}</td>
                             <td>{{target}}</td>
@@ -113,13 +113,13 @@
                         </span>
                                 <span ng-if="key == 2">
                                 <localize key="redirectsviewer_noContent">
-                                    Target Content doesn't exists
+                                       New URL does not exist in Umbraco 
                                 </localize>
-                                                        </span>
+                                </span>
 
                                 <span ng-if="key == 3">
                                 <localize key="redirectsviewer_exists">
-                                    New URL does not exist in Umbraco
+                                  Error, this redirect already exists
                                 </localize>
                                 </span>
                                 <span ng-if="key == 4">
@@ -150,7 +150,6 @@
                             disabled="vm.working"/>
             </div>
         </div>
-    
 
 
     </div>

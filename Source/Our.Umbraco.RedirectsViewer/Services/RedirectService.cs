@@ -77,10 +77,10 @@ namespace Our.Umbraco.RedirectsViewer.Services
             }
             if (redirects.Any(x => x.Url == redirectUrl))
             {
-                return 1;
+                return 3;
             }
             this._redirectUrlService.Register(redirectUrl, key);
-            return 0;
+            return 1;
         
         }
     }
