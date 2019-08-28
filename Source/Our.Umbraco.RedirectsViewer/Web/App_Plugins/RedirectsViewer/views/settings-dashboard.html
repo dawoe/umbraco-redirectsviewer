@@ -88,13 +88,28 @@
         <div ng-if="!vm.loading" class="umb-box">
             <div class="umb-dashboard__content">
                 <div class="" ng-if="statusImportItems">
-                    {{vm.importedCount}} / {{vm.total}}
+                    <h4 class="usync-action-message">
+                        <localize ng-if="importedCount!==total" key="redirectsviewer_inProgress">Import in Progress</localize>
+
+                        <localize ng-if="importedCount===total" key="redirectsviewer_finished">Import Finished</localize>
+                    </h4>
+                    <div class="progress" style="height: 2px;">
+                        <div class="bar" role="progressbar" style="width: {{vm.calcPercentage(importedCount)}}%;"
+                             aria-valuenow="{{vm.calcPercentage(importedCount)}}" aria-valuemin="0"
+                             aria-valuemax="100"></div>
+                    </div>
                     <table class="unstyled status-table" id="redirectStatusTable">
                         <tr>
                             <th></th>
-                            <th>Source URL</th>
-                            <th>Target (URL/ID/GUID)</th>
-                            <th>Status</th>
+                            <th>
+                                <localize key="redirectsviewer_sourceURL">Source URL</localize>
+                            </th>
+                            <th>
+                                <localize key="redirectsviewer_targetURL">Target (URL/ID/GUID)</localize>
+                            </th>
+                            <th>
+                                <localize key="redirectsviewer_status">Status</localize>
+                            </th>
                         </tr>
                         <tbody ng-repeat="(key,item) in statusImportItems">
                         <tr ng-repeat="(source,target) in item" ng-class="{success: key == 1}">

@@ -26,7 +26,8 @@
     $scope.upload = function (options) {
         if (!options) options = {};
         if (typeof (options) == 'function') options = { callback: options };
-
+        $rootScope.importFinished = false;
+        $rootScope.statusImportItems = undefined;
         if ($scope.file === null) {
             $scope.noFile = true;
             $timeout(function () {

@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    function SettingsController($rootScope,$scope, userGroupResource, notificationsService, angularHelper, editorService, redirectsHub) {
+    function SettingsController($rootScope, $scope, userGroupResource, notificationsService, angularHelper, editorService, redirectsHub) {
         var vm = this;
 
         vm.loading = true;
@@ -11,9 +11,9 @@
         vm.settings = {};
         $rootScope.importFinished = false;
         $rootScope.statusImportItems = undefined;
-       
+
         function init() {
-    
+
             InitHub();
             userGroupResource.getAll().then(
                 //groups from umbraco clean
@@ -130,7 +130,7 @@
 
                     // Iterate over cells
                     for (var j = 1, jLen = cells.length; j < jLen; j++) {
-                        t.push(cells[j].textContent.trim().replace(","," "));
+                        t.push(cells[j].textContent.trim().replace(",", " "));
                     }
                     result.push(t);
                 }
@@ -139,6 +139,12 @@
             return result;
         }
 
+        vm.calcPercentage = function (status) {
+            if (status !== undefined) {
+                return (100 * status) / $rootScope.total;
+            }
+            return 1;
+        }
 
         vm.export = function () {
             var csv = 'Source,Target,Issue\n';
@@ -163,10 +169,11 @@
                 vm.hub = hub;
 
                 vm.hub.on('update', function (data) {
-                    vm.statusImportItems = data.Message;
+                    console.log(data);
+                    $rootScope.statusImportItems = data.Message;
 
-                    vm.importedCount = data.Count;
-                    vm.total = data.Total;
+                    $rootScope.importedCount = data.Count;
+                    $rootScope.total = data.Total;
 
                 });
 
@@ -178,6 +185,6 @@
 
     }
 
-    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$rootScope','$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService', 'angularHelper', 'editorService', "redirectsHub", SettingsController]);
+    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$rootScope', '$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService', 'angularHelper', 'editorService', "redirectsHub", SettingsController]);
 
 })();

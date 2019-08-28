@@ -37,6 +37,11 @@
     <key alias="created">Redirect created</key>
     <key alias="exists">Error, this redirect already exists</key>
     <key alias="unknown">Unknown error</key>
+    <key alias="status">Status</key>
+    <key alias="sourceURL">Source URL</key>
+    <key alias="targetURL">Target (URL/ID/GUID)</key>
+    <key alias="inProgress">Import in Progress</key>
+    <key alias="finished">Import Finished</key>
   </area>
   <area alias="dashboardTabs">
     <key alias="redirectsSettings">Redirects</key>
