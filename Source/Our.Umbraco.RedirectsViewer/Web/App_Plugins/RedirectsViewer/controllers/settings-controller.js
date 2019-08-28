@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    function SettingsController($scope, userGroupResource, notificationsService, angularHelper, editorService, redirectsHub) {
+    function SettingsController($rootScope,$scope, userGroupResource, notificationsService, angularHelper, editorService, redirectsHub) {
         var vm = this;
 
         vm.loading = true;
@@ -9,9 +9,11 @@
         vm.deleteGroups = [];
         vm.selectedGroups = [];
         vm.settings = {};
-
-
+        $rootScope.importFinished = false;
+        $rootScope.statusImportItems = undefined;
+       
         function init() {
+    
             InitHub();
             userGroupResource.getAll().then(
                 //groups from umbraco clean
@@ -115,14 +117,54 @@
 
         vm.saveSettings = saveSettings;
 
+        function tableToArray(table) {
+            var result = []
+            var rows = table.rows;
+            var cells, t;
+
+            // Iterate over rows
+            for (var i = 1, iLen = rows.length; i < iLen; i++) {
+                if ((' ' + rows[i].className + ' ').indexOf(' success ') === -1) {
+                    cells = rows[i].cells;
+                    t = [];
+
+                    // Iterate over cells
+                    for (var j = 1, jLen = cells.length; j < jLen; j++) {
+                        t.push(cells[j].textContent.trim());
+                    }
+                    result.push(t);
+                }
+
+            }
+            return result;
+        }
+
+
+        vm.export = function () {
+            var csv = 'Source,Target,Issue\n';
+            var data = tableToArray(document.getElementById("redirectStatusTable"));
+
+            data.forEach(function (row) {
+                csv += row.join(',');
+                csv += "\n";
+            });
+
+            console.log(csv);
+            var hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+            hiddenElement.target = '_blank';
+            hiddenElement.download = 'redirects.csv';
+            hiddenElement.click();
+        }
+
         function InitHub() {
             redirectsHub.initHub(function (hub) {
 
                 vm.hub = hub;
 
                 vm.hub.on('update', function (data) {
-                    vm.statusImportItems =data.Message;
-                    
+                    vm.statusImportItems = data.Message;
+
                     vm.importedCount = data.Count;
                     vm.total = data.Total;
 
@@ -133,9 +175,9 @@
         }
 
         init();
-      
+
     }
-   
-    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService', 'angularHelper', 'editorService', "redirectsHub", SettingsController]);
+
+    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$rootScope','$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService', 'angularHelper', 'editorService', "redirectsHub", SettingsController]);
 
 })();

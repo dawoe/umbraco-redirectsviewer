@@ -56,6 +56,7 @@
 
                 //var file = new Blob([data], { type: 'text/csv' });
                 //saveAs(file, 'redirects.csv');
+            $rootScope.importFinished = true;
             $rootScope.statusImportItems =JSON.parse(response.data);             
             //return fileName;
         });

@@ -32,6 +32,7 @@
     <key alias="noFile">A CSV or XLSX file must be selected.</key>
     <key alias="cancel">Cancel</key>
     <key alias="import">Import</key>
+    <key alias="import_errors">Download CSV of all errors</key>
     <key alias="noContent">New URL does not exist in Umbraco</key>
     <key alias="created">Redirect created</key>
     <key alias="exists">New URL does not exist in Umbraco</key>

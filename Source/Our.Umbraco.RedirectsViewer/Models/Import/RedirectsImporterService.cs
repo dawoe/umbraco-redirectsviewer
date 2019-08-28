@@ -63,7 +63,8 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
             response.File = file;
             response.ImportedItems = file.Redirects;
             var domains = this._domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
-            Dictionary<int, Dictionary<string, string>> List = new Dictionary<int, Dictionary<string, string>>();
+            Dictionary<int, Dictionary<string, string>> list = new Dictionary<int, Dictionary<string, string>>();
+             
             int redirects = 0;
             foreach (var redirect in file.Redirects)
             {
@@ -71,23 +72,23 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
                 {
                     var status = _redirectService.AddRedirect(redirect.Content, domains, redirect.Url);
                    
-                    if (!List.ContainsKey(status))
+                    if (!list.ContainsKey(status))
                     {
                         var urlDictionary = new Dictionary<string,string>();
                         urlDictionary.Add(redirect.Url,redirect.Target);
-                        List.Add(status,urlDictionary);
+                        list.Add(status,urlDictionary);
 
                        
                     }
                     else
                     {
-                        List[status].Add(redirect.Url,redirect.Target);
+                        list[status].Add(redirect.Url,redirect.Target);
                     }
                     redirects++;
                     var hubClient = new HubClientService(clientId);
                     hubClient.SendUpdate(new
                     {
-                        Message = List,
+                        Message = list,
                         Count = redirects, 
                         Total = file.Redirects.Count
                     });
@@ -95,7 +96,7 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
                 }
             }
 
-            response.StatusImportItems = List;
+            response.StatusImportItems = list;
 
             RaiseEvent(response);
 

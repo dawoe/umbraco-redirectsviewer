@@ -89,7 +89,7 @@
             <div class="umb-dashboard__content">
                 <div class="" ng-if="statusImportItems">
                     {{vm.importedCount}} / {{vm.total}}
-                    <table class="unstyled status-table">
+                    <table class="unstyled status-table" id="redirectStatusTable">
                         <tr>
                             <th></th>
                             <th>Source URL</th>
@@ -97,7 +97,7 @@
                             <th>Status</th>
                         </tr>
                         <tbody ng-repeat="(key,item) in statusImportItems">
-                        <tr ng-repeat="(source,target) in item">
+                        <tr ng-repeat="(source,target) in item" ng-class="{success: key == 1}">
                             <td>
                                 <i class="umb-healthcheck-status-icon icon-check color-green" ng-if="key == 1"></i>
                                 <i class="umb-healthcheck-status-icon icon-delete icon-delete color-red"
@@ -136,14 +136,21 @@
                     </table>
                 </div>
             </div>
+            <div class="umb-panel-group__details-status-action">
+                <umb-button type="button"
+                            button-style="success"
+                            label-key="redirectsviewer_import"
+                            action="vm.import()"
+                            disabled="vm.working"/>
+                <umb-button type="button"
+                            button-style="danger"
+                            ng-if="importFinished"
+                            label-key="redirectsviewer_import_errors"
+                            action="vm.export()"
+                            disabled="vm.working"/>
+            </div>
         </div>
-        <div class="umb-panel-group__details-status-action">
-            <umb-button type="button"
-                        button-style="success"
-                        label-key="redirectsviewer_import"
-                        action="vm.import()"
-                        disabled="vm.working"/>
-        </div>
+    
 
 
     </div>
