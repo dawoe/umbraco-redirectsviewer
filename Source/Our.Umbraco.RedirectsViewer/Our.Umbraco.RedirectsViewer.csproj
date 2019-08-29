@@ -274,6 +274,7 @@
     <Compile Include="Controllers\RedirectsApiController.cs" />
     <Compile Include="Controllers\UserGroupsApiController.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="FormData\CustomMultipartFormDataStreamProvider.cs" />
     <Compile Include="Hubs\HubClientService.cs" />
     <Compile Include="Hubs\redirectsHub.cs" />
     <Compile Include="Import\Csv\CsvCell.cs" />

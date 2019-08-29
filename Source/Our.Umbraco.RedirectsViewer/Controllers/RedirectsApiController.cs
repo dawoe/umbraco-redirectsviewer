@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using NPoco.fastJSON;
+using Our.Umbraco.RedirectsViewer.FormData;
 using Our.Umbraco.RedirectsViewer.Import.Csv;
 using Our.Umbraco.RedirectsViewer.Models.Import;
 using Our.Umbraco.RedirectsViewer.Models.Import.File;
@@ -316,14 +317,6 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, response);
         }
 
-        public class CustomMultipartFormDataStreamProvider : MultipartFormDataStreamProvider
-        {
-            public CustomMultipartFormDataStreamProvider(string path) : base(path) { }
-
-            public override string GetLocalFileName(HttpContentHeaders headers)
-            {
-                return headers.ContentDisposition.FileName.Replace("\"", string.Empty);
-            }
-        }
+        
     }
 }
