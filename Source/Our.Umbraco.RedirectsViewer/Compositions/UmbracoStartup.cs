@@ -10,7 +10,6 @@ using Our.Umbraco.RedirectsViewer.Services;
 using Umbraco.Core.Composing;
 using Umbraco.Web;
 using Umbraco.Web.JavaScript;
-using Umbraco.Web.PublishedCache;
 
 namespace Our.Umbraco.RedirectsViewer.Compositions
 {
@@ -21,10 +20,12 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
 
             composition.RegisterAuto(typeof(RedirectService));
+
             composition.RegisterUnique<IRedirectPublishedContentFinder>(factory =>
             {
                 var umbCtx = (IUmbracoContextAccessor)factory.GetInstance(typeof(IUmbracoContextAccessor));
-               return new RedirectPublishedContentFinder(umbCtx.UmbracoContext.Content);
+                return new RedirectPublishedContentFinder(umbCtx.UmbracoContext.Content);
+
             });
 
 

@@ -5,7 +5,6 @@ using Our.Umbraco.RedirectsViewer.Hubs;
 using Our.Umbraco.RedirectsViewer.Models.Import.File;
 using Our.Umbraco.RedirectsViewer.Services;
 using Umbraco.Core.Services;
-using Umbraco.Core.Services.Implement;
 
 namespace Our.Umbraco.RedirectsViewer.Models.Import
 {

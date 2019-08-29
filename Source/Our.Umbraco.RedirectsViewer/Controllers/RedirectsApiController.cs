@@ -1,8 +1,6 @@
 ﻿using System.IO;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
-using NPoco.fastJSON;
 using Our.Umbraco.RedirectsViewer.FormData;
 using Our.Umbraco.RedirectsViewer.Import.Csv;
 using Our.Umbraco.RedirectsViewer.Models.Import;
@@ -68,6 +66,10 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         private readonly IDomainService _domainService;
 
         private readonly  IRedirectPublishedContentFinder _redirectPublishedContentFinder;
+
+        private const string FileUploadPath = "~/App_Data/TEMP/FileUploads/";
+        private const string FileName = "redirects{0}.csv";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RedirectsApiController"/> class.
         /// </summary>
@@ -209,6 +211,71 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/createError"));
         }
 
+        [System.Web.Http.HttpPost]
+        public async Task<HttpResponseMessage> Import()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.UnsupportedMediaType,
+                    Content = new StringContent("File must be a valid CSV or Excel file")
+                });
+            }
+
+            var uploadFolder = HttpContext.Current.Server.MapPath(FileUploadPath);
+
+            Directory.CreateDirectory(uploadFolder);
+
+            var provider = new CustomMultipartFormDataStreamProvider(uploadFolder);
+
+            var result = await Request.Content.ReadAsMultipartAsync(provider);
+
+            var file = result.FileData[0];
+
+            var path = file.LocalFileName;
+
+            var ext = path.Substring(path.LastIndexOf('.')).ToLower();
+
+            if (!CorrectExtension(ext))
+            {
+                throw new HttpResponseException(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.UnsupportedMediaType,
+                    Content = new StringContent("File must be a valid CSV or Excel file")
+                });
+            }
+
+            var fileNameAndPath = HttpContext.Current.Server.MapPath(FileUploadPath + string.Format(FileName, DateTime.Now.Ticks));
+
+            System.IO.File.Copy(file.LocalFileName, fileNameAndPath, true);
+
+            var importer = new RedirectsImporterService(_redirectService, _domainService);
+
+            IRedirectsFile redirectsFile;
+
+            switch (ext)
+            {
+
+                default:
+
+                    var csvFile = new CsvRedirectsFile(_redirectPublishedContentFinder)
+                    {
+                        FileName = fileNameAndPath,
+                        Seperator = CsvSeparator.Comma
+                    };
+
+                    redirectsFile = csvFile;
+
+                    break;
+            }
+
+            var response = Newtonsoft.Json.JsonConvert.SerializeObject(importer.Import(redirectsFile, result.FormData.Get("clientId")).StatusImportItems);
+
+            return Request.CreateResponse(HttpStatusCode.OK, response);
+        }
+
+
         /// <summary>
         /// Checks if  url tracking disabled.
         /// </summary>
@@ -252,73 +319,11 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             return string.Empty;
         }
-        private const string FileUploadPath = "~/App_Data/TEMP/FileUploads/";
-        private const string FileName = "redirects{0}.csv";
 
-        private bool isCorrectExtension(string ext)
+        private bool CorrectExtension(string ext)
         {
-          
-            return ext != ".csv" && ext != ".xlsx";
-        }
-        [System.Web.Http.HttpPost]
-        public async Task<HttpResponseMessage> Import()
-        {
-            if (!Request.Content.IsMimeMultipartContent())
-            {
-                throw new HttpResponseException(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.UnsupportedMediaType,
-                    Content = new StringContent("File must be a valid CSV or Excel file")
-                });
-            }
-
-            var uploadFolder = HttpContext.Current.Server.MapPath(FileUploadPath);
-            Directory.CreateDirectory(uploadFolder);
-            var provider = new CustomMultipartFormDataStreamProvider(uploadFolder);
-
-            var result = await Request.Content.ReadAsMultipartAsync(provider);
-
-            var file = result.FileData[0];
-            var path = file.LocalFileName;
-            var ext = path.Substring(path.LastIndexOf('.')).ToLower();
-            if (isCorrectExtension(ext))
-            {
-                throw new HttpResponseException(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.UnsupportedMediaType,
-                    Content = new StringContent("File must be a valid CSV or Excel file")
-                });
-            }
-
-            var fileNameAndPath = HttpContext.Current.Server.MapPath(FileUploadPath + string.Format(FileName, DateTime.Now.Ticks));
-
-            System.IO.File.Copy(file.LocalFileName, fileNameAndPath, true);
-            
-            var importer = new RedirectsImporterService(_redirectService,_domainService);
-            
-            IRedirectsFile redirectsFile;
-
-            switch (ext)
-            {   
-             
-                default:
-                    
-                    var csvFile = new CsvRedirectsFile(_redirectPublishedContentFinder)
-                        {
-                            FileName = fileNameAndPath,
-                            Seperator = CsvSeparator.Comma
-                        };
-
-                    redirectsFile = csvFile;
-
-                    break;
-            }
-                
-            var response = Newtonsoft.Json.JsonConvert.SerializeObject(importer.Import(redirectsFile,result.FormData.Get("clientId")).StatusImportItems);
-          
-            return Request.CreateResponse(HttpStatusCode.OK, response);
+            return ext == ".csv" && ext == ".xlsx";
         }
 
-        
     }
 }

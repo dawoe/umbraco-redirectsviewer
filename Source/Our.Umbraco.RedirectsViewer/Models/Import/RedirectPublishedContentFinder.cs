@@ -1,6 +1,5 @@
 using System;
 using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Web;
 using Umbraco.Web.PublishedCache;
 
 namespace Our.Umbraco.RedirectsViewer.Models.Import
