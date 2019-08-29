@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Skybrud.Umbraco.Redirects.Import.Csv {
+namespace Our.Umbraco.RedirectsViewer.Import.Csv {
 
     /// <summary>
     /// Class representing a row in an instance of <see cref="CsvFile"/>.

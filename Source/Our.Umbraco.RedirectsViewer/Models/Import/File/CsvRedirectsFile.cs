@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Our.Umbraco.RedirectsViewer.Models.Import;
-using Skybrud.Umbraco.Redirects.Extensions;
-using Skybrud.Umbraco.Redirects.Import.Csv;
-using Umbraco.Core.Models;
+using Our.Umbraco.RedirectsViewer.Extensions;
+using Our.Umbraco.RedirectsViewer.Import.Csv;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web;
 
-namespace Skybrud.Umbraco.Redirects.Models.Import.File
+namespace Our.Umbraco.RedirectsViewer.Models.Import.File
 {
     public class CsvRedirectsFile : IRedirectsFile
     {
@@ -22,6 +20,7 @@ namespace Skybrud.Umbraco.Redirects.Models.Import.File
         public CsvRedirectsFile(IRedirectPublishedContentFinder contentFinder)
         {
             this.contentFinder = contentFinder;
+            
         }
 
         public string FileName { get; set; }
@@ -78,6 +77,7 @@ namespace Skybrud.Umbraco.Redirects.Models.Import.File
 
                 redirectItem.Url = sourceUrlNoTrailingSlash;
             }
+            
 
             var destinationRaw = row.Cells[1] == null ? null : row.Cells[1].Value.Replace("\"", string.Empty).Trim();
             IPublishedContent content;

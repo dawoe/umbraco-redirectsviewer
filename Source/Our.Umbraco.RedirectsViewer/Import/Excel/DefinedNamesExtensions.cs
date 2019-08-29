@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace FastExcel
+namespace Our.Umbraco.RedirectsViewer.Import.Excel
 {
     /// <summary>
     /// Extensions to use on Dictionary of DefinedNames

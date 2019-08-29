@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace FastExcel
+namespace Our.Umbraco.RedirectsViewer.Import.Excel
 {
     /// <summary>
     /// Row that contains the Cells

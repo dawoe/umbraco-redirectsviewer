@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Our.Umbraco.RedirectsViewer.Models.Import;
 
-namespace Skybrud.Umbraco.Redirects.Models.Import.File
+namespace Our.Umbraco.RedirectsViewer.Models.Import.File
 {
     public interface IRedirectsFile
     {

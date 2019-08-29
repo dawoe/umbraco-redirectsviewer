@@ -1,4 +1,4 @@
-﻿namespace FastExcel
+﻿namespace Our.Umbraco.RedirectsViewer.Import.Excel
 {
     internal class WorksheetAddSettings
     {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Skybrud.Umbraco.Redirects.Import.Csv {
+namespace Our.Umbraco.RedirectsViewer.Import.Csv {
 
     /// <summary>
     /// Class representing a CSV file parsed either from a file or a string.

@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-namespace FastExcel
+namespace Our.Umbraco.RedirectsViewer.Import.Excel
 {
     public partial class FastExcel
     {

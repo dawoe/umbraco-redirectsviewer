@@ -1,4 +1,4 @@
-﻿namespace Skybrud.Umbraco.Redirects.Import.Csv
+﻿namespace Our.Umbraco.RedirectsViewer.Import.Csv
 {
 
     /// <summary>

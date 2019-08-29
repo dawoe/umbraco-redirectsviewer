@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace FastExcel
+namespace Our.Umbraco.RedirectsViewer.Import.Excel
 {
     /// <summary>
     /// Contains the actual value

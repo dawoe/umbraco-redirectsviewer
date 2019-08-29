@@ -3,11 +3,10 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using NPoco.fastJSON;
+using Our.Umbraco.RedirectsViewer.Import.Csv;
 using Our.Umbraco.RedirectsViewer.Models.Import;
+using Our.Umbraco.RedirectsViewer.Models.Import.File;
 using Our.Umbraco.RedirectsViewer.Services;
-using Skybrud.Umbraco.Redirects.Import.Csv;
-using Skybrud.Umbraco.Redirects.Models.Import;
-using Skybrud.Umbraco.Redirects.Models.Import.File;
 using Umbraco.Core.Cache;
 using Umbraco.Core.Configuration.UmbracoSettings;
 using Umbraco.Core.Mapping;
@@ -82,7 +81,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                                       UmbracoHelper umbracoHelper,UmbracoMapper mapper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
             _redirectUrlService = this.Services.RedirectUrlService;
-
+            
             _umbracoSettings = umbracoSettings;
             _mapper = mapper;
             _logger = logger;
@@ -127,6 +126,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         [HttpDelete]
         public HttpResponseMessage DeleteRedirect(Guid id)
         {
+            
             if (this.IsUrlTrackingDisabled())
             {
                 return new HttpResponseMessage(HttpStatusCode.Conflict);
@@ -252,6 +252,11 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         private const string FileUploadPath = "~/App_Data/TEMP/FileUploads/";
         private const string FileName = "redirects{0}.csv";
 
+        private bool isCorrectExtension(string ext)
+        {
+          
+            return ext != ".csv" && ext != ".xlsx";
+        }
         [System.Web.Http.HttpPost]
         public async Task<HttpResponseMessage> Import()
         {
@@ -273,8 +278,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             var file = result.FileData[0];
             var path = file.LocalFileName;
             var ext = path.Substring(path.LastIndexOf('.')).ToLower();
-
-            if (ext != ".csv" && ext != ".xlsx")
+            if (isCorrectExtension(ext))
             {
                 throw new HttpResponseException(new HttpResponseMessage
                 {
@@ -295,6 +299,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             {   
              
                 default:
+                    
                     var csvFile = new CsvRedirectsFile(new RedirectPublishedContentFinder(UmbracoContext.ContentCache))
                         {
                             FileName = fileNameAndPath,

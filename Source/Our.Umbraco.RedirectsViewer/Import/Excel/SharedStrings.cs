@@ -4,7 +4,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace FastExcel
+namespace Our.Umbraco.RedirectsViewer.Import.Excel
 {
     /// <summary>
     /// Read and update xl/sharedStrings.xml file

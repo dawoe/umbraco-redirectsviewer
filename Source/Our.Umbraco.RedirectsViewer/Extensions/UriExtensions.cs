@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Skybrud.Umbraco.Redirects.Extensions
+namespace Our.Umbraco.RedirectsViewer.Extensions
 {
     public static class UriExtensions
     {

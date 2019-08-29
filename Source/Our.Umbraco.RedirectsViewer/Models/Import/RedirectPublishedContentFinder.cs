@@ -1,11 +1,9 @@
 using System;
-using Our.Umbraco.RedirectsViewer.Models.Import;
-using Umbraco.Core;
-using Umbraco.Core.Models;
 using Umbraco.Core.Models.PublishedContent;
+using Umbraco.Web;
 using Umbraco.Web.PublishedCache;
 
-namespace Skybrud.Umbraco.Redirects.Models.Import
+namespace Our.Umbraco.RedirectsViewer.Models.Import
 {
     /// <summary>
     /// This class only really exists so I can test the looking up of Umbraco nodes without loads of mocking 
@@ -13,7 +11,7 @@ namespace Skybrud.Umbraco.Redirects.Models.Import
     /// </summary>
     public class RedirectPublishedContentFinder : IRedirectPublishedContentFinder
     {
-        private readonly IPublishedContentCache  publishedCache;
+        private IPublishedContentCache  publishedCache { get; }
 
         public RedirectPublishedContentFinder(IPublishedContentCache publishedCache)
         {

@@ -1,4 +1,4 @@
-namespace Skybrud.Umbraco.Redirects.Models.Import
+namespace Our.Umbraco.RedirectsViewer.Models.Import
 {
     public enum ImportErrorLevel
     {

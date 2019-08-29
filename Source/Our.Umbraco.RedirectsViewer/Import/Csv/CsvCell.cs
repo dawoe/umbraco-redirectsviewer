@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Skybrud.Umbraco.Redirects.Import.Csv
+namespace Our.Umbraco.RedirectsViewer.Import.Csv
 {
     /// <summary>
     /// Class representing a cell in an instance of <see cref="CsvFile"/>.

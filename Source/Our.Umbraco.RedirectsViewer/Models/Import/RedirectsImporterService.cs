@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Our.Umbraco.RedirectsViewer.Hubs;
+using Our.Umbraco.RedirectsViewer.Models.Import.File;
 using Our.Umbraco.RedirectsViewer.Services;
-using Skybrud.Umbraco.Redirects.Models.Import.File;
 using Umbraco.Core.Services;
 using Umbraco.Core.Services.Implement;
 

@@ -5,11 +5,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Our.Umbraco.RedirectsViewer.Controllers;
+using Our.Umbraco.RedirectsViewer.Models.Import;
 using Our.Umbraco.RedirectsViewer.Services;
 using Umbraco.Core.Composing;
-using Umbraco.Core.Services;
 using Umbraco.Web;
 using Umbraco.Web.JavaScript;
+using Umbraco.Web.PublishedCache;
 
 namespace Our.Umbraco.RedirectsViewer.Compositions
 {
@@ -20,6 +21,7 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
 
             composition.RegisterAuto(typeof(RedirectService));
+           
         }
 
         private void ServerVariablesParser_Parsing(object sender, System.Collections.Generic.Dictionary<string, object> e)

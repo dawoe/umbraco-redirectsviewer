@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace FastExcel
+namespace Our.Umbraco.RedirectsViewer.Import.Excel
 {
     /// <summary>
     /// Fast Excel

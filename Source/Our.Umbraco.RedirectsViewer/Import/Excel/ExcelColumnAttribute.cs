@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FastExcel
+namespace Our.Umbraco.RedirectsViewer.Import.Excel
 {
     /// <summary>
     /// Add a custom name to the field

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Skybrud.Umbraco.Redirects.Import.Csv
+namespace Our.Umbraco.RedirectsViewer.Import.Csv
 {
 
     /// <summary>
