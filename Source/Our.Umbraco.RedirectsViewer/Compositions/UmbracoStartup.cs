@@ -21,7 +21,13 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
 
             composition.RegisterAuto(typeof(RedirectService));
-           
+            composition.RegisterUnique<IRedirectPublishedContentFinder>(factory =>
+            {
+                var umbCtx = (IUmbracoContextAccessor)factory.GetInstance(typeof(IUmbracoContextAccessor));
+               return new RedirectPublishedContentFinder(umbCtx.UmbracoContext.Content);
+            });
+
+
         }
 
         private void ServerVariablesParser_Parsing(object sender, System.Collections.Generic.Dictionary<string, object> e)

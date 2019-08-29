@@ -67,6 +67,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </summary>
         private readonly IDomainService _domainService;
 
+        private readonly  IRedirectPublishedContentFinder _redirectPublishedContentFinder;
         /// <summary>
         /// Initializes a new instance of the <see cref="RedirectsApiController"/> class.
         /// </summary>
@@ -79,10 +80,11 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                                       AppCaches appCaches, 
                                       IProfilingLogger logger, 
                                       IRuntimeState runtimeState, 
-                                      UmbracoHelper umbracoHelper,UmbracoMapper mapper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+                                      UmbracoHelper umbracoHelper,UmbracoMapper mapper,
+                                      IRedirectPublishedContentFinder redirectPublishedContentFinder) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
             _redirectUrlService = this.Services.RedirectUrlService;
-            
+            _redirectPublishedContentFinder = redirectPublishedContentFinder;
             _umbracoSettings = umbracoSettings;
             _mapper = mapper;
             _logger = logger;
@@ -301,7 +303,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
              
                 default:
                     
-                    var csvFile = new CsvRedirectsFile(new RedirectPublishedContentFinder(UmbracoContext.ContentCache))
+                    var csvFile = new CsvRedirectsFile(_redirectPublishedContentFinder)
                         {
                             FileName = fileNameAndPath,
                             Seperator = CsvSeparator.Comma
