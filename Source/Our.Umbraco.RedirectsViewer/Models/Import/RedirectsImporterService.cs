@@ -69,10 +69,17 @@ namespace Our.Umbraco.RedirectsViewer.Models.Import
             {
                 if (domains.Any())
                 {
-                    var status = _redirectService.AddRedirect(redirect.Content, domains, redirect.Url);
-                    list.Add(new Tuple<int, string, string>(status,redirect.Url,redirect.Target));
-                  
-                    redirects++;
+                    try
+                    {
+                        var status = _redirectService.AddRedirect(redirect.Content, domains, redirect.Url);
+                        list.Add(new Tuple<int, string, string>(status, redirect.Url, redirect.Target));
+
+                        redirects++;
+                    }
+                    catch (Exception e)
+                    {
+                        list.Add(new Tuple<int, string, string>(3, redirect.Url, redirect.Target));
+                    }
                     var hubClient = new HubClientService(clientId);
                     hubClient.SendUpdate(new
                     {

@@ -112,32 +112,32 @@
                             </th>
                         </tr>
                        
-                        <tr ng-repeat="item in statusImportItems" ng-class="{success: item.Item1 == 1}">
+                        <tr ng-repeat="item in statusImportItems" ng-class="{success: item.Item1 == 0}">
                             <td>
-                                <i class="umb-healthcheck-status-icon icon-check color-green" ng-if="item.Item1 == 1"></i>
+                                <i class="umb-healthcheck-status-icon icon-check color-green" ng-if="item.Item1 == 0"></i>
                                 <i class="umb-healthcheck-status-icon icon-delete icon-delete color-red"
-                                   ng-if="item.Item1 != 1"></i>
+                                   ng-if="item.Item1 != 0"></i>
                             </td>
                             <td>{{item.Item2}}</td>
                             <td>{{item.Item3}}</td>
                             <td>
-                        <span ng-if="item.Item1 == 1">
+                        <span ng-if="item.Item1 == 0">
                                 <localize key="redirectsviewer_created">
                                     Created
                                 </localize>
                         </span>
-                                <span ng-if="item.Item1 == 2">
+                                <span ng-if="item.Item1 == 1">
                                 <localize key="redirectsviewer_noContent">
                                        New URL does not exist in Umbraco 
                                 </localize>
                                 </span>
 
-                                <span ng-if="item.Item1 == 3">
+                                <span ng-if="item.Item1 == 2">
                                 <localize key="redirectsviewer_exists">
                                   Error, this redirect already exists
                                 </localize>
                                 </span>
-                                <span ng-if="item.Item1 == 4">
+                                <span ng-if="item.Item1 == 3">
                                 <localize key="redirectsviewer_unknown">
                                    Unknown error
                                 </localize>

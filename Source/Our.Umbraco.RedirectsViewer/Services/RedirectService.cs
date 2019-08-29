@@ -31,7 +31,7 @@ namespace Our.Umbraco.RedirectsViewer.Services
         {
             if (content == null)
             {
-                return 2;
+                return 1;
             }
 
             return AddRedirect(domains, url, content.Path, content.Key);
@@ -77,10 +77,10 @@ namespace Our.Umbraco.RedirectsViewer.Services
             }
             if (redirects.Any(x => x.Url == redirectUrl))
             {
-                return 3;
+                return 2;
             }
             this._redirectUrlService.Register(redirectUrl, key);
-            return 1;
+            return 0;
         
         }
     }
