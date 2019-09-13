@@ -10,6 +10,11 @@
         vm.selectedGroups = [];
         vm.settings = {};
 
+        vm.properties = {
+            'AllowPermission': { 'label': 'Set specific permissions', 'description': 'Toggle this to set specific permissions per user group. If not all users will have all rights' },
+            'GroupPermissions': { 'label': 'Group permissions', 'description': 'Check the groups you want to allow this permissions for. Admins will always have this permissions' },
+        };
+
        
         function init() {
             
@@ -89,6 +94,22 @@
         };
 
         vm.saveSettings = saveSettings;
+
+        function toggleValue(value) {
+            return !value;
+        }
+
+        function toggleCreateAllowed() {
+            vm.settings.create.allowed = toggleValue(vm.settings.create.allowed);
+        }
+
+        vm.toggleCreateAllowed = toggleCreateAllowed;
+
+        function toggleDeleteAllowed() {
+            vm.settings.delete.allowed = toggleValue(vm.settings.delete.allowed);
+        }
+
+        vm.toggleDeleteAllowed = toggleDeleteAllowed;
 
         init();
     }
