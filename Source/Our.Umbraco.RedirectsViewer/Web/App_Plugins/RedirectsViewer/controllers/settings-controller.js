@@ -111,6 +111,18 @@
 
         vm.toggleDeleteAllowed = toggleDeleteAllowed;
 
+        function toggleCreatePermission(index) {
+            vm.createGroups[index].checked = toggleValue(vm.createGroups[index].checked);
+        }
+
+        vm.toggleCreatePermission = toggleCreatePermission;
+
+        function toggleDeletePermission(index) {
+            vm.deleteGroups[index].checked = toggleValue(vm.deleteGroups[index].checked);
+        }
+
+        vm.toggleDeletePermission = toggleDeletePermission;
+
         init();
     }
 
