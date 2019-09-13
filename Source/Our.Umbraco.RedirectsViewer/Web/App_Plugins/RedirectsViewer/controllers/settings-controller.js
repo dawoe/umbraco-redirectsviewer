@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    function SettingsController($scope, userGroupResource, notificationsService, angularHelper) {
+    function SettingsController($scope, userGroupResource, notificationsService, angularHelper, localizationService) {
         var vm = this;
 
         vm.loading = true;
@@ -17,6 +17,17 @@
 
        
         function init() {
+
+            localizationService
+                .localizeMany([
+                    'redirectsviewer_createAllowLabel', 'redirectsviewer_createAllowDescription',
+                    'redirectsviewer_groupPermissionsLabel', 'redirectsviewer_prevalueUsergroups'
+                ]).then(function(data) {
+                    vm.properties.AllowPermission.label = data[0];
+                    vm.properties.AllowPermission.description = data[1];
+                    vm.properties.GroupPermissions.label = data[2];
+                    vm.properties.GroupPermissions.description = data[3];
+                });
             
             userGroupResource.getAll().then(
                 //groups from umbraco clean
@@ -126,6 +137,6 @@
         init();
     }
 
-    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService','angularHelper', SettingsController]);
+    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService','angularHelper','localizationService', SettingsController]);
 
 })();
