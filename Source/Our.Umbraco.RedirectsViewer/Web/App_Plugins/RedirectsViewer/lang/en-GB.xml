@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <language alias="en" intName="English (UK)" localName="English (UK)" lcid="" culture="en-GB">
+  <area alias="dashboardTabs">
+    <key alias="Redirects settings">Redirect viewer permissions</key>
+  </area>
   <area alias="redirectsviewer">
     <key alias="headerText">Redirect viewer permissions</key>
     <key alias="introText">Redirect content app permissions can be set here, select groups that can create or delete redirects</key>
