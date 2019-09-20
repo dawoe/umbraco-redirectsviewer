@@ -322,7 +322,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
         private bool CorrectExtension(string ext)
         {
-            return ext == ".csv" && ext == ".xlsx";
+            return ext == ".csv" || ext == ".xlsx";
         }
 
     }

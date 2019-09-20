@@ -1,10 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <language alias="nl" intName="Dutch" localName="Nederlands" lcid="19" culture="nl-NL">
+  <area alias="dashboardTabs">
+    <key alias="Redirects settings">Redirect viewer rechten</key>
+  </area>
   <area alias="redirectsviewer">
-    <key alias="headerText">Redirect viewer permissions</key>
-    <key alias="introText">Redirect content app permissions can be set here, select groups that can create or delete redirects</key>
+    <key alias="headerText">Redirect viewer rechten</key>
+    <key alias="introText">Redirect viewer content app rechten kunnen hier ingesteld worden. Selecteer de groepen die rechten hebben</key>
+    <key alias="createHeading">Toevoeg rechten</key>
+    <key alias="deleteHeading">Verwijder rechten</key>
+    <key alias="saveSettings">Opslaan</key>
     <key alias="prevalueUsergroups">Kies de gebruikersgroep die deze rechten krijgt. Admins hebben altijd deze rechten</key>
-    <key alias="redirectsNotEnabled">Redirect url tracking is uitgeschakeld. Contacteer uw systeem beheerder om url tracking in te schakelen</key>
+    <key alias="redirectsNotEnabled">edirect url tracking is uitgeschakeld. Contacteer uw systeem beheerder om url tracking in te schakelen</key>
     <key alias="createMode">Redirects zijn niet zichtbaar voor nieuwe items. Na het opslaan van het item is het mogelijk om redirects toe te voegen</key>
     <key alias="addButtonLabel">Redirect toevoegen</key>
     <key alias="noRedirects">Er zijn nog geen redirects toegevoegd voor deze pagina</key>
@@ -22,5 +28,8 @@
     <key alias="urlExistsError">Er bestaat al een redirect voor deze url</key>
     <key alias="createSuccess">De redirect is aangemaakt</key>
     <key alias="createError">Er ging iets mis bij het aanmaken van de redirect</key>
+    <key alias="createAllowLabel">Specifieke rechten instelllen</key>
+    <key alias="createAllowDescription">Selecteer dit om specifieke rechten per gebruikersgroep in te stellen</key>
+    <key alias="groupPermissionsLabel">Groep rechten</key>
   </area>
 </language>
