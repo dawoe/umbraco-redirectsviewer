@@ -1,3 +1,19 @@
 ﻿.our_umbraco_redirectsviewer {
     margin-bottom: 20px;
 }
+
+.umb-permission {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.umb-permission > * {
+    padding-right: 10px;
+}
+
+.umb-permission__description {
+    font-style: italic;
+    color: #444;
+    margin-top: 2px;
+}

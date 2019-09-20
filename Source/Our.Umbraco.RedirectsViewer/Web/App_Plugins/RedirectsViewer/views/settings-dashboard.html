@@ -1,0 +1,78 @@
+﻿<div ng-controller="Our.Umbraco.RedirectsViewer.SettingsController as vm" class="form-horizontal">
+    <umb-box>
+        <umb-box-header title-key="redirectsviewer_headerText">
+
+        </umb-box-header>
+        <umb-box-content>
+            <p><localize key="redirectsviewer_introText">Redirect content app permissions can be set here, select groups that can create or delete redirects</localize></p>
+        </umb-box-content>
+    </umb-box>
+    <umb-box ng-if="!vm.loading">
+        <umb-box-header title-key="redirectsviewer_createHeading">
+
+        </umb-box-header>
+        <umb-box-content>
+            <umb-property property="vm.properties.AllowPermission">
+                <umb-toggle checked="vm.settings.create.allowed"
+                            on-click="vm.toggleCreateAllowed()">
+
+                </umb-toggle>
+            </umb-property>
+            <umb-property property="vm.properties.GroupPermissions" ng-if="vm.settings.create.allowed">
+                <div class="umb-table">
+                    <div class="umb-table-body">
+                        <div class="umb-table-row" ng-repeat="item in vm.createGroups">
+                            <div class="umb-table-cell not-fixed">
+                                {{item.name}}
+                            </div>
+                            <div class="umb-table-cell">
+                                <umb-toggle checked="item.checked"
+                                            on-click="vm.toggleCreatePermission($index)">
+
+                                </umb-toggle>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </umb-property>           
+        </umb-box-content>
+    </umb-box>
+    <umb-box ng-if="!vm.loading">
+        <umb-box-header title-key="redirectsviewer_deleteHeading">
+
+        </umb-box-header>
+        <umb-box-content>
+            <umb-property property="vm.properties.AllowPermission">
+                <umb-toggle checked="vm.settings.delete.allowed"
+                            on-click="vm.toggleDeleteAllowed()">
+
+                </umb-toggle>
+            </umb-property>
+            <umb-property property="vm.properties.GroupPermissions" ng-if="vm.settings.delete.allowed">
+                <div class="umb-table">
+                    <div class="umb-table-body">
+                        <div class="umb-table-row" ng-repeat="item in vm.deleteGroups">
+                            <div class="umb-table-cell not-fixed">
+                                {{item.name}}
+                            </div>
+                            <div class="umb-table-cell">
+                                <umb-toggle checked="item.checked"
+                                            on-click="vm.toggleDeletePermission($index)">
+
+                                </umb-toggle>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </umb-property></umb-box-content>
+    </umb-box>
+    <div>
+        <umb-button type="button"
+                    button-style="success"
+                    label-key="redirectsviewer_saveSettings"
+                    action="vm.saveSettings()"
+                    disabled="vm.working" />
+    </div>
+</div>
