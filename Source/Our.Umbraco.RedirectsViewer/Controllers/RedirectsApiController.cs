@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -12,6 +13,7 @@
     using global::Umbraco.Core;
     using global::Umbraco.Core.Configuration;
     using global::Umbraco.Core.Logging;
+    using global::Umbraco.Core.Models;
     using global::Umbraco.Core.Services;
     using global::Umbraco.Web;
     using global::Umbraco.Web.Editors;
@@ -196,8 +198,20 @@
                 // check if we there is a domain configured for this node in umbraco
                 var rootNode = string.Empty;
 
+                var wildCardDomains = ConfigurationManager.AppSettings["Our.Umbraco.RedirectsViewer:IgnoreWildCardDomains"];
+
+                var ignoreWildCardDomains = wildCardDomains != null && bool.Parse(wildCardDomains);
+
                 // get all the domains that have a root content id set
-                var domains = this.domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
+                Func<IDomain, bool> domainPredicate = x => x.RootContentId.HasValue;
+
+                if (ignoreWildCardDomains)
+                {
+                    domainPredicate = x => x.RootContentId.HasValue && x.IsWildcard == false;
+                }
+                
+
+                var domains = this.domainService.GetAll(true).Where(domainPredicate).ToList();
                 
                 if (domains.Any())
                 {

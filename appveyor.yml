@@ -1,20 +1,20 @@
 os: Visual Studio 2015
 
 # Version format
-version: 1.2.0.{build}
+version: 1.3.0.{build}
 
 cache:
   - Source\Our.Umbraco.RedirectsViewer\packages -> **\packages.config   # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
 branches:
   only:
-    - develop
-    - master
+    - develop-v7
+    - master-v7
     
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX if a rtm release build this should be blank, otherwise if empty will default to alpha
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
 init:
-  - set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=rtm
+  - set UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
   
 test: 
     assemblies:
@@ -36,7 +36,7 @@ deploy:
       secure: xuhyqGpLpjeK0tUansB6IVWy89Fw+yqGqCmCpVuAY1fnDjfYrxA/gVGNBh8oU0JA
     artifact: /.*\.nupkg/
     on:
-      branch: develop
+      branch: develop-v7
       
  # GitHub Deployment for releases
   - provider: GitHub
@@ -46,7 +46,7 @@ deploy:
     draft: false
     prerelease: false
     on:
-      branch: master
+      branch: master-v7
       appveyor_repo_tag: true        # deploy on tag push only
 
 # NuGet Deployment for releases
@@ -56,7 +56,7 @@ deploy:
       secure: nbR13qs8xp+iOGpuDFDsz7AtYFcltXswOXo9N8fhqx+oJoRdkzHk3pjubFbfO6dx
     artifact: /.*\.nupkg/
     on:
-      branch: master
+      branch: master-v7
       appveyor_repo_tag: true
       
 notifications:
