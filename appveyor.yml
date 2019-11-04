@@ -8,8 +8,8 @@ cache:
 
 branches:
   only:
-    - develop
-    - master
+    - develop-v7
+    - master-v7
     
 # UMBRACO_PACKAGE_PRERELEASE_SUFFIX if a rtm release build this should be blank, otherwise if empty will default to alpha
 # example UMBRACO_PACKAGE_PRERELEASE_SUFFIX=beta
