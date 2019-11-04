@@ -36,7 +36,7 @@ deploy:
       secure: xuhyqGpLpjeK0tUansB6IVWy89Fw+yqGqCmCpVuAY1fnDjfYrxA/gVGNBh8oU0JA
     artifact: /.*\.nupkg/
     on:
-      branch: develop
+      branch: develop-v7
       
  # GitHub Deployment for releases
   - provider: GitHub
@@ -46,7 +46,7 @@ deploy:
     draft: false
     prerelease: false
     on:
-      branch: master
+      branch: master-v7
       appveyor_repo_tag: true        # deploy on tag push only
 
 # NuGet Deployment for releases
@@ -56,7 +56,7 @@ deploy:
       secure: nbR13qs8xp+iOGpuDFDsz7AtYFcltXswOXo9N8fhqx+oJoRdkzHk3pjubFbfO6dx
     artifact: /.*\.nupkg/
     on:
-      branch: master
+      branch: master-v7
       appveyor_repo_tag: true
       
 notifications:
