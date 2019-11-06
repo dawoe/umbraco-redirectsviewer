@@ -19,6 +19,18 @@ Deleting and creating is by default disabled (except for admins), but can be ena
 
 
 
+## How to use ##
+
+1. In the Developer section, create a new Data Type, give it an appropriate name, e.g. "Redirects Viewer", choose the property editor with the same name, and set the permissions to your liking (admins have full access).
+
+2. Go to the Settings section. On the doc types for the pages which you want to redirect **to**, add a new property, give it an appropriate name, e.g. "Allow Redirects From", and choose the data type you created above. A composite doc type which you're including on many/all pages might also be a good candidate for where to place the new property.
+
+3. Go to the Contents section and select a page which you want to be the target of a redirect, find the property you created, click "Add redirect", and enter the path you are redirecting **from**. The path should not contain the domain name, and may/may not start with a slash (it doesn't matter).
+
+4. That's it. Except one gotcha! If you have a site with multiple roots, e.g. one per language/country, and you have not specifically assigned domain names to these roots, then the redirects will not work out of the box. The work around is to add a setting to your web.config: under the &lt;appsettings> element add the following: &lt;add key="Our.Umbraco.RedirectsViewer:IgnoreWildCardDomains" value="true" />, and reload the website.
+
+
+
 ## Support this package ##
 
 If you like this package and use it in your website, consider becoming a patreon to support ongoing maintenance
