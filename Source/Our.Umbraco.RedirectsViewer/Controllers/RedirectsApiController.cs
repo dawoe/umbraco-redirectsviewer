@@ -88,14 +88,14 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// The <see cref="HttpResponseMessage"/>.
         /// </returns>
         [HttpGet]
-        public HttpResponseMessage GetRedirectsForContent(Guid contentKey)
+        public HttpResponseMessage GetRedirectsForContent(Guid contentKey, string culture)
         {
             if (this.IsUrlTrackingDisabled())
             {
                 return new HttpResponseMessage(HttpStatusCode.Conflict);
             }
 
-            var redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).ToArray());
+            var redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).Where(x => x.Culture.InvariantEquals(culture)).ToArray());
 
             return this.Request.CreateResponse(HttpStatusCode.OK, redirects);
         }
@@ -158,12 +158,13 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             if (!string.IsNullOrEmpty(urlError))
             {
                 return this.Request.CreateNotificationValidationErrorResponse(urlError);
-            }            
+            }
 
             try
             {
                 // check if we there is a domain configured for this node in umbraco
                 var rootNode = string.Empty;
+                var rootNodeUrl = string.Empty;
 
                 // get all the domains that have a root content id set
                 var domains = this._domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
@@ -184,18 +185,30 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                     if (pathIds.Any())
                     {
                         // find a domain that is in the path of the item
-                        var assignedDomain = domains.FirstOrDefault(x => pathIds.Contains(x.RootContentId.Value.ToString()));
+                        var assignedDomain = domains.FirstOrDefault(x => x.LanguageIsoCode.InvariantEquals(redirect.Culture) && pathIds.Contains(x.RootContentId.Value.ToString()));
 
                         if (assignedDomain != null)
                         {
                             // get the root content node
                             rootNode = assignedDomain.RootContentId.Value.ToString();
+                            rootNodeUrl = assignedDomain.DomainName;
                         }
                     }
                 }
 
                 if (!string.IsNullOrEmpty(rootNode))
                 {
+                    // remove language prefix
+                    if (!string.IsNullOrEmpty(rootNodeUrl) && redirect.Url.StartsWith(rootNodeUrl))
+                    {
+                        redirect.Url = redirect.Url.Substring(rootNodeUrl.Length);
+                    }
+
+                    if (string.IsNullOrEmpty(redirect.Url))
+                    {
+                        throw new Exception("Cannot redirect root node");
+                    }
+
                     // prefix the url with the root content node
                     redirect.Url = rootNode + redirect.Url;
                 }
@@ -209,14 +222,14 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                     return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/urlExistsError"));
                 }
 
-                this._redirectUrlService.Register(redirect.Url, redirect.ContentKey);
+                this._redirectUrlService.Register(redirect.Url, redirect.ContentKey, redirect.Culture.ToLower());
                 return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/createSuccess"));
             }
             catch (Exception ex)
             {
                 this._logger.Error(this.GetType(), "Error creating redirect", ex);
                 return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/createError"));
-            }           
+            }
         }
 
         /// <summary>

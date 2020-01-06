@@ -40,7 +40,7 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
                 },
                 {
                     "RedirectsApi", urlHelper.GetUmbracoApiServiceBaseUrl<RedirectsApiController>(c =>
-                        c.GetRedirectsForContent(Guid.Empty))
+                        c.GetRedirectsForContent(Guid.Empty, String.Empty))
                 }
             };
 
