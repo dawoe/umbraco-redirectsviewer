@@ -7,6 +7,7 @@ using Umbraco.Core.Persistence;
 namespace Our.Umbraco.RedirectsViewer.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -88,14 +89,23 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// The <see cref="HttpResponseMessage"/>.
         /// </returns>
         [HttpGet]
-        public HttpResponseMessage GetRedirectsForContent(Guid contentKey, string culture)
+        public HttpResponseMessage GetRedirectsForContent(Guid contentKey, string culture = "")
         {
             if (this.IsUrlTrackingDisabled())
             {
                 return new HttpResponseMessage(HttpStatusCode.Conflict);
             }
 
-            var redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).Where(x => x.Culture.InvariantEquals(culture)).ToArray());
+            var redirects = new List<ContentRedirectUrl>();
+
+            if (!string.IsNullOrEmpty(culture))
+            {
+                redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).Where(x => x.Culture.InvariantEquals(culture)).ToArray());
+            }
+            else
+            {
+                redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).ToArray());
+            }
 
             return this.Request.CreateResponse(HttpStatusCode.OK, redirects);
         }
@@ -166,26 +176,41 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                 var rootNode = string.Empty;
                 var rootNodeUrl = string.Empty;
 
+                // get the content item
+                var content = this._contentService.GetById(redirect.ContentKey);
+
+                if (content == null)
+                {
+                    throw new Exception("Content does not exist");
+                }
+
+                // set default culture (if any)
+                if (string.IsNullOrEmpty(redirect.Culture) && content.CultureInfos.Count > 0)
+                {
+                    redirect.Culture = content.CultureInfos[0].Culture;
+                }
+
                 // get all the domains that have a root content id set
                 var domains = this._domainService.GetAll(true).Where(x => x.RootContentId.HasValue).ToList();
                 
                 if (domains.Any())
                 {
-                    // get the content item
-                    var content = this._contentService.GetById(redirect.ContentKey);
-
-                    if (content == null)
-                    {
-                        throw new Exception("Content does not exist");
-                    }
-
                     // get all the ids in the path
                     var pathIds = content.Path.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                     if (pathIds.Any())
                     {
                         // find a domain that is in the path of the item
-                        var assignedDomain = domains.FirstOrDefault(x => x.LanguageIsoCode.InvariantEquals(redirect.Culture) && pathIds.Contains(x.RootContentId.Value.ToString()));
+                        IDomain assignedDomain = null;
+
+                        if (!string.IsNullOrEmpty(redirect.Culture))
+                        {
+                            assignedDomain = domains.FirstOrDefault(x => x.LanguageIsoCode.InvariantEquals(redirect.Culture) && pathIds.Contains(x.RootContentId.Value.ToString()));
+                        }
+                        else
+                        {
+                            assignedDomain = domains.FirstOrDefault(x => pathIds.Contains(x.RootContentId.Value.ToString()));
+                        }
 
                         if (assignedDomain != null)
                         {
@@ -199,7 +224,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                 if (!string.IsNullOrEmpty(rootNode))
                 {
                     // remove language prefix
-                    if (!string.IsNullOrEmpty(rootNodeUrl) && redirect.Url.StartsWith(rootNodeUrl))
+                    if (!string.IsNullOrEmpty(rootNodeUrl) && rootNodeUrl != "/" && redirect.Url.StartsWith(rootNodeUrl))
                     {
                         redirect.Url = redirect.Url.Substring(rootNodeUrl.Length);
                     }
@@ -222,7 +247,15 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                     return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/urlExistsError"));
                 }
 
-                this._redirectUrlService.Register(redirect.Url, redirect.ContentKey, redirect.Culture.ToLower());
+                if (!string.IsNullOrEmpty(redirect.Culture))
+                {
+                    this._redirectUrlService.Register(redirect.Url, redirect.ContentKey, redirect.Culture.ToLower());
+                }
+                else
+                {
+                    this._redirectUrlService.Register(redirect.Url, redirect.ContentKey);
+                }
+
                 return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/createSuccess"));
             }
             catch (Exception ex)
