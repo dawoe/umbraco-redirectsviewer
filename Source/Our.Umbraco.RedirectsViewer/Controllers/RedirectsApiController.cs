@@ -1,4 +1,5 @@
-﻿using Umbraco.Core.Cache;
+﻿using Our.Umbraco.RedirectsViewer.Services;
+using Umbraco.Core.Cache;
 using Umbraco.Core.Configuration.UmbracoSettings;
 using Umbraco.Core.Mapping;
 using Umbraco.Core.Models;
@@ -30,7 +31,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// <summary>
         /// The redirect url service.
         /// </summary>
-        private readonly IRedirectUrlService _redirectUrlService;
+        private readonly IOurRedirectsService _redirectUrlService;
 
         private readonly IUmbracoSettingsSection _umbracoSettings;
         private readonly UmbracoMapper _mapper;
@@ -66,9 +67,9 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                                       AppCaches appCaches, 
                                       IProfilingLogger logger, 
                                       IRuntimeState runtimeState, 
-                                      UmbracoHelper umbracoHelper,UmbracoMapper mapper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+                                      UmbracoHelper umbracoHelper,UmbracoMapper mapper,IOurRedirectsService ourRedirectsService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
         {
-            _redirectUrlService = this.Services.RedirectUrlService;
+            _redirectUrlService = ourRedirectsService;
 
             _umbracoSettings = umbracoSettings;
             _mapper = mapper;
