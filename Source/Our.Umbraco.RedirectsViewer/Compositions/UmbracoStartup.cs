@@ -9,7 +9,7 @@ using Our.Umbraco.RedirectsViewer.Services;
 using Umbraco.Core.Composing;
 using Umbraco.Web;
 using Umbraco.Web.JavaScript;
-
+using Umbraco.Core;
 namespace Our.Umbraco.RedirectsViewer.Compositions
 {
     public class UmbracoStartup:IUserComposer
@@ -17,7 +17,7 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
         public void Compose(Composition composition)
         {
             ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
-            composition.RegisterFor<IOurRedirectsService,RedirectsService>();
+            composition.Register<IOurRedirectsService,RedirectsService>();
         }
 
         private void ServerVariablesParser_Parsing(object sender, System.Collections.Generic.Dictionary<string, object> e)

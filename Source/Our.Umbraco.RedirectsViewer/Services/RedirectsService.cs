@@ -8,10 +8,6 @@ namespace Our.Umbraco.RedirectsViewer.Services
 {
     public interface IOurRedirectsService
     {
-        event EventHandler RedirectAdded;
-        
-        event EventHandler RedirectDeleted;
-        
         void Delete(Guid id);
         
         IEnumerable<IRedirectUrl> GetContentRedirectUrls(Guid contentKey);
@@ -26,8 +22,8 @@ namespace Our.Umbraco.RedirectsViewer.Services
     public class RedirectsService:IOurRedirectsService
     {
         private readonly IRedirectUrlService _redirectUrlService;
-        public event EventHandler RedirectAdded;
-        public event EventHandler RedirectDeleted;
+        public static event EventHandler<RedirectAddedArgs> RedirectAdded;
+        public static event EventHandler<RedirectDeletedArgs> RedirectDeleted;
 
         public RedirectsService(IRedirectUrlService redirectUrlService)
         {
@@ -54,7 +50,7 @@ namespace Our.Umbraco.RedirectsViewer.Services
         public void Register(string url, Guid contentKey, string culture = null)
         {
             _redirectUrlService.Register(url,contentKey,culture);
-            RedirectAdded?.Invoke(this,new RedirectAdded(url,contentKey,culture));
+            RedirectAdded?.Invoke(this,new RedirectAddedArgs(url,contentKey,culture));
         }
     }
 }
