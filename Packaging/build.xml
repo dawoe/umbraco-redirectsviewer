@@ -97,11 +97,12 @@
 
 	<!-- PREPARE FILES -->
 	<Target Name="PrepareFiles" DependsOnTargets="Clean">
+	   
 		<ItemGroup>
 			<!-- Shared -->
 			<CoreBinFiles Include="$(CoreProjectDir)\bin\$(BuildConfig)\Our.Umbraco.RedirectsViewer.dll" />
 			<CorePdbFiles Include="$(CoreProjectDir)\bin\$(BuildConfig)\Our.Umbraco.RedirectsViewer.pdb" />			
-			<AppPluginFiles Include="$(PackageProjectDir)\App_Plugins\**\*.*" />
+			<AppPluginFiles Include="$(CoreProjectDir)\Web\App_Plugins\**\*.*" />
 
 			<!-- Umbraco specific -->
 			<PackageFile Include="$(MSBuildProjectDirectory)\package.xml" />
@@ -110,10 +111,13 @@
 			<NuSpecFile Include="$(MSBuildProjectDirectory)\package.nuspec" />
 		</ItemGroup>
 
+        
+
 		<!-- Umbraco -->		
 		<Copy SourceFiles="@(CoreBinFiles)" DestinationFolder="$(BuildUmbDir)\bin" />
 		<Copy SourceFiles="@(PackageFile)" DestinationFolder="$(BuildUmbDir)" />
 
+		<Message Text="package project folder is $(CoreProjectDir)" />
 		<Copy SourceFiles="@(AppPluginFiles)" DestinationFiles="@(AppPluginFiles->'$(BuildUmbDir)\App_Plugins\%(RecursiveDir)%(Filename)%(Extension)')" />
 
 
