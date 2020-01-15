@@ -116,8 +116,6 @@
 		<!-- Umbraco -->		
 		<Copy SourceFiles="@(CoreBinFiles)" DestinationFolder="$(BuildUmbDir)\bin" />
 		<Copy SourceFiles="@(PackageFile)" DestinationFolder="$(BuildUmbDir)" />
-
-		<Message Text="package project folder is $(CoreProjectDir)" />
 		<Copy SourceFiles="@(AppPluginFiles)" DestinationFiles="@(AppPluginFiles->'$(BuildUmbDir)\App_Plugins\%(RecursiveDir)%(Filename)%(Extension)')" />
 
 
