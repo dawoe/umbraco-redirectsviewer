@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Our.Umbraco.RedirectsViewer.Models.Events;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 
@@ -20,30 +21,6 @@ namespace Our.Umbraco.RedirectsViewer.Services
         void Register(string url, Guid contentKey, string culture = null);
         
         
-    }
-
-    public class RedirectDeletedArgs : EventArgs
-    {
-        public Guid Id { get; }
-
-        public RedirectDeletedArgs(Guid id)
-        {
-            Id = id;
-        }
-    }
-
-    public class RedirectAdded:EventArgs
-    {
-        public string Url { get; }
-        public Guid ContentKey { get; }
-        public string Culture { get; }
-
-        public RedirectAdded(string url, Guid contentKey, string culture = null)
-        {
-            Url = url;
-            ContentKey = contentKey;
-            Culture = culture;
-        }
     }
 
     public class RedirectsService:IOurRedirectsService

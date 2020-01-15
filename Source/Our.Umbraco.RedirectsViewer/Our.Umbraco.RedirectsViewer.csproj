@@ -270,6 +270,8 @@
     <Compile Include="Compositions\UmbracoStartup.cs" />
     <Compile Include="Controllers\RedirectsApiController.cs" />
     <Compile Include="Controllers\UserGroupsApiController.cs" />
+    <Compile Include="Models\Events\RedirectAdded.cs" />
+    <Compile Include="Models\Events\RedirectDeletedArgs.cs" />
     <Compile Include="Models\RedirectSave.cs" />
     <Compile Include="Models\RedirectSetting.cs" />
     <Compile Include="Models\UserGroupDisplay.cs" />
