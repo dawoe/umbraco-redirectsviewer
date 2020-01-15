@@ -120,8 +120,8 @@
 
 
 		<!--NuGet -->
-		<Copy SourceFiles="@(CoreBinFiles)" DestinationFolder="$(BuildNuGetCoreDir)\lib\net45" />
-		<Copy SourceFiles="@(CorePdbFiles)" DestinationFolder="$(BuildNuGetCoreDir)\lib\net45" />		
+		<Copy SourceFiles="@(CoreBinFiles)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />
+		<Copy SourceFiles="@(CorePdbFiles)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />		
 		<Copy SourceFiles="@(AppPluginFiles)" DestinationFiles="@(AppPluginFiles->'$(BuildNuGetDir)\Content\App_Plugins\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(NuSpecFile)" DestinationFolder="$(BuildNuGetDir)" />
 
