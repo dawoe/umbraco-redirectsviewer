@@ -13,14 +13,6 @@
 |**Pre-release**| [![AppVeyor Artifacts](https://img.shields.io/badge/appveyor-umbraco-orange.svg)](https://ci.appveyor.com/project/dawoe/umbraco-redirectsviewer/build/artifacts)
 
 
-This package will install a property editor that will allow you to view and manage redirects for the current page.
+This package installs a content app that will allow you to view and manage redirects for the current page.
 
-Deleting and creating is by default disabled (except for admins), but can be enabled in the datatype settings. It will allow you to select which user groups have the rights to do these actions.
-
-
-
-## Support this package ##
-
-If you like this package and use it in your website, consider becoming a patreon to support ongoing maintenance
-
-[https://www.patreon.com/dawoe](https://t.co/TBsvTMnOLB)
+Deleting and creating is by default disabled (except for admins), but can be enabled in a dashboard in the settings section. It will allow you to select which user groups have the rights to do these actions.

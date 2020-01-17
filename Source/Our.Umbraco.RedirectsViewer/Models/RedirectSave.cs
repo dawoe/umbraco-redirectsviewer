@@ -20,5 +20,11 @@
         /// </summary>
         [DataMember(Name = "contentKey")]
         public Guid ContentKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the culture.
+        /// </summary>
+        [DataMember(Name = "culture")]
+        public string Culture { get; set; }
     }
 }

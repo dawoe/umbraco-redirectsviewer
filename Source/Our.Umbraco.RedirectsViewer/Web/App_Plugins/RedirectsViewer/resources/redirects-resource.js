@@ -13,12 +13,12 @@
 
         return resource;
 
-        function getRedirectsForContent(contentKey) {
+        function getRedirectsForContent(contentKey, culture) {
             return umbRequestHelper.resourcePromise(
-                $http.get(apiUrl + "GetRedirectsForContent?contentKey=" + contentKey),
+                $http.get(apiUrl + "GetRedirectsForContent?contentKey=" + contentKey + "&culture=" + culture),
                 "Failed to load redirects for content"
             );
-        };
+        }
 
         function deleteRedirect(id) {
             return umbRequestHelper.resourcePromise(
@@ -27,15 +27,14 @@
             );
         }
 
-        function createRedirect(url, id) {
-            var data = JSON.stringify({ url: url, contentKey: id });
+        function createRedirect(url, id, culture) {
+            var data = JSON.stringify({ url: url, contentKey: id, culture: culture });
 
             return umbRequestHelper.resourcePromise(
                 $http.post(apiUrl + "CreateRedirect", data),
                 "Failed delete redirect"
             );
-        };
-
+        }
     }
 
     angular.module("umbraco.resources").factory("Our.Umbraco.RedirectsViewer.RedirectsResource", RedirectsResource);

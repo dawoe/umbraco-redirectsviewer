@@ -61,10 +61,18 @@
         };
        
         function loadRedirects() {
+            var culture = "";
+
+            if (typeof ($routeParams.cculture) !== "undefined") {
+                culture = $routeParams.cculture;
+            }
+            else if (typeof ($routeParams.mculture) !== "undefined") {
+                culture = $routeParams.mculture;
+            }
+
             vm.loading = true;
 
-
-            return redirectsResource.getRedirects(editorState.current.key).then(function (data) {
+            return redirectsResource.getRedirects(editorState.current.key, culture).then(function (data) {
                     vm.redirects = data;
                     vm.isLoading = false;
                 },
@@ -79,7 +87,16 @@
             vm.overlay.view = umbRequestHelper.convertVirtualToAbsolutePath("~/App_Plugins/RedirectsViewer/views/create-overlay.html");
             vm.overlay.title = title;
             vm.overlay.submit = function (newModel) {
-                redirectsResource.createRedirect(newModel.data.OldUrl, editorState.current.key).then(function (data) {
+                var culture = "";
+
+                if (typeof ($routeParams.cculture) !== "undefined") {
+                    culture = $routeParams.cculture;
+                }
+                else if (typeof ($routeParams.mculture) !== "undefined") {
+                    culture = $routeParams.mculture;
+                }
+
+                redirectsResource.createRedirect(newModel.data.OldUrl, editorState.current.key, culture).then(function (data) {
                         loadRedirects(editorState.current.key);
                         vm.overlay.show = false;
                         vm.overlay = null;

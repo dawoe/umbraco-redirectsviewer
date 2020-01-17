@@ -1,7 +1,7 @@
 ﻿(function () {
     "use strict";
 
-    function SettingsController($scope, userGroupResource, notificationsService, angularHelper) {
+    function SettingsController($scope, userGroupResource, notificationsService, angularHelper, localizationService) {
         var vm = this;
 
         vm.loading = true;
@@ -10,8 +10,24 @@
         vm.selectedGroups = [];
         vm.settings = {};
 
+        vm.properties = {
+            'AllowPermission': { 'label': 'Set specific permissions', 'description': 'Toggle this to set specific permissions per user group. If not all users will have all rights' },
+            'GroupPermissions': { 'label': 'Group permissions', 'description': 'Check the groups you want to allow this permissions for. Admins will always have this permissions' },
+        };
+
        
         function init() {
+
+            localizationService
+                .localizeMany([
+                    'redirectsviewer_createAllowLabel', 'redirectsviewer_createAllowDescription',
+                    'redirectsviewer_groupPermissionsLabel', 'redirectsviewer_prevalueUsergroups'
+                ]).then(function(data) {
+                    vm.properties.AllowPermission.label = data[0];
+                    vm.properties.AllowPermission.description = data[1];
+                    vm.properties.GroupPermissions.label = data[2];
+                    vm.properties.GroupPermissions.description = data[3];
+                });
             
             userGroupResource.getAll().then(
                 //groups from umbraco clean
@@ -90,9 +106,37 @@
 
         vm.saveSettings = saveSettings;
 
+        function toggleValue(value) {
+            return !value;
+        }
+
+        function toggleCreateAllowed() {
+            vm.settings.create.allowed = toggleValue(vm.settings.create.allowed);
+        }
+
+        vm.toggleCreateAllowed = toggleCreateAllowed;
+
+        function toggleDeleteAllowed() {
+            vm.settings.delete.allowed = toggleValue(vm.settings.delete.allowed);
+        }
+
+        vm.toggleDeleteAllowed = toggleDeleteAllowed;
+
+        function toggleCreatePermission(index) {
+            vm.createGroups[index].checked = toggleValue(vm.createGroups[index].checked);
+        }
+
+        vm.toggleCreatePermission = toggleCreatePermission;
+
+        function toggleDeletePermission(index) {
+            vm.deleteGroups[index].checked = toggleValue(vm.deleteGroups[index].checked);
+        }
+
+        vm.toggleDeletePermission = toggleDeletePermission;
+
         init();
     }
 
-    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService','angularHelper', SettingsController]);
+    angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.SettingsController", ['$scope', 'Our.Umbraco.RedirectsViewer.UserGroupResource', 'notificationsService','angularHelper','localizationService', SettingsController]);
 
 })();

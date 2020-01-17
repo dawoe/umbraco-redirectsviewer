@@ -1,10 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <language alias="en_us" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <area alias="dashboardTabs">
+    <key alias="Redirects settings">Redirect viewer permissions</key>
+  </area>
   <area alias="redirectsviewer">
     <key alias="headerText">Redirect viewer permissions</key>
     <key alias="introText">Redirect content app permissions can be set here, select groups that can create or delete redirects</key>
-    <key alias="createHeading">Create</key>
-    <key alias="deleteHeading">Delete</key>
+    <key alias="createHeading">Create permissions</key>
+    <key alias="deleteHeading">Delete permissions</key>
     <key alias="saveSettings">Save</key>
     <key alias="prevalueUsergroups">Select the user groups that have these rights. Admins will always have these rights</key>
     <key alias="redirectsNotEnabled">Redirect url tracking is disabled. Please contact your system adminstrator to enable url tracking</key>
@@ -25,5 +28,8 @@
     <key alias="urlExistsError">There is already a existing redirect with this url</key>
     <key alias="createSuccess">The redirect is created</key>
     <key alias="createError">Something went wrong creating the redirect</key>
+    <key alias="createAllowLabel">Set specific permissions</key>
+    <key alias="createAllowDescription">Toggle this to set specific permissions per user group. If not all users will have all rights</key>
+    <key alias="groupPermissionsLabel">Group permissions</key>
   </area>
 </language>
