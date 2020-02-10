@@ -122,7 +122,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </returns>
         [HttpPost]
         [HttpDelete]
-        public HttpResponseMessage DeleteRedirect(Guid id)
+        public HttpResponseMessage DeleteRedirect(Guid id, string culture = "")
         {
             if (this.IsUrlTrackingDisabled())
             {
@@ -131,7 +131,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             try
             {
-                this._redirectUrlService.Delete(id);
+                this._redirectUrlService.Delete(id,culture);
 
                 return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/deleteSuccess"));
             }

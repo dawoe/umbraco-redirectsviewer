@@ -122,7 +122,7 @@
         function confirmAction(index, item) {
             vm.isLoading = true;
             item.deletePrompt = false;
-            redirectsResource.deleteRedirect(item.redirectId).then(function (data) {
+            redirectsResource.deleteRedirect(item.redirectId,item.culture).then(function (data) {
                     loadRedirects();
                 },
                 function (err) {

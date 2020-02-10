@@ -20,9 +20,9 @@
             );
         }
 
-        function deleteRedirect(id) {
+        function deleteRedirect(id,culture) {
             return umbRequestHelper.resourcePromise(
-                $http.delete(apiUrl + "DeleteRedirect?id=" + id),
+                $http.delete(apiUrl + "DeleteRedirect?id=" + id+"&culture="+culture),
                 "Failed delete redirect"
             );
         }
