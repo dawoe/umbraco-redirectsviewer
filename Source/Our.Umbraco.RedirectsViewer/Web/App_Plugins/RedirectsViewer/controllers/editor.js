@@ -1,7 +1,7 @@
 ﻿(function() {
     "use strict";
 
-    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource,umbRequestHelper, localizationService,userGroupResource) {
+    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource,umbRequestHelper, localizationService,userGroupResource,contentResource) {
         var vm = this;
 
         vm.isCreate = $routeParams.create;
@@ -21,9 +21,9 @@
 
                 if (vm.isEnabled === false) {
                     vm.isLoading = false;
-                }               
+                }
             });
-        };        
+        };
 
         function checkUserPermissions() {
             return authResource.getCurrentUser().then(function (user) {
@@ -34,11 +34,11 @@
                     vm.canAdd = true;
                 } else {
                     var groups = user.userGroups;
-                    
+
                     if (vm.redirectSettings.delete.allowed) {
-                       
-                       for (var i = 0; i < groups.length; i++) {
-                           vm.canDelete = _.contains(vm.redirectSettings.delete.usergroups, groups[i]);
+
+                        for (var i = 0; i < groups.length; i++) {
+                            vm.canDelete = _.contains(vm.redirectSettings.delete.usergroups, groups[i]);
 
                             if (vm.canDelete) {
                                 break;
@@ -47,7 +47,7 @@
                     }
 
                     if (vm.redirectSettings.create.allowed) {
-                       
+
                         for (var i = 0; i < groups.length; i++) {
                             vm.canAdd = _.contains(vm.redirectSettings.create.usergroups, groups[i]);
 
@@ -59,7 +59,7 @@
                 }
             });
         };
-       
+
         function loadRedirects() {
             var culture = "";
 
@@ -112,7 +112,7 @@
             };
             vm.overlay.data = data;
         };
-       
+
         function showPrompt(item) {
             item.deletePrompt = true;
         };
@@ -122,19 +122,24 @@
         function confirmAction(index, item) {
             vm.isLoading = true;
             item.deletePrompt = false;
-            redirectsResource.deleteRedirect(item.redirectId,item.contentGuid,item.culture).then(function (data) {
-                    loadRedirects();
-                },
-                function (err) {
-                    vm.isLoading = false;
+
+            contentResource.getById(item.contentId)
+                .then(function(data) {
+                    var contentId = data.key;
+                    redirectsResource.deleteRedirect(item.redirectId,contentId,item.culture).then(function (data) {
+                            loadRedirects();
+                        },
+                        function (err) {
+                            vm.isLoading = false;
+                        });
                 });
-        };
+        }
 
         vm.confirmAction = confirmAction;
 
         function hidePrompt(item) {
             item.deletePrompt = false;
-        };
+        }
 
         vm.hidePrompt = hidePrompt;
 
@@ -159,13 +164,13 @@
                 if (vm.isEnabled) {
                     checkUserPermissions().then(function () {
                         localizationService.localize('redirectsviewer_createOverlayTitle').then(function (value) {
-                                vm.overlayTitle = value;
-                            });
-                        loadRedirects();                        
-                    });                                                                      
-               }
+                            vm.overlayTitle = value;
+                        });
+                        loadRedirects();
+                    });
+                }
             });
-        };        
+        };
 
         init();
 
@@ -177,5 +182,5 @@
     }
 
     angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.EditController",
-        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'umbRequestHelper', 'localizationService','Our.Umbraco.RedirectsViewer.UserGroupResource', EditController]);
+        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'umbRequestHelper', 'localizationService','Our.Umbraco.RedirectsViewer.UserGroupResource','contentResource', EditController]);
 })();
