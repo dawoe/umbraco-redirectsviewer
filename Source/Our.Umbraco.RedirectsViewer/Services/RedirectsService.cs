@@ -8,7 +8,7 @@ namespace Our.Umbraco.RedirectsViewer.Services
 {
     public interface IOurRedirectsService
     {
-        void Delete(Guid id,string culture);
+        void Delete(Guid id,Guid contentId,string culture);
         
         IEnumerable<IRedirectUrl> GetContentRedirectUrls(Guid contentKey);
         
@@ -30,10 +30,10 @@ namespace Our.Umbraco.RedirectsViewer.Services
             _redirectUrlService = redirectUrlService;
         }
 
-        public void Delete(Guid id,string culture)
+        public void Delete(Guid id,Guid contentId,string culture)
         {
             _redirectUrlService.Delete(id);
-            RedirectDeleted?.Invoke(this,new RedirectDeletedArgs(id,culture));
+            RedirectDeleted?.Invoke(this,new RedirectDeletedArgs(contentId,culture));
         }
 
         public IEnumerable<IRedirectUrl> GetContentRedirectUrls(Guid contentKey)
