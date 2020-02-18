@@ -24,6 +24,8 @@ namespace Our.Umbraco.RedirectsViewer.Services
         private readonly IRedirectUrlService _redirectUrlService;
         public static event EventHandler<RedirectAddedArgs> RedirectAdded;
         public static event EventHandler<RedirectDeletedArgs> RedirectDeleted;
+        
+        public static event EventHandler<RedirectDeletingArgs> RedirectDeleting;
 
         public RedirectsService(IRedirectUrlService redirectUrlService)
         {
@@ -32,7 +34,10 @@ namespace Our.Umbraco.RedirectsViewer.Services
 
         public void Delete(Guid id,Guid contentId,string culture)
         {
+            RedirectDeleting?.Invoke(this,new RedirectDeletingArgs(contentId,culture));
+            
             _redirectUrlService.Delete(id);
+            
             RedirectDeleted?.Invoke(this,new RedirectDeletedArgs(contentId,culture));
         }
 

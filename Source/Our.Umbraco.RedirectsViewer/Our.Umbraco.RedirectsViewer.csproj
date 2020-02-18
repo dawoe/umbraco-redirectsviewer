@@ -272,6 +272,7 @@
     <Compile Include="Controllers\UserGroupsApiController.cs" />
     <Compile Include="Models\Events\RedirectAddedArgs.cs" />
     <Compile Include="Models\Events\RedirectDeletedArgs.cs" />
+    <Compile Include="Models\Events\RedirectDeletingArgs.cs" />
     <Compile Include="Models\RedirectSave.cs" />
     <Compile Include="Models\RedirectSetting.cs" />
     <Compile Include="Models\UserGroupDisplay.cs" />
