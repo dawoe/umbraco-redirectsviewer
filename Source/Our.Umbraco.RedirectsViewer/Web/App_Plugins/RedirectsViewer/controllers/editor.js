@@ -1,12 +1,10 @@
-﻿(function() {
+﻿(function () {
     "use strict";
 
-    function EditController($scope, $routeParams, editorState, redirectUrlsResource, redirectsResource, authResource,umbRequestHelper, localizationService,userGroupResource) {
+    function EditController($scope, $routeParams, editorState, redirectsResource, authResource, umbRequestHelper, localizationService, userGroupResource) {
         var vm = this;
-
-        vm.isCreate = $routeParams.create;
-        vm.isLoading = true;
-        vm.isEnabled = false;
+        
+        vm.isLoading = true;       
         vm.isAdmin = false;
         vm.redirects = [];
         vm.canDelete = false;
@@ -15,19 +13,10 @@
         vm.redirectSettings = [];
         vm.culture = '';
 
-        function checkEnabled() {
-            return redirectUrlsResource.getEnableState().then(function(data) {
-                vm.isEnabled = data.enabled === true;
-                vm.isAdmin = data.userIsAdmin;
-
-                if (vm.isEnabled === false) {
-                    vm.isLoading = false;
-                }               
-            });
-        };        
-
         function checkUserPermissions() {
             return authResource.getCurrentUser().then(function (user) {
+
+                vm.isAdmin = user.userGroups.includes('admin');
 
                 //admin can always add and delete
                 if (vm.isAdmin) {
@@ -35,11 +24,11 @@
                     vm.canAdd = true;
                 } else {
                     var groups = user.userGroups;
-                    
+
                     if (vm.redirectSettings.delete.allowed) {
-                       
-                       for (var i = 0; i < groups.length; i++) {
-                           vm.canDelete = _.contains(vm.redirectSettings.delete.usergroups, groups[i]);
+
+                        for (var i = 0; i < groups.length; i++) {
+                            vm.canDelete = _.contains(vm.redirectSettings.delete.usergroups, groups[i]);
 
                             if (vm.canDelete) {
                                 break;
@@ -48,7 +37,7 @@
                     }
 
                     if (vm.redirectSettings.create.allowed) {
-                       
+
                         for (var i = 0; i < groups.length; i++) {
                             vm.canAdd = _.contains(vm.redirectSettings.create.usergroups, groups[i]);
 
@@ -60,15 +49,15 @@
                 }
             });
         };
-       
-        function loadRedirects() {           
+
+        function loadRedirects() {
 
             vm.loading = true;
 
             return redirectsResource.getRedirects(editorState.current.key, vm.culture).then(function (data) {
-                    vm.redirects = data;
-                    vm.isLoading = false;
-                },
+                vm.redirects = data;
+                vm.isLoading = false;
+            },
                 function (err) {
                     vm.isLoading = false;
                 });
@@ -79,13 +68,13 @@
             vm.overlay.show = true;
             vm.overlay.view = umbRequestHelper.convertVirtualToAbsolutePath("~/App_Plugins/RedirectsViewer/views/create-overlay.html");
             vm.overlay.title = title;
-            vm.overlay.submit = function (newModel) {               
+            vm.overlay.submit = function (newModel) {
 
                 redirectsResource.createRedirect(newModel.data.OldUrl, editorState.current.key, vm.culture).then(function (data) {
-                        loadRedirects(editorState.current.key);
-                        vm.overlay.show = false;
-                        vm.overlay = null;
-                    },
+                    loadRedirects(editorState.current.key);
+                    vm.overlay.show = false;
+                    vm.overlay = null;
+                },
                     function (err) {
                         console.error(err.data.notifications[0]);
                     });
@@ -97,7 +86,7 @@
             };
             vm.overlay.data = data;
         };
-       
+
         function showPrompt(item) {
             item.deletePrompt = true;
         };
@@ -108,8 +97,8 @@
             vm.isLoading = true;
             item.deletePrompt = false;
             redirectsResource.deleteRedirect(item.redirectId).then(function (data) {
-                    loadRedirects();
-                },
+                loadRedirects();
+            },
                 function (err) {
                     vm.isLoading = false;
                 });
@@ -137,7 +126,7 @@
             var currentVariant = _.find($scope.content.variants, function (v) { return v.active });
 
             if (currentVariant && currentVariant.language) {
-                vm.culture = currentVariant.language.culture;                          
+                vm.culture = currentVariant.language.culture;
             }
 
             userGroupResource.getSettings().then(
@@ -146,17 +135,15 @@
                 }
             );
 
-            checkEnabled().then(function() {
-                if (vm.isEnabled) {
-                    checkUserPermissions().then(function () {
-                        localizationService.localize('redirectsviewer_createOverlayTitle').then(function (value) {
-                                vm.overlayTitle = value;
-                            });
-                        loadRedirects();                        
-                    });                                                                      
-               }
+
+            checkUserPermissions().then(function () {
+                localizationService.localize('redirectsviewer_createOverlayTitle').then(function (value) {
+                    vm.overlayTitle = value;
+                });
+                loadRedirects();
             });
-        };        
+
+        };
 
         init();
 
@@ -168,5 +155,5 @@
     }
 
     angular.module("umbraco").controller("Our.Umbraco.RedirectsViewer.EditController",
-        ['$scope', '$routeParams', 'editorState', 'redirectUrlsResource', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'umbRequestHelper', 'localizationService','Our.Umbraco.RedirectsViewer.UserGroupResource', EditController]);
+        ['$scope', '$routeParams', 'editorState', 'Our.Umbraco.RedirectsViewer.RedirectsResource', 'authResource', 'umbRequestHelper', 'localizationService', 'Our.Umbraco.RedirectsViewer.UserGroupResource', EditController]);
 })();

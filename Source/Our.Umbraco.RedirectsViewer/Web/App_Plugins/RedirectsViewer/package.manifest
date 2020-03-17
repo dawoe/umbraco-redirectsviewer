@@ -8,19 +8,6 @@
     }
   ],
 
-  "contentApps": [
-    {
-      "name": "Redirects",
-      "alias": "redirects",
-      "weight": 0,
-      "icon": "icon-trafic",
-      "view": "~/App_Plugins/RedirectsViewer/views/editor.html",
-      "show": [
-        "+content/*"
-      ]
-    }
-  ],
-
   "javascript": [
     "~/App_Plugins/RedirectsViewer/controllers/settings-controller.js",
     "~/App_Plugins/RedirectsViewer/controllers/editor.js",
