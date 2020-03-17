@@ -16,6 +16,8 @@
         function checkUserPermissions() {
             return authResource.getCurrentUser().then(function (user) {
 
+                vm.isAdmin = user.userGroups.includes('admin');
+
                 //admin can always add and delete
                 if (vm.isAdmin) {
                     vm.canDelete = true;
