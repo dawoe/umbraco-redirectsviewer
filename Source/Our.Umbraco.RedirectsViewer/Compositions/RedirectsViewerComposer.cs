@@ -1,6 +1,7 @@
 ﻿using Umbraco.Core.Composing;
 using Umbraco.Core;
 using Our.Umbraco.RedirectsViewer.Components;
+using Umbraco.Web;
 
 namespace Our.Umbraco.RedirectsViewer.Compositions
 {
@@ -10,6 +11,8 @@ namespace Our.Umbraco.RedirectsViewer.Compositions
         public void Compose(Composition composition)
         {
             composition.Components().Append<ServerVariableRegistrationComponent>();
+
+            composition.ContentApps().Append<RedirectsContentAppFactory>();
         }
     }
 }

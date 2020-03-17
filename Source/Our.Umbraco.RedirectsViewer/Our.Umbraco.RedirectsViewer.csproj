@@ -261,6 +261,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\RedirectsContentAppFactory.cs" />
     <Compile Include="Components\ServerVariableRegistrationComponent.cs" />
     <Compile Include="Compositions\RedirectsViewerComposer.cs" />
     <Compile Include="Controllers\RedirectsApiController.cs" />
