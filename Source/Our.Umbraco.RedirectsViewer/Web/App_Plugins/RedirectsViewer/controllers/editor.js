@@ -13,6 +13,7 @@
         vm.canAdd = false;
         vm.overlayTitle = 'Create redirect';
         vm.redirectSettings = [];
+        vm.culture = '';
 
         function checkEnabled() {
             return redirectUrlsResource.getEnableState().then(function(data) {
@@ -60,19 +61,11 @@
             });
         };
        
-        function loadRedirects() {
-            var culture = "";
-
-            if (typeof ($routeParams.cculture) !== "undefined") {
-                culture = $routeParams.cculture;
-            }
-            else if (typeof ($routeParams.mculture) !== "undefined") {
-                culture = $routeParams.mculture;
-            }
+        function loadRedirects() {           
 
             vm.loading = true;
 
-            return redirectsResource.getRedirects(editorState.current.key, culture).then(function (data) {
+            return redirectsResource.getRedirects(editorState.current.key, vm.culture).then(function (data) {
                     vm.redirects = data;
                     vm.isLoading = false;
                 },
@@ -86,17 +79,9 @@
             vm.overlay.show = true;
             vm.overlay.view = umbRequestHelper.convertVirtualToAbsolutePath("~/App_Plugins/RedirectsViewer/views/create-overlay.html");
             vm.overlay.title = title;
-            vm.overlay.submit = function (newModel) {
-                var culture = "";
+            vm.overlay.submit = function (newModel) {               
 
-                if (typeof ($routeParams.cculture) !== "undefined") {
-                    culture = $routeParams.cculture;
-                }
-                else if (typeof ($routeParams.mculture) !== "undefined") {
-                    culture = $routeParams.mculture;
-                }
-
-                redirectsResource.createRedirect(newModel.data.OldUrl, editorState.current.key, culture).then(function (data) {
+                redirectsResource.createRedirect(newModel.data.OldUrl, editorState.current.key, vm.culture).then(function (data) {
                         loadRedirects(editorState.current.key);
                         vm.overlay.show = false;
                         vm.overlay = null;
@@ -148,6 +133,12 @@
         vm.createRedirect = createRedirect;
 
         function init() {
+
+            var currentVariant = _.find($scope.content.variants, function (v) { return v.active });
+
+            if (currentVariant && currentVariant.language) {
+                vm.culture = currentVariant.language.culture;                          
+            }
 
             userGroupResource.getSettings().then(
                 function (data) {
