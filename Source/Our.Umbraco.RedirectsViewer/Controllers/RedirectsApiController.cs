@@ -96,16 +96,12 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                 return new HttpResponseMessage(HttpStatusCode.Conflict);
             }
 
-            var redirects = new List<ContentRedirectUrl>();
+            var redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).ToList());
 
             if (!string.IsNullOrEmpty(culture))
             {
-                redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).Where(x => x.Culture.InvariantEquals(culture)).ToArray());
-            }
-            else
-            {
-                redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).ToArray());
-            }
+                redirects = redirects.Where(x => x.Culture.InvariantEquals(culture)).ToList();
+            }          
 
             return this.Request.CreateResponse(HttpStatusCode.OK, redirects);
         }
