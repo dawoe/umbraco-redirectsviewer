@@ -12,13 +12,13 @@
 
         </umb-box-header>
         <umb-box-content>
-            <umb-property property="vm.properties.AllowPermission">
+            <umb-property property="vm.properties.AllowPermission" property-alias="allowPermission">
                 <umb-toggle checked="vm.settings.create.allowed"
                             on-click="vm.toggleCreateAllowed()">
 
                 </umb-toggle>
             </umb-property>
-            <umb-property property="vm.properties.GroupPermissions" ng-if="vm.settings.create.allowed">
+            <umb-property property="vm.properties.GroupPermissions" property-alias="groupPermissions" ng-if="vm.settings.create.allowed">
                 <div class="umb-table">
                     <div class="umb-table-body">
                         <div class="umb-table-row" ng-repeat="item in vm.createGroups">
@@ -34,8 +34,7 @@
                         </div>
                     </div>
                 </div>
-
-            </umb-property>           
+            </umb-property>
         </umb-box-content>
     </umb-box>
     <umb-box ng-if="!vm.loading">
@@ -43,13 +42,13 @@
 
         </umb-box-header>
         <umb-box-content>
-            <umb-property property="vm.properties.AllowPermission">
+            <umb-property property="vm.properties.AllowPermission" property-alias="allowPermission">
                 <umb-toggle checked="vm.settings.delete.allowed"
                             on-click="vm.toggleDeleteAllowed()">
 
                 </umb-toggle>
             </umb-property>
-            <umb-property property="vm.properties.GroupPermissions" ng-if="vm.settings.delete.allowed">
+            <umb-property property="vm.properties.GroupPermissions" property-alias="groupPermissions" ng-if="vm.settings.delete.allowed">
                 <div class="umb-table">
                     <div class="umb-table-body">
                         <div class="umb-table-row" ng-repeat="item in vm.deleteGroups">
@@ -65,8 +64,8 @@
                         </div>
                     </div>
                 </div>
-
-            </umb-property></umb-box-content>
+            </umb-property>
+        </umb-box-content>
     </umb-box>
     <div>
         <umb-button type="button"
