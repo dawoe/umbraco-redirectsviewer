@@ -6,7 +6,7 @@ using Umbraco.Web;
 namespace Our.Umbraco.RedirectsViewer.Compositions
 {
     [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
-    internal class RedirectsViewerComposer : IUserComposer
+    public class RedirectsViewerComposer : IUserComposer
     {
         public void Compose(Composition composition)
         {
