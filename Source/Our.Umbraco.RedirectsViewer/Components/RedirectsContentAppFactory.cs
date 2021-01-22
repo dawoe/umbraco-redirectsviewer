@@ -34,15 +34,19 @@ namespace Our.Umbraco.RedirectsViewer.Components
             {
                 return null;
             }
-            
 
-            return new ContentApp
+            if (contentBase is IContent)
             {
-                Alias = "redirects",
-                Icon = "icon-trafic",
-                Name = "Redirects",
-                View = "/App_Plugins/RedirectsViewer/views/editor.html",                
-            };
+                return new ContentApp
+                {
+                    Alias = "redirects",
+                    Icon = "icon-trafic",
+                    Name = "Redirects",
+                    View = "/App_Plugins/RedirectsViewer/views/editor.html",
+                };
+            }
+
+            return null;
         }
 
         private bool IsUrlTrackingDisabled()

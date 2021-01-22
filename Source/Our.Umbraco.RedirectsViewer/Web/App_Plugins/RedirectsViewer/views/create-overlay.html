@@ -1,9 +1,9 @@
 ﻿<div ng-controller="Our.Umbraco.RedirectsViewer.CreateOverlayController as vm" class="umb-el-wrap">
-    <form name="settingsForm" val-form-manager >   
-        <div style="margin-top: 20px;">     
-            <umb-property property="vm.properties.OldUrl">
+    <form name="settingsForm" val-form-manager >
+        <div style="margin-top: 20px;">
+            <umb-property property="vm.properties.OldUrl" property-alias="oldUrl">
                 <input type="text" ng-model="vm.model.OldUrl" class="umb-property-editor umb-textstring textstring" required no-dirty-check/>
-            </umb-property>      
+            </umb-property>
         </div>
     </form>
 </div>
