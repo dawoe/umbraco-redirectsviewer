@@ -32,7 +32,7 @@
 		<Copyright>Copyright &#169; Dave Woestenborghs and contributors.</Copyright>
 		<Owners>Dave Woestenborghs</Owners>
 		<Description>This package implements a property editor that allows you to view and manage 301 redirects</Description>
-		<IconUrl>https://github.com/dawoe/umbraco-redirectsviewer/raw/develop/Images/icon.png</IconUrl>
+		<IconUrl>https://raw.githubusercontent.com/dawoe/umbraco-redirectsviewer/develop/Images/icon.png</IconUrl>
 		<Tags>umbraco</Tags>
 		<Language>en-GB</Language>
 		<RequireLicenseAcceptance>false</RequireLicenseAcceptance>
