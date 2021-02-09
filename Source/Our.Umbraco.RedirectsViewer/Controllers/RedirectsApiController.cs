@@ -249,7 +249,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                 }
                 else
                 {
-                    this._redirectUrlService.Register(redirect.Url, redirect.ContentKey);
+                    this._redirectUrlService.Register(redirect.Url, redirect.ContentKey, string.Empty);
                 }
 
                 return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/createSuccess"));
