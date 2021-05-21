@@ -238,7 +238,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                 long total;
                 var redirects = this._redirectUrlService.GetAllRedirectUrls(0, int.MaxValue, out total);
 
-                if (redirects.Any(x => x.Url == redirect.Url))
+                if (redirects.Any(x => x.Url == redirect.Url && x.Culture == redirect.Culture))
                 {
                     return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/urlExistsError"));
                 }
