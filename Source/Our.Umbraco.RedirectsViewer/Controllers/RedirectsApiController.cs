@@ -40,7 +40,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </summary>
         private readonly IRedirectUrlService _redirectUrlService;
 
-        private readonly UmbracoMapper _mapper;
+        private readonly IUmbracoMapper _mapper;
 
         /// <summary>
         /// The logger.
@@ -74,7 +74,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                                       AppCaches appCaches, 
                                       ILogger<RedirectsApiController> logger, 
                                       IRuntimeState runtimeState, 
-                                      UmbracoHelper umbracoHelper,UmbracoMapper mapper) : base()
+                                      UmbracoHelper umbracoHelper,IUmbracoMapper mapper) : base()
         {
             _redirectUrlService = redirectUrlService;
             _webRoutingSettings = webRoutingSettings;
