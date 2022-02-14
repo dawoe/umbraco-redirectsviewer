@@ -1,14 +1,13 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Umbraco.Cms.Core.Models.Membership;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
+using Umbraco.Cms.Web.BackOffice.Controllers;
 using Umbraco.Core;
-using Umbraco.Core.Cache;
-using Umbraco.Core.Configuration;
-using Umbraco.Core.Configuration.UmbracoSettings;
-using Umbraco.Core.Logging;
-using Umbraco.Core.Models.Membership;
-using Umbraco.Core.Persistence;
+
 
 namespace Our.Umbraco.RedirectsViewer.Controllers
 {
@@ -16,19 +15,13 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Web.Http;
-
-
-    using global::Umbraco.Core.Services;
-    using global::Umbraco.Web;
-    using global::Umbraco.Web.Editors;
 
     using Models;
 
     /// <summary>
     /// User groups api controller
     /// </summary>
-    public class UserGroupsApiController : controller
+    public class UserGroupsApiController : BackOfficeNotificationsController
     {
         /// <summary>
         /// The user service.
@@ -42,16 +35,10 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// <summary>
         /// Initializes a new instance of the <see cref="UserGroupsApiController"/> class.
         /// </summary>      
-        public UserGroupsApiController(IUmbracoSettingsSection umbracoSettings,
-            IGlobalSettings globalSettings,
-            IUmbracoContextFactory umbracoContextAccessor,
-            ISqlContext sqlContext,
-            ServiceContext services,
-            AppCaches appCaches,
-            IProfilingLogger logger,
-            IRuntimeState runtimeState,
-            UmbracoHelper umbracoHelper, 
-            IUserService userService,IKeyValueService keyValueService) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+        public UserGroupsApiController(
+            ILogger<UserGroupsApiController> logger,
+           
+            IUserService userService,IKeyValueService keyValueService) : base()
         {
             _userService = userService;
             _keyValueService = keyValueService;
@@ -79,8 +66,11 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             {
                 model = Map(allUserTypes);
             }
-
-            return Request.CreateResponse(HttpStatusCode.OK, model);
+            
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(model))
+            };
         }
 
         [HttpPost]
@@ -89,12 +79,14 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             try
             {
                 _keyValueService.SetValue("redirectSettings_" + _key, JsonConvert.SerializeObject(settings));
-
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,ex);
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(JsonConvert.SerializeObject(ex))
+                };
             }
         }
 
@@ -116,7 +108,10 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             }
 
 
-            return Request.CreateResponse(HttpStatusCode.OK, model);
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(model))
+            };
         }
 
         private RedirectSettings CreateEmptySettings()

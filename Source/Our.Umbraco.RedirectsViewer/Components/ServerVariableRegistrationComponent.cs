@@ -3,30 +3,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Notifications;
+using Umbraco.Extensions;
 
 namespace Our.Umbraco.RedirectsViewer.Components
 {
     internal class ServerVariableRegistrationComponent : INotificationHandler<ServerVariablesParsingNotification>
     {
-        public ServerVariableRegistrationComponent(urlhe)
+        private readonly LinkGenerator _linkGenerator;
+
+        public ServerVariableRegistrationComponent(LinkGenerator linkGenerator)
         {
+            _linkGenerator = linkGenerator;
         }
 
-        private static void SetUpDictionaryForAngularPropertyEditor(Dictionary<string, object> e)
+        private void SetUpDictionaryForAngularPropertyEditor(IDictionary<string, object> e)
         {
-            var urlHelper = new UrlHelper(new RequestContext(new HttpContextWrapper(HttpContext.Current), new RouteData()));
-
+          
             var urlDictionairy = new Dictionary<string, object>
             {
                 {
                     "UserGroupApi",
-                    urlHelper.GetUmbracoApiServiceBaseUrl<UserGroupsApiController>(c => c.GetUserGroups())
+                    _linkGenerator.GetUmbracoApiServiceBaseUrl<UserGroupsApiController>(c => c.GetUserGroups())
                 },
                 {
-                    "RedirectsApi", urlHelper.GetUmbracoApiServiceBaseUrl<RedirectsApiController>(c =>
+                    "RedirectsApi", _linkGenerator.GetUmbracoApiServiceBaseUrl<RedirectsApiController>(c =>
                         c.GetRedirectsForContent(Guid.Empty, string.Empty))
                 }
             };
@@ -40,12 +45,7 @@ namespace Our.Umbraco.RedirectsViewer.Components
 
         public void Handle(ServerVariablesParsingNotification notification)
         {
-            if (HttpContext.Current == null)
-            {
-                return;
-            }
-
-            SetUpDictionaryForAngularPropertyEditor(e);
+            SetUpDictionaryForAngularPropertyEditor(notification.ServerVariables);
         }
     }
 }

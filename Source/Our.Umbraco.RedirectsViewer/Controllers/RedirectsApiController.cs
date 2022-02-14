@@ -1,16 +1,34 @@
 ﻿
 
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Logging;
+using Umbraco.Cms.Core.Mapping;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.ContentEditing;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
+using Umbraco.Cms.Infrastructure.Persistence;
+using Umbraco.Cms.Web.BackOffice.Controllers;
+using Umbraco.Cms.Web.Common;
+using Our.Umbraco.RedirectsViewer.Models;
+using Umbraco.Cms.Core.Actions;
+using Umbraco.Cms.Core.Configuration.Models;
+using Umbraco.Cms.Core.Extensions;
+using Umbraco.Extensions;
+using HttpRequestExtensions = Umbraco.Extensions.HttpRequestExtensions;
+using StringExtensions = Umbraco.Extensions.StringExtensions;
 
 namespace Our.Umbraco.RedirectsViewer.Controllers
 {
-
-
-    using Models;
 
     /// <summary>
     /// The redirects api controller.
@@ -22,7 +40,6 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </summary>
         private readonly IRedirectUrlService _redirectUrlService;
 
-        private readonly IUmbracoSettingsSection _umbracoSettings;
         private readonly UmbracoMapper _mapper;
 
         /// <summary>
@@ -44,23 +61,24 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// The domain service.
         /// </summary>
         private readonly IDomainService _domainService;
+        private readonly IOptionsMonitor<WebRoutingSettings> _webRoutingSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedirectsApiController"/> class.
         /// </summary>
-        public RedirectsApiController(IUmbracoSettingsSection umbracoSettings, 
-                                      IGlobalSettings globalSettings, 
+        public RedirectsApiController(IRedirectUrlService redirectUrlService,
                                       IUmbracoContextFactory umbracoContextAccessor, 
+                                      IOptionsMonitor<WebRoutingSettings> webRoutingSettings,
                                       ISqlContext sqlContext, 
                                       ServiceContext services, 
                                       AppCaches appCaches, 
-                                      IProfilingLogger logger, 
+                                      ILogger<RedirectsApiController> logger, 
                                       IRuntimeState runtimeState, 
-                                      UmbracoHelper umbracoHelper,UmbracoMapper mapper) : base(globalSettings, umbracoContextAccessor, sqlContext, services, appCaches, logger, runtimeState, umbracoHelper)
+                                      UmbracoHelper umbracoHelper,UmbracoMapper mapper) : base()
         {
-            _redirectUrlService = this.Services.RedirectUrlService;
+            _redirectUrlService = redirectUrlService;
+            _webRoutingSettings = webRoutingSettings;
 
-            _umbracoSettings = umbracoSettings;
             _mapper = mapper;
             _logger = logger;
             _localizedTextService = services.TextService;
@@ -89,10 +107,12 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
             if (!string.IsNullOrEmpty(culture))
             {
-                redirects = redirects.Where(x => x.Culture.InvariantEquals(culture)).ToList();
+                redirects = redirects.Where(x => StringExtensions.InvariantEquals(x.Culture, culture)).ToList();
             }          
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, redirects);
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(redirects))
+            };
         }
 
         /// <summary>
@@ -106,23 +126,23 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </returns>
         [HttpPost]
         [HttpDelete]
-        public HttpResponseMessage DeleteRedirect(Guid id)
+        public IActionResult  DeleteRedirect(Guid id)
         {
             if (this.IsUrlTrackingDisabled())
             {
-                return new HttpResponseMessage(HttpStatusCode.Conflict);
+                return Conflict();
             }
 
             try
             {
                 this._redirectUrlService.Delete(id);
 
-                return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/deleteSuccess"));
+                return Ok(this._localizedTextService.Localize("redirectsviewer","deleteSuccess"));
             }
             catch (Exception e)
             {
-                this._logger.Error(this.GetType(), "Error deleting redirect", e);
-                return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/deleteError"));
+                this._logger.LogError( "Error deleting redirect", e);
+                return ValidationProblem(this._localizedTextService.Localize("redirectsviewer","deleteError"));
             }           
         }
 
@@ -136,23 +156,23 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// The <see cref="HttpResponseMessage"/>.
         /// </returns>
         [HttpPost]
-        public HttpResponseMessage CreateRedirect(RedirectSave redirect)
+        public IActionResult CreateRedirect(RedirectSave redirect)
         {
             if (this.IsUrlTrackingDisabled())
             {
-                return new HttpResponseMessage(HttpStatusCode.Conflict);
+                return Conflict();
             }
 
             if (redirect.ContentKey == Guid.Empty || string.IsNullOrEmpty(redirect.Url))
             {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
 
             var urlError = this.ValidateUrl(redirect);
 
             if (!string.IsNullOrEmpty(urlError))
             {
-                return this.Request.CreateNotificationValidationErrorResponse(urlError);
+                return ValidationProblem(urlError);
             }
 
             try
@@ -190,7 +210,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
                         if (!string.IsNullOrEmpty(redirect.Culture))
                         {
-                            assignedDomain = domains.FirstOrDefault(x => x.LanguageIsoCode.InvariantEquals(redirect.Culture) && pathIds.Contains(x.RootContentId.Value.ToString()));
+                            assignedDomain = domains.FirstOrDefault(x => StringExtensions.InvariantEquals(x.LanguageIsoCode,redirect.Culture) && pathIds.Contains(x.RootContentId.Value.ToString()));
                         }
                         else
                         {
@@ -229,7 +249,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
 
                 if (redirects.Any(x => x.Url == redirect.Url && x.Culture == redirect.Culture))
                 {
-                    return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/urlExistsError"));
+                    return ValidationProblem(this._localizedTextService.Localize("redirectsviewer","urlExistsError"));
                 }
 
                 if (!string.IsNullOrEmpty(redirect.Culture))
@@ -250,12 +270,12 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                     this._redirectUrlService.Register(redirect.Url, redirect.ContentKey);
                 }
 
-                return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/createSuccess"));
+                return Ok(this._localizedTextService.Localize("redirectsviewer","createSuccess"));
             }
             catch (Exception ex)
             {
-                this._logger.Error(this.GetType(), "Error creating redirect", ex);
-                return this.Request.CreateNotificationValidationErrorResponse(this._localizedTextService.Localize("redirectsviewer/createError"));
+                this._logger.LogError("Error creating redirect", ex);
+                return ValidationProblem(this._localizedTextService.Localize("redirectsviewer","createError"));
             }
         }
 
@@ -267,7 +287,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </returns>
         private bool IsUrlTrackingDisabled()
         {
-            return _umbracoSettings.WebRouting.DisableRedirectUrlTracking;
+            return _webRoutingSettings.CurrentValue.DisableRedirectUrlTracking;
         }
 
         /// <summary>
@@ -283,17 +303,17 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         {
             if (redirect.Url.StartsWith("http://") || redirect.Url.StartsWith("https://"))
             {
-                return this._localizedTextService.Localize("redirectsviewer/urlRelativeError");
+                return this._localizedTextService.Localize("redirectsviewer","urlRelativeError");
             }
 
             if (redirect.Url.Contains("."))
             {
-                return this._localizedTextService.Localize("redirectsviewer/urlNoDotsError");
+                return this._localizedTextService.Localize("redirectsviewer","urlNoDotsError");
             }
 
             if (redirect.Url.Contains(" "))
             {
-                return this._localizedTextService.Localize("redirectsviewer/urlNoSpacesError");
+                return this._localizedTextService.Localize("redirectsviewer","urlNoSpacesError");
             }
 
 

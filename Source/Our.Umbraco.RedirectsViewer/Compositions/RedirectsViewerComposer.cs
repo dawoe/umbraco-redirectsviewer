@@ -1,10 +1,8 @@
-﻿using Umbraco.Core.Composing;
-using Umbraco.Core;
+﻿using Umbraco.Core;
 using Our.Umbraco.RedirectsViewer.Components;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Notifications;
-using Umbraco.Web;
 
 namespace Our.Umbraco.RedirectsViewer.Compositions
 {
