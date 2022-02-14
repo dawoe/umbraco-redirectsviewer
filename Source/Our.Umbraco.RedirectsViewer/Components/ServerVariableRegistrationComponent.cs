@@ -3,48 +3,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Umbraco.Core.Composing;
-using Umbraco.Web;
-using Umbraco.Web.JavaScript;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
+using Umbraco.Cms.Core.Composing;
+using Umbraco.Cms.Core.Events;
+using Umbraco.Cms.Core.Notifications;
+using Umbraco.Extensions;
 
 namespace Our.Umbraco.RedirectsViewer.Components
 {
-    internal class ServerVariableRegistrationComponent : IComponent
+    internal class ServerVariableRegistrationComponent : INotificationHandler<ServerVariablesParsingNotification>
     {
-        public void Initialize()
+        private readonly LinkGenerator _linkGenerator;
+
+        public ServerVariableRegistrationComponent(LinkGenerator linkGenerator)
         {
-            ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
+            _linkGenerator = linkGenerator;
         }
 
-        public void Terminate()
+        private void SetUpDictionaryForAngularPropertyEditor(IDictionary<string, object> e)
         {
-            ServerVariablesParser.Parsing -= ServerVariablesParser_Parsing;
-        }
-
-        private void ServerVariablesParser_Parsing(object sender, System.Collections.Generic.Dictionary<string, object> e)
-        {
-            if (HttpContext.Current == null)
-            {
-                return;
-            }
-
-            SetUpDictionaryForAngularPropertyEditor(e);
-        }
-
-        private static void SetUpDictionaryForAngularPropertyEditor(Dictionary<string, object> e)
-        {
-            var urlHelper = new UrlHelper(new RequestContext(new HttpContextWrapper(HttpContext.Current), new RouteData()));
-
+          
             var urlDictionairy = new Dictionary<string, object>
             {
                 {
                     "UserGroupApi",
-                    urlHelper.GetUmbracoApiServiceBaseUrl<UserGroupsApiController>(c => c.GetUserGroups())
+                    _linkGenerator.GetUmbracoApiServiceBaseUrl<UserGroupsApiController>(c => c.GetUserGroups())
                 },
                 {
-                    "RedirectsApi", urlHelper.GetUmbracoApiServiceBaseUrl<RedirectsApiController>(c =>
+                    "RedirectsApi", _linkGenerator.GetUmbracoApiServiceBaseUrl<RedirectsApiController>(c =>
                         c.GetRedirectsForContent(Guid.Empty, string.Empty))
                 }
             };
@@ -54,6 +41,11 @@ namespace Our.Umbraco.RedirectsViewer.Components
             {
                 e.Add("Our.Umbraco.RedirectsViewer", urlDictionairy);
             }
+        }
+
+        public void Handle(ServerVariablesParsingNotification notification)
+        {
+            SetUpDictionaryForAngularPropertyEditor(notification.ServerVariables);
         }
     }
 }

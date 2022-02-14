@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using Umbraco.Core.Configuration.UmbracoSettings;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.ContentEditing;
-using Umbraco.Core.Models.Membership;
+using Microsoft.Extensions.Options;
+using Umbraco.Cms.Core.Configuration.Models;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.ContentEditing;
+using Umbraco.Cms.Core.Models.Membership;
 
 namespace Our.Umbraco.RedirectsViewer.Components
 {
     internal class RedirectsContentAppFactory : IContentAppFactory
     {
-        private readonly IUmbracoSettingsSection _umbracoSettings;
+        private readonly IOptionsMonitor<WebRoutingSettings> _webRoutingSettings;
 
-        public RedirectsContentAppFactory(IUmbracoSettingsSection umbracoSettings)
+        public RedirectsContentAppFactory( IOptionsMonitor<WebRoutingSettings> webRoutingSettings)
         {
-            this._umbracoSettings = umbracoSettings;
+            _webRoutingSettings = webRoutingSettings;
         }
 
         public ContentApp GetContentAppFor(object source, IEnumerable<IReadOnlyUserGroup> userGroups)
@@ -51,7 +52,7 @@ namespace Our.Umbraco.RedirectsViewer.Components
 
         private bool IsUrlTrackingDisabled()
         {
-            return _umbracoSettings.WebRouting.DisableRedirectUrlTracking;
+            return _webRoutingSettings.CurrentValue.DisableRedirectUrlTracking;
         }
     }
 }
