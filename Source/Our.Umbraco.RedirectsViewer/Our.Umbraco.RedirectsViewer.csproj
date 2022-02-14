@@ -8,11 +8,23 @@
     <Platforms>AnyCPU</Platforms>
     <PackageId>Our.Umbraco.RedirectsViewer</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>3.0.0-beta</PackageVersion>
+    <PackageVersion>3.0.0</PackageVersion>
     <PackageProjectUrl>https://github.com/dawoe/umbraco-redirectsviewer</PackageProjectUrl>
     <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
+  <ItemGroup>
+    <None Update="Web\**\*.*">
+      <Pack>True</Pack>
+      <PackagePath>_Content</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="build\**\*.*">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Umbraco.Cms.Core" Version="9.2.0" />
