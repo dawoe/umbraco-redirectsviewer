@@ -1,6 +1,7 @@
 ﻿
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -96,11 +97,11 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// The <see cref="HttpResponseMessage"/>.
         /// </returns>
         [HttpGet]
-        public HttpResponseMessage GetRedirectsForContent(Guid contentKey, string culture = "")
+        public ActionResult<List<ContentRedirectUrl>> GetRedirectsForContent(Guid contentKey, string culture = "")
         {
             if (this.IsUrlTrackingDisabled())
             {
-                return new HttpResponseMessage(HttpStatusCode.Conflict);
+                return Conflict();
             }
 
             var redirects = _mapper.MapEnumerable<IRedirectUrl, ContentRedirectUrl>(_redirectUrlService.GetContentRedirectUrls(contentKey).ToList());
@@ -108,11 +109,10 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
             if (!string.IsNullOrEmpty(culture))
             {
                 redirects = redirects.Where(x => StringExtensions.InvariantEquals(x.Culture, culture)).ToList();
-            }          
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(redirects))
-            };
+            }
+
+           return redirects;
+           
         }
 
         /// <summary>
