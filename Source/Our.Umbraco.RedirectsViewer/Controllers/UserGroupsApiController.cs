@@ -1,5 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Web;
 using Umbraco.Core;
 using Umbraco.Core.Cache;
 using Umbraco.Core.Configuration;
@@ -26,7 +28,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
     /// <summary>
     /// User groups api controller
     /// </summary>
-    public class UserGroupsApiController : BackOfficeNotificationsController
+    public class UserGroupsApiController : controller
     {
         /// <summary>
         /// The user service.
@@ -42,7 +44,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </summary>      
         public UserGroupsApiController(IUmbracoSettingsSection umbracoSettings,
             IGlobalSettings globalSettings,
-            IUmbracoContextAccessor umbracoContextAccessor,
+            IUmbracoContextFactory umbracoContextAccessor,
             ISqlContext sqlContext,
             ServiceContext services,
             AppCaches appCaches,

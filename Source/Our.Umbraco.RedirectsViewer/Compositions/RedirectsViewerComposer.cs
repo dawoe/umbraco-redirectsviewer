@@ -1,16 +1,18 @@
 ﻿using Umbraco.Core.Composing;
 using Umbraco.Core;
 using Our.Umbraco.RedirectsViewer.Components;
+using Umbraco.Cms.Core.Composing;
+using Umbraco.Cms.Core.DependencyInjection;
+using Umbraco.Cms.Core.Notifications;
 using Umbraco.Web;
 
 namespace Our.Umbraco.RedirectsViewer.Compositions
 {
-    [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
-    public class RedirectsViewerComposer : IUserComposer
+    public class RedirectsViewerComposer : IComposer
     {
-        public void Compose(Composition composition)
+        public void Compose(IUmbracoBuilder composition)
         {
-            composition.Components().Append<ServerVariableRegistrationComponent>();
+            composition.AddNotificationHandler<ServerVariablesParsingNotification,ServerVariableRegistrationComponent>();
 
             composition.ContentApps().Append<RedirectsContentAppFactory>();
         }

@@ -1,25 +1,14 @@
-﻿using Umbraco.Core.Cache;
-using Umbraco.Core.Configuration.UmbracoSettings;
-using Umbraco.Core.Mapping;
-using Umbraco.Core.Models;
-using Umbraco.Core.Persistence;
+﻿
+
+using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Core.Cache;
+using Umbraco.Cms.Core.Logging;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Web;
 
 namespace Our.Umbraco.RedirectsViewer.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Web.Http;
-    using global::Umbraco.Core;
-    using global::Umbraco.Core.Configuration;
-    using global::Umbraco.Core.Logging;
-    using global::Umbraco.Core.Services;
-    using global::Umbraco.Web;
-    using global::Umbraco.Web.Editors;
-    using global::Umbraco.Web.Models.ContentEditing;
-    using global::Umbraco.Web.WebApi;
+
 
     using Models;
 
@@ -61,7 +50,7 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
         /// </summary>
         public RedirectsApiController(IUmbracoSettingsSection umbracoSettings, 
                                       IGlobalSettings globalSettings, 
-                                      IUmbracoContextAccessor umbracoContextAccessor, 
+                                      IUmbracoContextFactory umbracoContextAccessor, 
                                       ISqlContext sqlContext, 
                                       ServiceContext services, 
                                       AppCaches appCaches, 
@@ -250,6 +239,15 @@ namespace Our.Umbraco.RedirectsViewer.Controllers
                 else
                 {
                     this._redirectUrlService.Register(redirect.Url, redirect.ContentKey, string.Empty);
+                }
+
+                if (!string.IsNullOrEmpty(redirect.Culture))
+                {
+                    this._redirectUrlService.Register(redirect.Url, redirect.ContentKey, redirect.Culture.ToLower());
+                }
+                else
+                {
+                    this._redirectUrlService.Register(redirect.Url, redirect.ContentKey);
                 }
 
                 return this.Request.CreateNotificationSuccessResponse(this._localizedTextService.Localize("redirectsviewer/createSuccess"));

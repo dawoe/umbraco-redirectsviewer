@@ -3,34 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Umbraco.Core.Composing;
-using Umbraco.Web;
-using Umbraco.Web.JavaScript;
+using Umbraco.Cms.Core.Composing;
+using Umbraco.Cms.Core.Events;
+using Umbraco.Cms.Core.Notifications;
 
 namespace Our.Umbraco.RedirectsViewer.Components
 {
-    internal class ServerVariableRegistrationComponent : IComponent
+    internal class ServerVariableRegistrationComponent : INotificationHandler<ServerVariablesParsingNotification>
     {
-        public void Initialize()
+        public ServerVariableRegistrationComponent(urlhe)
         {
-            ServerVariablesParser.Parsing += ServerVariablesParser_Parsing;
-        }
-
-        public void Terminate()
-        {
-            ServerVariablesParser.Parsing -= ServerVariablesParser_Parsing;
-        }
-
-        private void ServerVariablesParser_Parsing(object sender, System.Collections.Generic.Dictionary<string, object> e)
-        {
-            if (HttpContext.Current == null)
-            {
-                return;
-            }
-
-            SetUpDictionaryForAngularPropertyEditor(e);
         }
 
         private static void SetUpDictionaryForAngularPropertyEditor(Dictionary<string, object> e)
@@ -54,6 +36,16 @@ namespace Our.Umbraco.RedirectsViewer.Components
             {
                 e.Add("Our.Umbraco.RedirectsViewer", urlDictionairy);
             }
+        }
+
+        public void Handle(ServerVariablesParsingNotification notification)
+        {
+            if (HttpContext.Current == null)
+            {
+                return;
+            }
+
+            SetUpDictionaryForAngularPropertyEditor(e);
         }
     }
 }
