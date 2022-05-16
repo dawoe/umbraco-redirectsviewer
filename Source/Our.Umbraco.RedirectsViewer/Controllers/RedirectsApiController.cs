@@ -142,7 +142,6 @@
         /// <returns>
         /// The <see cref="HttpResponseMessage"/>.
         /// </returns>
-        [HttpPost]
         [HttpDelete]
         public HttpResponseMessage DeleteRedirect(Guid id)
         {
